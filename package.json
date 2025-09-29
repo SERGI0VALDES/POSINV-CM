@@ -1,0 +1,32 @@
+{
+  "name": "posinvcm",
+  "version": "1.0.0",
+  "description": "(POSINVCM) Punto de venta e inventario Creaciones Madriz",
+  "main": "./src/main/main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "echo \"No hay pruebas definidas\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SERGI0VALDES/POSINV-CM.git"
+  },
+  "keywords": [
+    "desktop-app",
+    "electron",
+    "punto-de-venta",
+    "inventario",
+    "sqlite",
+    "creaciones-madriz",
+    "negocio-local"
+  ],
+  "author": "Sergio J. Valdes P.",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/SERGI0VALDES/POSINV-CM/issues"
+  },
+  "homepage": "https://github.com/SERGI0VALDES/POSINV-CM#readme",
+  "devDependencies": {
+    "electron": "^38.1.2"
+  }
+}

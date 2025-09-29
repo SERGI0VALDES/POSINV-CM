@@ -1,0 +1,289 @@
+/* Colores y tipografía base */
+:root {
+    --primary-color: #4A90E2;
+    --secondary-color: #F5A623;
+    --text-color: #333;
+    --bg-color: #F8F9FA;
+    --card-bg: #FFF;
+    --border-color: #E0E0E0;
+}
+/* Animación de entrada suave */
+@keyframes screenFadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+/* Estilos base para el cuerpo */
+body {
+    opacity: 0;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    animation: screenFadeIn 0.8s ease-out forwards;
+}
+
+/* Estilos para la barra superior */
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center; /* Alinea verticalmente a todos los hijos directos: .logo, .info-usuario, .nav-menu */
+    padding: 10px 30px;
+    background-color: var(--card-bg);
+    border-bottom: 1px solid var(--border-color);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.logo img {
+    height: 130px;
+}
+
+.info-usuario {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.info-usuario h2, .info-usuario p {
+    margin: 0;
+}
+
+/* Estilos para el menú con los iconos */
+.nav-menu ul {
+    list-style: none; 
+    padding: 0; /* Elimina el padding por defecto */
+    margin: 0; /* Elimina el margen por defecto */
+    display: flex; /* Usa flexbox para alinear los iconos */
+    justify-content: center; /* Centra los iconos horizontalmente */
+    gap: 2rem; /* Espacio entre los iconos */
+}
+
+.nav-menu li {
+    margin: 0 15px;
+}
+
+.nav-menu a {
+    text-decoration: none;
+    color: var(--text-color);
+    display: flex; /* Convierte el enlace en un flexbox para centrar la imagen */
+    flex-direction: column ; /* Alinea los elementos en columna */
+    align-items: center; /* Centra la imagen horizontalmente */
+    transition: color 0.3s;
+}
+
+.nav-menu img {
+    /* Estandariza el tamaño de los iconos */
+    width: 60px; 
+    height: 60px;
+    object-fit: contain;
+    margin-bottom: 5px; /* Espacio entre la imagen y el texto (si lo hay) */
+}
+
+.nav-menu a span {
+    font-size: 0.9rem;
+    font-weight: bold;
+    text-align: center;
+}
+
+.nav-menu a:hover, .nav-menu li.active a {
+    color: var(--primary-color);
+}
+
+/* Contenido principal para las tarjetas */
+.main-content {
+    padding: 30px;
+}
+
+.summary-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 20px;
+}
+
+/* Botón flotante */
+.add-button {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: var(--primary-color);
+    color: #FFF;
+    font-size: 30px;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+/* Estilos para el contenedor de las tarjetas */
+.summary-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 20px;
+}
+
+/* ========================================================= */
+/* MODIFICACIÓN CLAVE: Quitamos el color base de .card      */
+/* y lo definimos en selectores específicos más abajo.       */
+/* ========================================================= */
+.card {
+    display: flex;
+    align-items: center;
+    /* background-color: var(--card-bg); <--- ¡ELIMINADO! */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.card-icon {
+    font-size: 3rem;
+    margin-right: 20px;
+}
+
+.card-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.card-content p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #777;
+}
+
+.card-content h3 {
+    margin: 5px 0 0;
+    font-size: 1.5rem;
+    color: var(--text-color);
+}
+
+/* ========================================================= */
+/* NUEVOS ESTILOS: Colores de fondo individuales por tarjeta */
+/* ========================================================= */
+
+.card-ventas {
+    background-color: #fffdfd; /* Azul muy claro */
+    border-radius: 10px;
+}
+
+.card-vestidos {
+    background-color: #ee9ceedb; /* Rosa suave */
+    border-radius: 10px;
+}
+
+.card-telas {
+    background-color: #b0c798; /* Verde muy claro */
+    border-radius: 10px;
+}
+
+.card-ultimas-ventas {
+    background-color: #ffeeee; /* Melocotón / Naranja suave */
+    border-radius: 10px;
+}
+
+
+/* Importamos la fuente "Ananda" */
+@font-face {
+    font-family: 'Ananda'; /* El nombre que usarás en tu CSS */
+    src: url('../../assets/fonts/Ananda.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* Importamos la fuente "Comfortaa" */
+@font-face {
+    font-family: 'Comfortaa'; /* El nombre que usarás en tu CSS */
+    src: url('../../assets/fonts/Comfortaa.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* Aplicamos la fuente a los textos de la barra superior */
+.info-usuario h2 {
+    font-family: 'Ananda', Arial, sans-serif;
+    font-size: 38px;
+    padding-left: 48px;
+    padding-bottom: 10px;
+}
+.info-usuario p {
+    font-family: 'Comfortaa', Arial, sans-serif;
+    font-size: 15px;
+}
+
+.tabla-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 200px;
+    padding-left: 50px;
+    padding-bottom: 20px;
+}
+
+/* Estilos para las tarjetas (revisión de .card-content) */
+.card-content {
+    display:flex;
+    flex-direction: column;
+    width: 550px;
+    height: 110px;
+    /* Aseguramos que el color de fondo no bloquee el color de la tarjeta exterior */
+    background-color: transparent; 
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    
+}
+
+.card-rapidas {
+    display: flex;
+    flex-direction: column;
+    align-items: center;            
+    width: 800px;
+    margin: 0 auto;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.30);
+    border-radius: 10px;
+    padding: 10px 5px; 
+    background-color: #ffffff;
+}
+/* Estilos de los botones dentro de card-rapidas */
+.boton-rapidas {
+    /* Define el color y el aspecto del botón */
+    background-color: #96d4f3; /* Un azul intenso */
+    color: #FFFFFF;         /* Texto blanco para alto contraste */
+    
+    /* Forma y tamaño */
+    padding: 10px 10px;        /* Relleno interno para hacerlo grande y cómodo */
+    border: none;              /* Quita el borde por defecto */
+   
+    /* Tipografía */
+    font-size: 1rem;         /* Tamaño de fuente claro */
+    font-weight: bold;         /* Texto en negrita */
+    
+    /* Comportamiento */
+    cursor: pointer; /* Muestra el puntero al pasar el ratón */
+    transition: background-color 0.3s ease, transform 0.1s ease; /* Transiciones suaves */
+    
+    /* Sombra sutil para darle profundidad */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Efecto al pasar el ratón */
+.boton-rapidas:hover {
+    background-color: #d5e4ec; /* Azul un poco más oscuro */
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15); /* Sombra ligeramente más profunda */
+}
+
+/* Efecto al hacer clic (opcional, pero mejora la experiencia) */
+.boton-rapidas:active {
+    transform: translateY(1px); /* Mueve el botón ligeramente hacia abajo */
+}

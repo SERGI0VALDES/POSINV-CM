@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Dashboard de la aplicación para Creaciones Madriz-->
+    <title>Creaciones Madriz | Dashboard</title>
+    <link rel="stylesheet" href="./css/dashboard.css">
+</head>
+
+<body>
+    <header class="topbar">
+
+        <!-- Logo de la empresa -->
+        <div class="logo">
+            <img src="../assets/img/logo.png" alt="Logo">
+        </div>
+        
+        <!-- Informacion del usuario y fecha actual -->
+        <div class="info-usuario">
+        <h2>¡Hola Madriz!</h2>
+        <!-- Traemos la fecha y hora actual-->
+        <p id="currentDate"></p>
+        </div>
+        
+        <!-- Menu de navegacion -->
+        <nav class="nav-menu">
+
+            <!-- Lista de enlaces de navegacion -->
+            <ul>
+                <li>
+                    <!-- Botón para ir al punto de venta de la app -->
+                    <a href="../renderer/screens/pos.html">
+                        <img src="../assets/icons/icon_pos.png">
+                        <span>Punto de Venta</span>    
+                    </a>
+                </li>
+                <li>
+                    <!-- Botón para ver los vestidos disponibles -->
+                    <a href="../renderer/screens/Vestidos.html">
+                        <img src="../assets/icons/icon_vestidos.png">
+                        <span>Vestidos</span>
+                    </a>
+                </li>
+                <li>
+                    <!-- Botón para ir al inventario de las telas disponibles-->
+                    <a href="../renderer/screens/Telas.html">
+                        <img src="../assets/icons/icon_telas.png">
+                        <span>Telas</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+    </header>
+
+    <main class="main-content">
+
+        <table class="tabla-cards">
+               
+                <!-- Tarjeta que muestra el total de ventas -->
+                <tr>
+                    <td>
+                        <div class="card-ventas">
+                            <div class="card-content">
+                                <span class="card-icon">💰</span>
+                                <p>Total de Ventas</p>
+                                <h3>$15,000.00</h3>
+                            </div>
+                        </div>
+                    </td>
+
+                <!-- Tarjeta que muestra los vestidos listos -->        
+                    <td>
+                        <div class="card-vestidos">
+                            <div class="card-content">
+                                <span class="card-icon">📦</span>
+                                <p>Vestidos listos</p>
+                                <h3>45 Unidades</h3>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                
+                <!-- Tarjeta que muestra el stock de telas -->
+                <tr> 
+                    <td>
+                        <div class="card-telas">
+                            <div class="card-content">
+                                <span class="card-icon">📈</span>
+                                <p>Stock de telas</p>
+                                <h3>45</h3>
+                            </div>
+                        </div>
+                    </td>
+
+                    <td>
+                    <!-- Tarjeta de las ultimas ventas que se han realizado -->
+                        <div class="card-ultimas-ventas">
+                            <div class="card-content">
+                                <span class="card-icon">🛍️</span>   
+                                <p>Últimas Ventas</p>
+                                <h3>Vestido negro</h3>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+
+        </table>
+
+                        <!-- Tarjeta donde se muestran dos opciones en la parte de abajo-->
+                        <div class="card-rapidas"> 
+                            <h3>Acciones rapidas</h3>
+                            <!-- Botones -->
+                            <table>
+                                <tr>
+                                    <td>
+                                        <button class="boton-rapidas"><a href="../renderer/screens/Reportes.html" style="color: rgb(72, 72, 72); text-decoration: none;">Descargar reportes</a></button>
+                                        <button class="boton-rapidas"><a href="../renderer/screens/Fichas.html" style="color: rgb(72, 72, 72); text-decoration: none;">Crear fichas</a></button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+    </main> 
+
+    <!-- JavaScript -->
+    <script src="../renderer/js/dashboard.js"></script>
+    
+</body>
+</html>

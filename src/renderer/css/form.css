@@ -1,0 +1,185 @@
+/* =========================================== */
+/* ESTILOS DE ELEGANCIA GEOMÉTRICA Y MÍNIMA (Líneas Rectas) */
+/* =========================================== */
+
+/* Variables de color enfocadas en la sobriedad */
+:root {
+    --accent-color: #7A7A7A; /* Gris carbón/grafito para el contraste sobrio */
+    --text-color-dark: #1E1E1E; /* Negro profundo para la formalidad */
+    --border-line-thin: 1px solid #E0E0E0; /* Línea de borde muy fina */
+    --border-line-accent: 1px solid var(--primary-color);
+}
+
+/* Contenedor principal del formulario */
+.client-form {
+    max-width: 950px; 
+    margin: 50px auto; 
+    padding: 50px; 
+    background-color: var(--card-bg);
+    border-radius: 0; /* ¡Totalmente recto! */
+    
+    /* Sombra de caja minimalista y sutil */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05); 
+    /* Borde principal muy fino */
+    border: var(--border-line-thin); 
+}
+
+/* Estilos de las secciones (fieldset) */
+fieldset {
+    /* Mantenemos el fondo limpio para contraste */
+    background: var(--card-bg); 
+    border: 0; /* Eliminamos el borde de fieldset por defecto */
+    border-radius: 0;
+    margin-bottom: 40px;
+    padding: 30px 0 30px 0; /* Solo padding vertical, sin horizontal */
+    
+    /* Demarcación estricta: línea inferior sólida */
+    border-bottom: 1px solid #CCCCCC;
+    transition: border-bottom-color 0.3s ease;
+}
+
+fieldset:last-of-type {
+    border-bottom: none; /* Elimina la línea en el último fieldset */
+}
+
+fieldset:hover {
+    border-bottom: 1px solid var(--accent-color); /* Un sutil acento al pasar el mouse */
+}
+
+legend {
+    /* Título: Jerarquía y tipografía limpia */
+    font-size: 1.7rem;
+    font-weight: 300; /* Fuente ligera para sofisticación */
+    color: var(--text-color-dark); 
+    padding: 5px 0; /* Padding mínimo */
+    background-color: transparent; /* Fondo transparente */
+    border-radius: 0;
+    letter-spacing: 1.5px; /* Espaciado generoso para elegancia */
+    text-transform: uppercase;
+    
+    /* Línea delgada debajo para jerarquía */
+    border-bottom: 2px solid var(--primary-color);
+    margin-bottom: 25px;
+}
+
+/* Estilos de los grupos de campos y labels */
+.form-group {
+    margin-bottom: 25px;
+}
+
+.form-group label {
+    display: block; 
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--text-color-dark);
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Estilos de los campos de texto, números y select */
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-group input[type="date"],
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 14px; 
+    border: 1px solid #CCCCCC; /* Borde simple y claro */
+    border-radius: 0; /* ¡Líneas rectas! */
+    font-size: 1rem;
+    box-sizing: border-box; 
+    color: var(--text-color-dark);
+    background-color: #fff;
+    
+    /* Quitamos cualquier sombra de campo para máxima limpieza */
+    box-shadow: none; 
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Efecto de foco: Borde formal */
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    /* Borde grueso de color de acento, sin sombras */
+    border: 2px solid var(--primary-color); 
+    outline: none; 
+}
+
+/* Estilos para el grid de medidas */
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); 
+    gap: 30px; 
+}
+
+/* Estilos para el campo de anotaciones de ancho completo */
+.full-width {
+    grid-column: 1 / -1; 
+    /* Separador sutil sobre el textarea */
+    padding-top: 15px;
+    border-top: 1px dashed #E0E0E0;
+}
+
+/* =========================================== */
+/* ESTILOS DE BOTONES (Contraste Máximo) */
+/* =========================================== */
+
+/* Contenedor para alinear los botones en el centro (NECESITAS AJUSTAR EL HTML) */
+.form-actions {
+    text-align: center;
+    margin-top: 40px;
+}
+
+.boton-rapidas {
+    display: inline-block; 
+    text-align: center;
+    
+    padding: 16px 35px; 
+    border-radius: 0; /* ¡Rectos! */
+    font-size: 1.15rem;
+    font-weight: 700;
+    
+    border: 1px solid transparent;
+    margin: 0 10px;
+    cursor: pointer;
+    
+    /* Sombra mínima */
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Botón Guardar: Color primario */
+.boton-guardar {
+    background-color: var(--primary-color);
+    color: #fff;
+}
+
+/* Botón Imprimir: Botón blanco con borde oscuro (el más elegante) */
+.boton-imprimir {
+   background-color: var(--primary-color);
+    color: #fff;
+}
+
+
+/* Efecto hover: Cambio de color, sin elevación */
+.boton-guardar:hover {
+     background-color: var(--accent-color);
+    color: #fff;
+    border-color: var(--accent-color);
+}
+
+/* Efecto hover en Imprimir: El color de acento se activa */
+.boton-imprimir:hover {
+    background-color: var(--accent-color);
+    color: #fff;
+    border-color: var(--accent-color);
+}
+
+/* Efecto al hacer clic: Se presiona */
+.boton-rapidas:active {
+    transform: translateY(1px); 
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
