@@ -1,0 +1,64 @@
+/* Archivo: punto_de_venta.css */
+
+/* Estilo del contenedor principal del buscador */
+.buscador {
+ padding: 20px;
+    background-color: var(--card-bg);
+    border-bottom: 1px solid var(--border-color);
+}
+
+/* Estilo del campo de entrada de texto */
+#buscadorInput {
+    width: 100%;
+    padding: 12px 20px;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+    box-sizing: border-box; /* Fundamental para que el padding no desborde */
+}
+
+#buscadorInput:focus {
+    border-color: var(--primary-color);
+    outline: none;
+    box-shadow: 0 0 5px rgba(74, 144, 226, 0.5);
+}
+
+/* Estilos de la lista de productos */
+.lista-vestidos-contenedor {
+    max-height: 400px; /* Limita la altura del contenedor para hacerlo scrollable */
+    overflow-y: auto;
+    background-color: var(--card-bg);
+    padding: 0 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.lista-vestidos {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.vestido-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    border-bottom: 1px solid var(--border-color);
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.vestido-item:hover {
+    background-color: #f0f0f0;
+}
+
+.product-nombre {
+    font-weight: bold;
+}
+
+.product-precio {
+    color: var(--primary-color);
+    font-weight: 600;
+}

@@ -1,11 +1,88 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <!-- Punto de venta de la aplicación para Creaciones Madriz-->
+    <title>Creaciones Madriz | Punto de Venta</title>
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="stylesheet" href="../css/pos.css">
 </head>
+
 <body>
-    <h1>Hola desde pos!</h1>
+    <header class="topbar">
+
+        <!-- Logo de la empresa -->
+        <div class="logo">
+            <a href="../dashboard.html"><img src="../../assets/img/logo.png" alt="Logo"></a>
+        </div>
+        
+        <!-- Informacion del usuario y fecha actual -->
+        <div class="info-usuario">
+        <h2>¡Bienvenida al punto de venta!</h2>
+        <!-- Traemos la fecha y hora actual-->
+        <p id="currentDate"></p>
+        </div>
+        
+        <!-- Menu de navegacion -->
+        <nav class="nav-menu">
+            
+            <ul>
+                <li>
+                    <!-- Botón para ver los vestidos disponibles -->
+                    <a href="../screens/Vestidos.html">
+                        <img src="../../assets/icons/icon_vestidos.png">
+                        <span>Vestidos</span>
+                    </a>
+                </li>      
+            </ul>
+        </nav>
+
+    </header>
+
+    <main class="main-content">
+
+        <!-- Este es el buscador para los vestidos -->
+        <input id="buscadorInput" type="text" placeholder="Buscar vestido por nombre" style="font-family: Comfortaa;">
+        <button>Buscar</button>
+        
+
+        <h3 style="color: rgb(133, 133, 133); font-family: Comfortaa;"> Productos </h3>
+
+        <!-- Aqui se mostrara la lista de vestidos que busquemos -->
+        <div class="lista-vestidos-contenedor">
+            <ul id="listaVestidos" class="lista-vestidos">
+                <!-- Los elementos de la lista se generarán dinámicamente con JavaScript -->
+                 <li class="vestido-item">
+                    <img src="../../assets/img/logo.png" alt="Vestido 1" width="50">
+                    <span class="product-nombre">Vestido de Seda Azul</span>
+                    <span class="product-precio">$550.00</span>
+                </li>
+            </ul>
+        </div>
+
+        <!--Carrito de compras o pedido actual-->
+        <div class="carrito-contenedor">
+            <h3 style="color: rgb(133, 133, 133); font-family: Comfortaa;"> Pedido Actual </h3>
+            <ul id="carritoLista" class="carrito-lista">
+                <!-- Los elementos del carrito se generarán dinámicamente con JavaScript -->
+                <li class="carrito-item">
+                    <span class="carrito-nombre">Vestido de Seda Azul</span>
+                    <span class="carrito-cantidad">1</span>
+                    <span class="carrito-precio">$550.00</span>
+                </li>
+            </ul>
+            <div class="total-contenedor">
+                <span>Total:</span>
+                <span id="totalPrecio" class="total-precio">$550.00</span>
+            </div>
+            <button id="finalizarCompraBtn" class="finalizar-compra-btn">Finalizar Compra</button>
+        </div>                
+    </main> 
+
+    <!-- JS´s-->
+    <script src="../js/dateTime.js"></script>
+    
 </body>
 </html>
