@@ -14,6 +14,7 @@
 }
 /* Estilos base para el cuerpo */
 body {
+    overflow: hidden; /* Evita el scroll si no es necesario */
     opacity: 0;
     font-family: Arial, sans-serif;
     margin: 0;
@@ -25,13 +26,24 @@ body {
 
 /* Estilos para la barra superior */
 .topbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center; /* Alinea verticalmente a todos los hijos directos: .logo, .info-usuario, .nav-menu */
-    padding: 10px 30px;
+
+    display: grid; /* 1. Habilitar el sistema Grid */
+    
+    grid-template-columns: auto 1fr auto; /* 2. Definimos las tres columnas (Izquierda | Centro | Derecha) */
+    /* 
+       - auto: La columna del Logo ocupa solo el espacio de su contenido.
+       - 1fr: La columna de Info-Usuario ocupa todo el espacio restante (Centro).
+       - auto: La columna del Menú ocupa solo el espacio de su contenido.
+    */
+    align-items: center; /* 3. Asegura que los ítems dentro de las celdas se alineen verticalmente al centro */
+    justify-items: center; /* 4. Centra horizontalmente los ítems dentro de sus celdas */   
+    /* padding: 10px 30px; Espaciado interno */
     background-color: var(--card-bg);
     border-bottom: 1px solid var(--border-color);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+
+    /* Orden: Arriba | Derecha | Abajo | Izquierda */
+    padding: 10px 0px 10px 10px; /* Espaciado interno */
 }
 
 .logo img {
@@ -244,37 +256,62 @@ body {
     
 }
 
+/* Estilos para la tarjeta contenedora */
 .card-rapidas {
-    display: flex;
-    flex-direction: column;
-    align-items: center;            
-    width: 800px;
-    margin: 0 auto;
+    /* 1. Habilita Flexbox y fuerza el flujo vertical (título encima de botones) */
+    display: flex; 
+    flex-direction: column; 
+    /* 2. Centrado Horizontal: Centra todos los elementos hijos (h3 y div.botones-acciones) */
+    align-items: center; 
+    justify-content: center;
+    /* 3. Espacio vertical entre los elementos apilados (título y botones) */
+    gap: 0px;
+    /* 3. Centrado Vertical: Alinea el contenido de las celdas verticalmente */
+    align-items: center;
+    
+    /* --- Estilos de Apariencia --- */
+    height: auto;
+    min-height: 20px;
+    width: 800px; /* O el ancho que prefieras */
+    margin: 0 auto; /* Centra la tarjeta en la pantalla */
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.30);
     border-radius: 10px;
-    padding: 10px 5px; 
+    padding: 10px 20px; 
     background-color: #ffffff;
 }
-/* Estilos de los botones dentro de card-rapidas */
+
+/* Estilo del Título (Columna 1) */
+.card-rapidas h3 {
+    /* Asegurar que el título esté centrado verticalmente dentro de su celda, si aplica */
+    align-self: center; 
+    margin: 5; 
+    font-size: 1.5rem;
+    font-weight: bold;
+    /* Opcional: Centrar texto dentro de la celda (si la celda es más ancha que el texto) */
+}
+
+/* El contenedor que agrupa los botones (Columna 2) */
+.botones-acciones {
+    /* Mantenemos Flexbox para alinear los dos botones internos */
+    display: flex;
+    gap: 10px; 
+    /* Opcional: Asegura que el grupo de botones se alinee a la izquierda de su columna */
+    justify-self: start;
+}
+
+/* Estilos de los botones (con pequeña modificación de display) */
 .boton-rapidas {
-    /* Define el color y el aspecto del botón */
-    background-color: #96d4f3; /* Un azul intenso */
-    color: #FFFFFF;         /* Texto blanco para alto contraste */
-    
-    /* Forma y tamaño */
-    padding: 10px 10px;        /* Relleno interno para hacerlo grande y cómodo */
-    border: none;              /* Quita el borde por defecto */
-   
-    /* Tipografía */
-    font-size: 1rem;         /* Tamaño de fuente claro */
-    font-weight: bold;         /* Texto en negrita */
-    
-    /* Comportamiento */
-    cursor: pointer; /* Muestra el puntero al pasar el ratón */
-    transition: background-color 0.3s ease, transform 0.1s ease; /* Transiciones suaves */
-    
-    /* Sombra sutil para darle profundidad */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    /* Aseguramos que el enlace se comporte como un bloque para poder darle padding y width */
+    display: inline-block; 
+    text-align: center;
+    padding: 15px 20px;
+    /* Nota: Los estilos en línea del HTML (style="...") no son necesarios si los pones aquí */
+    color: rgb(0, 0, 0); 
+    text-decoration: none;
+    /* Sigue el resto de tus estilos del boton-rapidas */
+    background-color: #96d4f3;
+    border-radius: 5px;
+    /* ... */
 }
 
 /* Efecto al pasar el ratón */

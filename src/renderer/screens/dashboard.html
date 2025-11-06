@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Dashboard de la aplicación para Creaciones Madriz-->
     <title>Creaciones Madriz | Dashboard</title>
-    <link rel="stylesheet" href="./css/dashboard.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
 </head>
 
 <body>
@@ -14,7 +14,9 @@
 
         <!-- Logo de la empresa -->
         <div class="logo">
-            <img src="../assets/img/logo.png" alt="Logo">
+            <a>
+                <img src="../../assets/img/logo.png" alt="Logo">
+            </a>
         </div>
         
         <!-- Informacion del usuario y fecha actual -->
@@ -31,28 +33,20 @@
             <ul>
                 <li>
                     <!-- Botón para ir al punto de venta de la app -->
-                    <a href="../renderer/screens/pos.html">
-                        <img src="../assets/icons/icon_pos.png">
-                        <span>Punto de Venta</span>    
+                    <a data-screen="POS">
+                        <img src="../../assets/img/icon_pos.png">
+                        <span style="font-family: Comfortaa;">Punto de Venta</span>    
                     </a>
                 </li>
                 <li>
-                    <!-- Botón para ver los vestidos disponibles -->
-                    <a href="../renderer/screens/Vestidos.html">
-                        <img src="../assets/icons/icon_vestidos.png">
-                        <span>Vestidos</span>
+                    <!-- Botón inventarios-->
+                    <a data-screen="INVENTARIOS">
+                        <img src="../../assets/img/img_inventario.png">
+                        <span style="font-family: Comfortaa;">Revisar inventarios</span>
                     </a>
-                </li>
-                <li>
-                    <!-- Botón para ir al inventario de las telas disponibles-->
-                    <a href="../renderer/screens/Telas.html">
-                        <img src="../assets/icons/icon_telas.png">
-                        <span>Telas</span>
-                    </a>
-                </li>
+                </li>   
             </ul>
         </nav>
-
     </header>
 
     <main class="main-content">
@@ -108,24 +102,27 @@
                 </tr>
 
         </table>
+                    <!-- Tarjeta donde se muestran dos opciones en la parte de abajo-->
+                    <div class="card-rapidas"> 
+                        <!-- 1. Columna 1 del Grid -->
+                        <h3 style="color: rgb(72, 72, 72); font-family: Comfortaa;">Acciones rapidas</h3>
+                        
+                        <!-- 2. Columna 2 del Grid -->
+                        <div class="botones-acciones"> 
 
-                        <!-- Tarjeta donde se muestran dos opciones en la parte de abajo-->
-                        <div class="card-rapidas"> 
-                            <h3>Acciones rapidas</h3>
-                            <!-- Botones -->
-                            <table>
-                                <tr>
-                                    <td>
-                                        <button class="boton-rapidas"><a href="../renderer/screens/Reportes.html" style="color: rgb(72, 72, 72); text-decoration: none;">Descargar reportes</a></button>
-                                        <button class="boton-rapidas"><a href="../renderer/screens/Fichas.html" style="color: rgb(72, 72, 72); text-decoration: none;">Crear fichas</a></button>
-                                    </td>
-                                </tr>
-                            </table>
+                            <a class="boton-rapidas" data-screen="REPORTES" style="text-decoration: none; font-family: Comfortaa;">
+                                Descargar reportes
+                            </a>       
+                            <a class="boton-rapidas" data-screen="FICHA" style="text-decoration: none; font-family: Comfortaa;">
+                                Crear fichas
+                            </a>
                         </div>
+
+                    </div>   
     </main> 
 
     <!-- JavaScript -->
-    <script src="../renderer/js/dateTime.js"></script>
-    
+    <script src="../js/dateTime.js"></script>
+    <script type="module" src="../js/cargar_rutas.js"></script>
 </body>
 </html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Dashboard de la aplicación para Creaciones Madriz-->
+    <title>Creaciones Madriz | Inventarios</title>
+    <link rel="stylesheet" href="../../css/inventario.css">
+</head>
+
+<body>
+    <header class="topbar">
+
+        <!-- Logo de la empresa -->
+        <div class="logo">
+            <a href="../../screens/dashboard.html">
+                <img src="../../../assets/img/logo.png" alt="Logo">
+            </a>
+        </div>
+        
+        <!-- Informacion del usuario y fecha actual -->
+        <div class="info-usuario">
+        <h2>¡Revisa tus inventarios!</h2>
+        <!-- Traemos la fecha y hora actual-->
+        <p id="currentDate"></p>
+        </div>
+        
+        <!-- Menu de navegacion -->
+        <nav class="nav-menu">
+            <!-- Lista de enlaces de navegacion -->
+            <ul>
+                <li>
+                    <!-- Botón para ir al punto de venta de la app -->
+                    <a href="../../screens/venta/pos.html">
+                        <img src="../../../assets/img/icon_pos.png">
+                        <span style="font-family: Comfortaa;">Punto de Venta</span>    
+                    </a>
+                </li>
+        
+            </ul>
+        </nav>
+
+    </header>
+
+    <main class="main-content">
+        <p style="font-family: Comfortaa;">Bienvenida al módulo de inventarios. Aquí podrás gestionar y revisar los inventarios de productos disponibles.</p>
+        
+        <!-- Aqui dividiremos la parte de los botones y el inventario en si -->
+        
+        <div class="inventario-layout">
+            <div class="contenedor-botones">
+                <nav>
+                    <button class="botones">VESTIDOS</button>
+                    <button class="botones">TELAS</button>
+                    <button class="botones">INSUMOS</button>
+                </nav>
+            </div>
+
+            <div class="inventarios">
+
+            </div>
+        </div>
+</div>
+    </main>
+
+    <!-- JavaScript -->
+    <script src="../js/dateTime.js"></script>
+    <script type="module" src="../js/cargar_rutas.js"></script>
+</body>
+</html>

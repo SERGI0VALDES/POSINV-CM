@@ -4,13 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Creaciones Madriz | Fichas</title>
-    <link rel="stylesheet" href="../css/dashboard.css">
-    <link rel="stylesheet" href="../css/form.css">
+    <link rel="stylesheet" href="../../css/globals.css">
+    <link rel="stylesheet" href="../../css/form.css">
 </head>
 <body>
     <header class="topbar">
         <div class="logo">
-            <a href="../dashboard.html"><img src="../../assets/img/logo.png" alt="Logo"></a>
+            <a data-screen="DASHBOARD">
+                <img src="../../../assets/img/logo.png" alt="Logo">
+            </a>
         </div>
         <div class="info-usuario">
             <h2>Llenar los siguientes datos</h2>
@@ -18,9 +20,9 @@
         <nav class="nav-menu">
             <ul>
                 <li>
-                    <a href="../screens/Vestidos.html">
-                        <img src="../../assets/icons/icon_vestidos.png" alt="Vestidos">
-                        <span>Ver vestidos</span>
+                    <a href="../inventarios/inventario.html">
+                        <img src="../../../assets/img/img_inventario.png" alt="Vestidos">
+                        <span style="font-family: Comfortaa;"   >Revisar inventarios</span>
                     </a>
                 </li>
             </ul>
@@ -142,12 +144,16 @@
                     <textarea id="anotaciones" name="anotaciones" rows="4"></textarea>
                 </div>
             </fieldset>
+
             <div class="form-actions">
                 <button type="submit" class="boton-rapidas boton-guardar">Guardar ficha</button>
                 <button type="submit" class="boton-rapidas boton-imprimir">Imprimir ficha</button>
             </div>
         </form>
     </main>
-    <script src="./js/app.js"></script>
+
+    <!-- JavaScript -->
+    <script src="../../js/dateTime.js"></script>
+    <script type="module" src="../../js/cargar_rutas.js"></script>
 </body>
 </html>

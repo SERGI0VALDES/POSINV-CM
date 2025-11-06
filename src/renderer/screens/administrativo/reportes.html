@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creaciones Madriz | Reportes</title>
+    <link rel="stylesheet" href="../../css/reportes.css">
+    <link rel="stylesheet" href="../../css/dashboard.css">
+</head>
+<body>
+    <header class="topbar">
+        <div class="logo">
+            <a data-screen="DASHBOARD">
+                <img src="../../../assets/img/logo.png" alt="Logo">
+            </a>
+        </div>
+        <div class="info-usuario">
+            <h2>Reportes Automáticos</h2>
+        </div>
+        <nav class="nav-menu">
+            <ul>
+                <li>
+                    <a href="../venta/pos.html">
+                        <img src="../../../assets/img/icon_pos.png" alt="pos">
+                        <span>Punto de Venta</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="main-content">
+        <div class="report-buttons-container">
+            <h3 style="text-decoration: none; font-family: Comfortaa;">Generar reporte de ventas:</h3>
+            <div class="report-buttons">
+                <button class="report-button" id="manualmente" style="text-decoration: none; font-family: Comfortaa;">Manualmente</button>
+                <hr>
+                <p style="text-decoration: none; font-family: Comfortaa;">*Recuerde que el reporte se genera mensualmente en automático*</p>
+            </div>
+        </div>
+
+        <div class="folder-button-container">
+            <br>
+            <p style="text-decoration: none; font-family: Comfortaa;">Ver reportes generados:</p>
+            <button id="openFolderBtn" class="open-folder-button" style="text-decoration: none; font-family: Comfortaa;">📂 Abrir carpeta de reportes</button>
+        </div>  
+    </main>
+
+    <!--Scripts-->
+    <script type="module" src="../../js/cargar_rutas.js"></script>
+    <script src="../../js/abrir_folder.js"></script>
+
+</body>
+</html>

@@ -1,5 +1,26 @@
 /* Archivo: punto_de_venta.css */
 
+/* Estilos para la barra superior */
+.topbar {
+
+    display: grid; /* 1. Habilitar el sistema Grid */
+    
+    grid-template-columns: auto 1fr auto; /* 2. Definimos las tres columnas (Izquierda | Centro | Derecha) */
+    /* 
+       - auto: La columna del Logo ocupa solo el espacio de su contenido.
+       - 1fr: La columna de Info-Usuario ocupa todo el espacio restante (Centro).
+       - auto: La columna del Menú ocupa solo el espacio de su contenido.
+    */
+    align-items: center; /* 3. Asegura que los ítems dentro de las celdas se alineen verticalmente al centro */
+    justify-items: center; /* 4. Centra horizontalmente los ítems dentro de sus celdas */   
+    /* Orden: Arriba | Derecha | Abajo | Izquierda */
+    padding: 10px 0px 10px 10px; /* Espaciado interno */
+    background-color: var(--card-bg);
+    border-bottom: 1px solid var(--border-color);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+ 
+}
+
 /* Estilo del contenedor principal del buscador */
 .buscador {
  padding: 20px;

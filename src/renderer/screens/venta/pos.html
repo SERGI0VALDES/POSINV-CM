@@ -6,8 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Punto de venta de la aplicación para Creaciones Madriz-->
     <title>Creaciones Madriz | Punto de Venta</title>
-    <link rel="stylesheet" href="../css/dashboard.css">
-    <link rel="stylesheet" href="../css/pos.css">
+    <link rel="stylesheet" href="../../css/dashboard.css">
+    <link rel="stylesheet" href="../../css/pos.css">
 </head>
 
 <body>
@@ -15,7 +15,9 @@
 
         <!-- Logo de la empresa -->
         <div class="logo">
-            <a href="../dashboard.html"><img src="../../assets/img/logo.png" alt="Logo"></a>
+            <a data-screen="DASHBOARD">
+                <img src="../../../assets/img/logo.png" alt="logo">
+            </a> 
         </div>
         
         <!-- Informacion del usuario y fecha actual -->
@@ -31,9 +33,9 @@
             <ul>
                 <li>
                     <!-- Botón para ver los vestidos disponibles -->
-                    <a href="../screens/Vestidos.html">
-                        <img src="../../assets/icons/icon_vestidos.png">
-                        <span>Vestidos</span>
+                    <a href="../inventarios/inventario.html">
+                        <img src="../../../assets/img/img_inventario.png">
+                        <span style="font-family: Comfortaa;">Revisar inventarios</span>
                     </a>
                 </li>      
             </ul>
@@ -55,7 +57,8 @@
             <ul id="listaVestidos" class="lista-vestidos">
                 <!-- Los elementos de la lista se generarán dinámicamente con JavaScript -->
                  <li class="vestido-item">
-                    <img src="../../assets/img/logo.png" alt="Vestido 1" width="50">
+                    <!-- Como recordatorio, esta ruta se va actualizar despues con una ruta dinamica 
+                    <img src="../../assets/img/logo.png" alt="Vestido 1" width="50">-->
                     <span class="product-nombre">Vestido de Seda Azul</span>
                     <span class="product-precio">$550.00</span>
                 </li>
@@ -82,7 +85,8 @@
     </main> 
 
     <!-- JS´s-->
-    <script src="../js/dateTime.js"></script>
+    <script src="../../js/dateTime.js"></script>
+    <script type="module" src="../../js/cargar_rutas.js"></script>
     
 </body>
 </html>

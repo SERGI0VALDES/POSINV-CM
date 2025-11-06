@@ -20,7 +20,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const timeOptions = {
                 hour: '2-digit',
                 minute: '2-digit',
-                second: '2-digit',
                 hour12: true // Para formato AM/PM
             };
 

@@ -1,0 +1,133 @@
+/* Colores y tipografía base */
+:root {
+    --primary-color: #4A90E2;
+    --secondary-color: #F5A623;
+    --text-color: #333;
+    --bg-color: #F8F9FA;
+    --card-bg: #FFF;
+    --border-color: #E0E0E0;
+}
+/* Animación de entrada suave */
+@keyframes screenFadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+/* Estilos base para el cuerpo */
+body {
+    opacity: 0;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    animation: screenFadeIn 0.8s ease-out forwards;
+}
+
+/* Estilos para la barra superior */
+.topbar {
+
+    display: grid; /* 1. Habilitar el sistema Grid */
+    
+    grid-template-columns: auto 1fr auto; /* 2. Definimos las tres columnas (Izquierda | Centro | Derecha) */
+    /* 
+       - auto: La columna del Logo ocupa solo el espacio de su contenido.
+       - 1fr: La columna de Info-Usuario ocupa todo el espacio restante (Centro).
+       - auto: La columna del Menú ocupa solo el espacio de su contenido.
+    */
+    align-items: center; /* 3. Asegura que los ítems dentro de las celdas se alineen verticalmente al centro */
+    justify-items: center; /* 4. Centra horizontalmente los ítems dentro de sus celdas */   
+    /* padding: 10px 30px; Espaciado interno */
+    background-color: var(--card-bg);
+    border-bottom: 1px solid var(--border-color);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+
+    /* Orden: Arriba | Derecha | Abajo | Izquierda */
+    padding: 10px 0px 10px 10px; /* Espaciado interno */
+}
+
+.logo img {
+    height: 130px;
+}
+
+.info-usuario {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.info-usuario h2, .info-usuario p {
+    margin: 0;
+}
+
+/* Estilos para el menú con los iconos */
+.nav-menu ul {
+    list-style: none; 
+    padding: 0; /* Elimina el padding por defecto */
+    margin: 0; /* Elimina el margen por defecto */
+    display: flex; /* Usa flexbox para alinear los iconos */
+    justify-content: center; /* Centra los iconos horizontalmente */
+    gap: 2rem; /* Espacio entre los iconos */
+}
+
+.nav-menu li {
+    margin: 0 15px;
+}
+
+.nav-menu a {
+    text-decoration: none;
+    color: var(--text-color);
+    display: flex; /* Convierte el enlace en un flexbox para centrar la imagen */
+    flex-direction: column ; /* Alinea los elementos en columna */
+    align-items: center; /* Centra la imagen horizontalmente */
+    transition: color 0.3s;
+}
+
+.nav-menu img {
+    /* Estandariza el tamaño de los iconos */
+    width: 60px; 
+    height: 60px;
+    object-fit: contain;
+    margin-bottom: 5px; /* Espacio entre la imagen y el texto (si lo hay) */
+}
+
+.nav-menu a span {
+    font-size: 0.9rem;
+    font-weight: bold;
+    text-align: center;
+}
+
+.nav-menu a:hover, .nav-menu li.active a {
+    color: var(--primary-color);
+}
+
+
+/* Importamos la fuente "Ananda" */
+@font-face {
+    font-family: 'Ananda'; /* El nombre que usarás en tu CSS */
+    src: url('../../assets/fonts/Ananda.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* Importamos la fuente "Comfortaa" */
+@font-face {
+    font-family: 'Comfortaa'; /* El nombre que usarás en tu CSS */
+    src: url('../../assets/fonts/Comfortaa.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* Aplicamos la fuente a los textos de la barra superior */
+.info-usuario h2 {
+    font-family: 'Ananda', Arial, sans-serif;
+    font-size: 38px;
+    padding-left: 48px;
+    padding-bottom: 10px;
+}
+.info-usuario p {
+    font-family: 'Comfortaa', Arial, sans-serif;
+    font-size: 15px;
+}
+
+
+
