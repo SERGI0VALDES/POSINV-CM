@@ -30,16 +30,17 @@
     </header>
 
     <main class="main-content">
-        <form class="client-form" id="clientForm">
+        <!-- Compartimos el id con el js (generadorFicha.js) para mandar la información -->
+        <form class="client-form" id="formularioFicha">
             <fieldset>
                 <legend>Datos del Cliente</legend>
                 <div class="form-group">
                     <label for="nombre">Nombre del cliente:</label>
-                    <input type="text" id="nombre" name="nombre" required>
+                    <input type="text" id="nombre" name="nombre">
                 </div>
                 <div class="form-group">
                     <label for="fechaPedido">Fecha de pedido:</label>
-                    <input type="date" id="fechaPedido" name="fechaPedido" required>
+                    <input type="date" id="fechaPedido" name="fechaPedido">
                 </div>
                 <div class="form-group">
                     <label for="fechaPrueba">Fecha de prueba:</label>
@@ -111,24 +112,24 @@
                         <input type="number" id="largoManga" name="largoManga">
                     </div>
                     <div class="form-group">
-                        <label for="punho">Puño:</label>
-                        <input type="number" id="punho" name="punho">
+                        <label for="puno">Puño:</label>
+                        <input type="number" id="puno" name="puno">
                     </div>
                     <div class="form-group">
                         <label for="largoFalda">Largo de falda o pantalón:</label>
                         <input type="number" id="largoFalda" name="largoFalda">
                     </div>
                     <div class="form-group">
-                        <label for="largoFalda">Largo exterior:</label>
-                        <input type="number" id="largoExterior" name="largoFalda">
+                        <label for="largoExterior">Largo exterior:</label>
+                        <input type="number" id="largoExterior" name="largoExterior">
                     </div>
                     <div class="form-group">
-                        <label for="largoFalda">Largo interior:</label>
-                        <input type="number" id="largoInterior" name="largoFalda">
+                        <label for="largoInterior">Largo interior:</label>
+                        <input type="number" id="largoInterior" name="largoInterior">
                     </div>
                     <div class="form-group">
-                        <label for="largoFalda">Bastilla:</label>
-                        <input type="number" id="Bastilla" name="largoFalda">
+                        <label for="bastilla">Bastilla:</label>
+                        <input type="number" id="bastilla" name="bastilla">
                     </div>
                     <div class="form-group">
                         <label for="rodilla">Rodilla:</label>
@@ -148,6 +149,7 @@
             <div class="form-actions">
                 <button type="submit" class="boton-rapidas boton-guardar">Guardar ficha</button>
                 <button type="submit" class="boton-rapidas boton-imprimir">Imprimir ficha</button>
+                <button type="button" id="openFolderFichas" class="boton-rapidas boton-folder">Abrir carpeta de fichas</button>
             </div>
         </form>
     </main>
@@ -155,5 +157,7 @@
     <!-- JavaScript -->
     <script src="../../js/dateTime.js"></script>
     <script type="module" src="../../js/cargar_rutas.js"></script>
+    <script src="../../js/abrir_folder.js"></script>
+    <script src="../../js/generadorFicha.js"></script>
 </body>
 </html>

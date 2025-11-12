@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Punto de venta de la aplicación para Creaciones Madriz-->
     <title>Creaciones Madriz | Punto de Venta</title>
-    <link rel="stylesheet" href="../../css/dashboard.css">
+    <link rel="stylesheet" href="../../css/globals.css">
     <link rel="stylesheet" href="../../css/pos.css">
 </head>
 
@@ -22,17 +22,17 @@
         
         <!-- Informacion del usuario y fecha actual -->
         <div class="info-usuario">
-        <h2>¡Bienvenida al punto de venta!</h2>
+        <h2>¡Bienvenido al punto de venta!   
+        </h2>
         <!-- Traemos la fecha y hora actual-->
         <p id="currentDate"></p>
         </div>
         
         <!-- Menu de navegacion -->
         <nav class="nav-menu">
-            
             <ul>
                 <li>
-                    <!-- Botón para ver los vestidos disponibles -->
+                    <!-- Botón para ver los inventarios -->
                     <a href="../inventarios/inventario.html">
                         <img src="../../../assets/img/img_inventario.png">
                         <span style="font-family: Comfortaa;">Revisar inventarios</span>
@@ -44,44 +44,66 @@
     </header>
 
     <main class="main-content">
-
-        <!-- Este es el buscador para los vestidos -->
-        <input id="buscadorInput" type="text" placeholder="Buscar vestido por nombre" style="font-family: Comfortaa;">
-        <button>Buscar</button>
         
+        <!-- En esta caja se encuentra el lado izquierdo de la pantalla; contiene el buscador de productos, el h3="Products" y donde 
+         se refleja la busqueda de los productos. -->
+        <div class="cajaIzq">
+            
+            <!-- bucador y botón buscar-->        
+            <input id="buscador" type="text" placeholder="Buscar producto...">
+            <!-- <button id="boton_buscar">Buscar</button> -->
 
-        <h3 style="color: rgb(133, 133, 133); font-family: Comfortaa;"> Productos </h3>
+            <!-- Titulo de productos -->
+            <p> Productos </p>
 
-        <!-- Aqui se mostrara la lista de vestidos que busquemos -->
-        <div class="lista-vestidos-contenedor">
-            <ul id="listaVestidos" class="lista-vestidos">
-                <!-- Los elementos de la lista se generarán dinámicamente con JavaScript -->
-                 <li class="vestido-item">
-                    <!-- Como recordatorio, esta ruta se va actualizar despues con una ruta dinamica 
-                    <img src="../../assets/img/logo.png" alt="Vestido 1" width="50">-->
-                    <span class="product-nombre">Vestido de Seda Azul</span>
-                    <span class="product-precio">$550.00</span>
-                </li>
-            </ul>
+            <!-- Lista de productos disponibles -->
+
+            <!-- Aqui se mostrara la lista de productos disponibles (productos) -->
+            <div class="listaProductos">
+                <ul id="ulInterno">
+                    <!-- Los elementos de la lista se generarán dinámicamente con JavaScript -->
+                    <li class="producto-item">
+                        <!-- Como recordatorio, esta ruta se va actualizar despues con una ruta dinamica 
+                        <img src="../../assets/img/logo.png" alt="Vestido 1" width="50">-->
+                        <span class="#"></span>
+                        <span class="#"></span>
+                    </li>
+                    
+                </ul>
+            </div>
         </div>
 
-        <!--Carrito de compras o pedido actual-->
-        <div class="carrito-contenedor">
-            <h3 style="color: rgb(133, 133, 133); font-family: Comfortaa;"> Pedido Actual </h3>
-            <ul id="carritoLista" class="carrito-lista">
-                <!-- Los elementos del carrito se generarán dinámicamente con JavaScript -->
-                <li class="carrito-item">
-                    <span class="carrito-nombre">Vestido de Seda Azul</span>
-                    <span class="carrito-cantidad">1</span>
-                    <span class="carrito-precio">$550.00</span>
-                </li>
-            </ul>
+        <!-- En esta caja se encuentra el lado derecho de la pantalla; contiene el carrito de compras y el total a pagar. -->
+        <div class="cajaDer">
+            <!--Carrito de compras o pedido actual-->
+            <div class="carrito-contenedor">
+
+                <!-- Titulo de el apartado -->
+                <h3> Pedido Actual </h3>
+
+                <!-- lista de compras -->
+                <ul class="ulInterno">
+                    <!-- Los elementos del carrito se generarán dinámicamente con JavaScript -->
+                    <li class="carrito-item">
+                        <span class="carrito-nombre"></span>
+                        <span class="carrito-cantidad"></span>
+                        <span class="carrito-precio"></span>
+                    </li>
+                </ul>
+                
+            </div> 
+
+            <!--Contenedor del sumario final del carrito de compras-->
             <div class="total-contenedor">
-                <span>Total:</span>
-                <span id="totalPrecio" class="total-precio">$550.00</span>
+                <span>Sumario de venta</span>
+                <span>Subtotal.</span>
+                <span>Total a pagar.</span>
+                <span id="totalPrecio" class="total-precio"></span>
+
+                <button id="finalizarCompraBtn" class="finalizar-compra-btn">Finalizar Compra</button>
             </div>
-            <button id="finalizarCompraBtn" class="finalizar-compra-btn">Finalizar Compra</button>
-        </div>                
+        </div>
+              
     </main> 
 
     <!-- JS´s-->

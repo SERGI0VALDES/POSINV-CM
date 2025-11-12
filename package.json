@@ -5,7 +5,8 @@
   "main": "./src/main/main.js",
   "scripts": {
     "start": "electron .",
-    "test": "echo \"No hay pruebas definidas\""
+    "test": "echo \"No hay pruebas definidas\"",
+    "dev": "electron . --no-sandbox"
   },
   "repository": {
     "type": "git",
@@ -27,6 +28,10 @@
   },
   "homepage": "https://github.com/SERGI0VALDES/POSINV-CM#readme",
   "devDependencies": {
-    "electron": "^38.1.2"
+    "electron": "^latest"
+  },
+  "dependencies": {
+    "docxtemplater": "^3.67.3",
+    "pizzip": "^3.2.0"
   }
 }

@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 day: 'numeric' 
             };
             
-            // Opciones para el formato de la hora (opcional, si también la quieres)
+            // Opciones para el formato de la hora
             const timeOptions = {
                 hour: '2-digit',
                 minute: '2-digit',

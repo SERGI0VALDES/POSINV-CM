@@ -1,85 +1,216 @@
-/* Archivo: punto_de_venta.css */
-
-/* Estilos para la barra superior */
-.topbar {
-
-    display: grid; /* 1. Habilitar el sistema Grid */
-    
-    grid-template-columns: auto 1fr auto; /* 2. Definimos las tres columnas (Izquierda | Centro | Derecha) */
-    /* 
-       - auto: La columna del Logo ocupa solo el espacio de su contenido.
-       - 1fr: La columna de Info-Usuario ocupa todo el espacio restante (Centro).
-       - auto: La columna del Menú ocupa solo el espacio de su contenido.
-    */
-    align-items: center; /* 3. Asegura que los ítems dentro de las celdas se alineen verticalmente al centro */
-    justify-items: center; /* 4. Centra horizontalmente los ítems dentro de sus celdas */   
-    /* Orden: Arriba | Derecha | Abajo | Izquierda */
-    padding: 10px 0px 10px 10px; /* Espaciado interno */
-    background-color: var(--card-bg);
-    border-bottom: 1px solid var(--border-color);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
- 
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%; /* Asegura que el body ocupe el 100% de la ventana */
+    overflow: hidden; /* Evita el scroll si no es necesario */
+    font-family: 'Comfortaa', cursive;
 }
+/* Estilos de el contenido de la caja izquierda, vamos desde el primer obj al ultimo*/
 
-/* Estilo del contenedor principal del buscador */
-.buscador {
- padding: 20px;
-    background-color: var(--card-bg);
-    border-bottom: 1px solid var(--border-color);
+.cajaIzq {
+   width: 100%;
+   height: 100%;
+   display: flex;
+   flex-direction: column;
 }
-
-/* Estilo del campo de entrada de texto */
-#buscadorInput {
-    width: 100%;
-    padding: 12px 20px;
-    border: 1px solid var(--border-color);
-    border-radius: 5px;
-    font-size: 1rem;
-    transition: border-color 0.3s;
+/* Estilos de el buscador */
+#buscador {
+    width: 80%; /* Ocupa el 80% del contenedor padre */
+    margin-bottom: 20px; /* Espacio inferior */
+    padding: 15px 20px; /* Espaciado interno */
+    border: 1px solid var(--border-color); /* Borde sutil */    
+    font-size: 1rem; /* Tamaño de fuente legible */
+    border-radius: 5px; /* Bordes redondeados */
+    transition: border-color 0.3s; /* Transición suave para el borde */
     box-sizing: border-box; /* Fundamental para que el padding no desborde */
-}
+    color: rgb(0, 0, 0); /* Color del texto por defecto */
+    font-family: 'Comfortaa', bold; /* Fuente cómoda y legible */}
 
-#buscadorInput:focus {
+#buscador:focus {
     border-color: var(--primary-color);
     outline: none;
-    box-shadow: 0 0 5px rgba(74, 144, 226, 0.5);
-}
+    box-shadow: 0 0 5px rgba(255, 0, 225, 0.5);}
+
+/* Estilos del botón buscar */
+#boton_buscar {
+    display: flex;
+    padding: 10px 35px; /* Espaciado interno */
+    margin-left: 0px;
+    background-color: var(--primary-color);
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s;
+    font-family: 'Comfortaa', bold;}
 
 /* Estilos de la lista de productos */
-.lista-vestidos-contenedor {
-    max-height: 400px; /* Limita la altura del contenedor para hacerlo scrollable */
-    overflow-y: auto;
+.listaProductos {
+    /* Altura fija con max-height para asegurar el scroll */
+    height: 45vh; 
+    max-height: 45vh; 
+            
+    /* Habilita el scroll vertical cuando el contenido excede 45vh */
+    overflow-y: auto; 
+    overflow-x: hidden; 
+            
+    margin-top: 15px; /* Espacio superior */
+
     background-color: var(--card-bg);
-    padding: 0 20px;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    border-radius: 5px; 
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); 
+    border: 1px solid var(--border-color);
+            
+    /* PASO CLAVE 1: Eliminamos todo el padding del contenedor de scroll */
+    padding: 0; 
 }
 
-.lista-vestidos {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.vestido-item {
-    display: flex;
-    justify-content: space-between;
+.producto-item {
+    display: flex; /* Usamos flexbox para alinear los elementos */
+    justify-content:space-between; /* PASO CLAVE 2: Distribuye el espacio entre los elementos */
     align-items: center;
-    padding: 15px;
-    border-bottom: 1px solid var(--border-color);
+    /* PASO CLAVE 3: Usamos 10px vertical (arriba/abajo) y 0px horizontal (izquierda/derecha) */
+    padding: 10px ;
+    margin-right: 30px;  
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05); 
+    border-top: 1px solid rgba(0, 0, 0, 0.05); 
     cursor: pointer;
-    transition: background-color 0.2s;
+    transition: background-color 0.2s; 
+    color: var(--text-color);
 }
 
-.vestido-item:hover {
+.producto-item:hover {
     background-color: #f0f0f0;
 }
 
-.product-nombre {
-    font-weight: bold;
+.ulInterno {
+    list-style: none; /* Elimina los puntos de la lista */
+    margin: 0 !important; /* Elimina el margen por defecto */
+    padding: 0 !important; /* Elimina el padding por defecto */
 }
 
-.product-precio {
-    color: var(--primary-color);
-    font-weight: 600;
+/* ------------------------------------------- */
+/* ESTILOS PARA LA BARRA DE SCROLL (Opcional, mejora visual) */
+/* ------------------------------------------- */
+.listaProductos::-webkit-scrollbar {
+    width: 8px;
+}
+
+.listaProductos::-webkit-scrollbar-thumb {
+    background-color: #ccc;
+    border-radius: 4px;
+}
+
+.listaProductos::-webkit-scrollbar-track {
+    background-color: #f1f1f1;
+}
+
+.main-content p{
+    color: rgb(84, 84, 84);
+    font-family: Comfortaa;
+}
+
+.main-content{
+    width: 100%; /* Ocupa todo el ancho disponible */
+    /* CORRECCIÓN CLAVE: El topbar mide 150px (130px img + 20px padding) */
+    height: calc(100vh - 150px); 
+    
+    display: grid; /* Usa grid para la disposición */
+    grid-template-columns: 50% 1fr; /* Dos columnas de igual tamaño */
+    gap: 20px; /* Espacio entre las columnas */
+    padding: 20px; /* Espacio interno */
+    box-sizing: border-box; /* Incluye el padding en el tamaño total */
+}
+
+/* Estilos de el contenido de la caja derecha, vamos desde el primer obj al ultimo*/
+.cajaDer{
+   width: 95%;
+   height: 85%;
+   display: flex;
+   flex-direction: column;
+}
+
+/*Estilos del contenedor que contiene los objetos del agregados al carrito */
+.carrito-contenedor{
+    width: auto; /* Ocupa todo el ancho disponible en su columna */
+    height:43vh; 
+    max-height: 43vh; /* Es una buena práctica usar max-height también */
+    background-color: var(--card-bg);
+    border-radius: 5px; 
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); 
+    border: 1px solid var(--border-color);
+    overflow-y: auto;
+    padding: 10px;
+}
+
+.carrito-item {
+    display: flex; /* Usamos flexbox para alinear los elementos */
+    justify-content: space-between; /* PASO CLAVE 2: Distribuye el espacio entre los elementos */
+    align-items: center;
+    /* PASO CLAVE 3: Usamos 10px vertical (arriba/abajo) y 0px horizontal (izquierda/derecha) */
+    padding: 10px 0;  
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05); 
+    cursor: pointer;
+    transition: background-color 0.2s; 
+    color: var(--text-color);
+}
+.carrito-item:hover {
+    background-color: #f0f0f0;
+}
+
+.total-contenedor {
+    /* 1. LAYOUT: Usamos Flexbox para control interno */
+    display: flex;
+    flex-direction:column; /* Apila los elementos (Total y Botón) verticalmente */
+    align-items:flex-start; /* Centra horizontalmente el contenido */
+    
+    /* 2. APARIENCIA: Se destaca del fondo */
+    background-color: var(--card-bg, #ffffff); /* Fondo blanco o de tarjeta */
+    border: 1px solid var(--border-color, #ccc);
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    
+    /* 3. ESPACIADO */
+    padding: 20px;
+    margin-top: 10px; /* Espacio superior para separarlo de otros elementos */
+    width: auto; /* Ocupa todo el ancho disponible en su columna */
+    height: 1fr; /* Altura completa del contenedor padre */
+}
+
+/* --- ESTILOS DEL TOTAL (TEXTOS) --- */
+.total-contenedor span {
+    font-size: 1.2rem;
+    color: var(--text-color, #333);
+    margin-bottom: 10px; /* Espacio debajo del texto "Total" */
+}
+
+/* 4. TOTAL FINAL: Se destaca el valor */
+.total-precio {
+    font-size: 2rem; /* Tamaño grande para el monto */
+    font-weight: bold;
+    color: var(--primary-color, #ff00e1); /* Usa el color de marca */
+    margin-bottom: 30px; /* Más espacio para separar el total del botón */
+}
+
+/* --- ESTILOS DEL BOTÓN --- */
+.finalizar-compra-btn {
+    width: 90%; /* Ancho completo o casi completo del contenedor */
+    padding: 15px 20px;
+    
+    background-color:#7bff5d; /* Color principal de la marca */
+    color: white; /* Texto blanco para contraste */
+    
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    transition: background-color 0.3s ease;
+}
+
+.finalizar-compra-btn:hover {
+    /* Oscurecer o cambiar color al pasar el ratón */
+    background-color: #d100b8; 
 }
