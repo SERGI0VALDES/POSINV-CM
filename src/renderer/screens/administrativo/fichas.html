@@ -3,7 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Quitar advertencia de seguridad -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net;">
     <title>Creaciones Madriz | Fichas</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <link rel="stylesheet" href="../../css/globals.css">
     <link rel="stylesheet" href="../../css/form.css">
 </head>
@@ -57,6 +62,7 @@
                 <div class="form-group">
                     <label for="sexo">Sexo:</label>
                     <select id="sexo" name="sexo">
+                        <option value="" disabled selected>Seleccione</option>
                         <option value="femenino">Femenino</option>
                         <option value="masculino">Masculino</option>
                         <option value="otro">Otro</option>
@@ -147,9 +153,16 @@
             </fieldset>
 
             <div class="form-actions">
+                <!-- Guardar la ficha con la info del formulario atual -->
                 <button type="submit" class="boton-rapidas boton-guardar">Guardar ficha</button>
-                <button type="submit" class="boton-rapidas boton-imprimir">Imprimir ficha</button>
-                <button type="button" id="openFolderFichas" class="boton-rapidas boton-folder">Abrir carpeta de fichas</button>
+                <!-- Imprimir directamente el formulario -->
+                <button type="button" id="imprimirFormulario" class="boton-rapidas boton-imprimir">
+                Imprimir 
+                </button>
+                <!-- Abrir la carpeta donde se guardan las fichas -->
+                <button type="button" id="openFolderFichas" class="boton-rapidas boton-folder">
+                    Abrir carpeta de fichas
+                </button>
             </div>
         </form>
     </main>
@@ -157,7 +170,6 @@
     <!-- JavaScript -->
     <script src="../../js/dateTime.js"></script>
     <script type="module" src="../../js/cargar_rutas.js"></script>
-    <script src="../../js/abrir_folder.js"></script>
     <script src="../../js/generadorFicha.js"></script>
 </body>
 </html>

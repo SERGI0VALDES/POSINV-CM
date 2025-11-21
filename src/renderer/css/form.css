@@ -176,10 +176,10 @@ legend {
     color: #fff;
 }
 
-/* Botón Imprimir: Botón blanco con borde oscuro (el más elegante) */
+
 .boton-imprimir {
    background-color: var(--primary-color);
-    color: #fff;
+   color: #fff;
 }
 
 .boton-folder {
