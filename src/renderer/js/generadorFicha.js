@@ -61,11 +61,11 @@ async function generarYGuardarFicha(formData) {
 
 // ✅ FUNCIÓN PARA IMPRIMIR FORMULARIO ACTUAL
 function imprimirFormularioActual() {
-    console.log('🖨️ [RENDERER] Preparando impresión del formulario...');
+    console.log('[RENDERER] Preparando impresión del formulario...');
     
     const form = document.getElementById('formularioFicha');
     if (!form) {
-        alert('❌ No se encontró el formulario para imprimir');
+        alert('No se encontró el formulario para imprimir');
         return;
     }
 

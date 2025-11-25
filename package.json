@@ -19,7 +19,8 @@
     "inventario",
     "sqlite",
     "creaciones-madriz",
-    "negocio-local"
+    "negocio-local",
+    "sqlite"
   ],
   "author": "Sergio J. Valdes P.",
   "license": "MIT",
@@ -32,7 +33,6 @@
   },
   "dependencies": {
     "docx": "^7.8.0",
-    "docxtemplater": "^3.67.3",
-    "pizzip": "^3.2.0"
+    "sqlite3": "^5.1.7"
   }
 }

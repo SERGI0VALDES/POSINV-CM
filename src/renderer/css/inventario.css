@@ -6,7 +6,14 @@
     --bg-color: #F8F9FA;
     --card-bg: #FFF;
     --border-color: #E0E0E0;
+    --primary-dark: #E0F7FF;
+    --loading: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    --danger-color: #F56565;
+    --shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+    --warning-color: #ED8936;
 }
+
 /* Animación de entrada suave */
 @keyframes screenFadeIn {
     from { opacity: 0; transform: translateY(10px); }
@@ -33,15 +40,14 @@ body {
 .topbar {
 
     display: grid; /* 1. Habilitar el sistema Grid */
-    
+    text-align: center;
     grid-template-columns: auto 1fr auto; /* 2. Definimos las tres columnas (Izquierda | Centro | Derecha) */
-    /* 
-       - auto: La columna del Logo ocupa solo el espacio de su contenido.
-       - 1fr: La columna de Info-Usuario ocupa todo el espacio restante (Centro).
-       - auto: La columna del Menú ocupa solo el espacio de su contenido.
+    /* - auto: La columna del Logo ocupa solo el espacio de su contenido.
+        - 1fr: La columna de Info-Usuario ocupa todo el espacio restante (Centro).
+        - auto: La columna del Menú ocupa solo el espacio de su contenido.
     */
     align-items: center; /* 3. Asegura que los ítems dentro de las celdas se alineen verticalmente al centro */
-    justify-items: center; /* 4. Centra horizontalmente los ítems dentro de sus celdas */   
+    justify-items: center; /* 4. Centra horizontalmente los ítems dentro de sus celdas */  
     padding: 10px 30px; /* Espaciado interno */
     background-color: var(--card-bg);
     border-bottom: 1px solid var(--border-color);
@@ -140,10 +146,9 @@ body {
 /* Contenedor Principal: Define las dos columnas */
 .inventario-layout {
     display: grid;
-    /* 
-        Define las dos columnas: 
-       - 300px: La Caja 1 tiene un ancho fijo de 300px.
-       - 1fr: La Caja 2 ocupa todo el espacio restante (flexible).
+    /* Define las dos columnas: 
+        - 300px: La Caja 1 tiene un ancho fijo de 300px.
+        - 1fr: La Caja 2 ocupa todo el espacio restante (flexible).
     */
     grid-template-columns: 300px 1fr; /* <--- Definición de anchos */
     gap: 60px; /* Espacio horizontal entre la Caja 1 y la Caja 2 */
@@ -158,9 +163,12 @@ body {
 /* Caja 1. ⬅️ Contenedor Izquierdo (Barra de Botones) */
 .contenedor-botones {
     /* Ocupa el 100% de los 300px asignados */
-    width: 100%; 
-    padding: 15px;
-    border: 1px solid #ccc;
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9ff 100%);
+    border-radius: 20px;
+    padding: 25px 20px;
+    box-shadow: var(--shadow-lg);
+    border: 1px solid rgba(139, 95, 191, 0.1);
+    backdrop-filter: blur(10px);
     /* Puedes fijar la altura si es necesario: height: 400px; */
     /* Estilos adicionales para el contenedor */
 }
@@ -175,34 +183,247 @@ body {
 .botones {
     /* Aplica el degradado nacarado */
     background: linear-gradient(135deg, #ffffff 0%, #E0F7FF 50%, #ffe7ff 100%);
-    color: #4A4A4A;
+    padding: 15px 20px; 
+    border: none;
+    border-radius: 5px;
+    color: rgb(0, 0, 0);
     font-weight: 600;
-    padding: 12px 30px;
-    border: 1px solid #E0E0E0;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
-    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-
-    /* Orden: Arriba | Derecha | Abajo | Izquierda */
-    padding: 10px 0px 10px 10px; /* Espaciado interno */
-    /* Comportamiento */
-    cursor: pointer; /* Muestra el puntero al pasar el ratón */
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: left;
+    font-size: 1rem;
+    box-shadow: var(--shadow);
+    position: relative;
+    overflow: hidden;
+    font-family: 'Comfortaa', Arial, sans-serif;
 }
-
+.botones::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s;
+}
+.botones:hover::before {
+    left: 100%;
+}
 .botones:hover {
-    /* El hover es el toque excéntrico: levita y brilla */
-    box-shadow: 0 15px 30px rgba(100, 100, 255, 0.2); /* Sombra con toque azul claro */
     transform: translateY(-3px);
+    box-shadow: var(--shadow-lg);
+    background: linear-gradient(135deg, #ffe7ff, var(--primary-dark));
 }
-
 /*============================================================*/
 
 /* Caja 2. ➡️ Contenedor Derecho (Inventario Actual) */
 .inventarios{
-    /* Ocupa el 100% del espacio '1fr' restante */
-    width: 100%; 
-    padding: 15px;
-    border: 1px solid #ccc;
-    height: 330px; /* La altura se ajusta al contenido */
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9ff 100%);
+    padding: 20px;
+    box-shadow: var(--shadow-lg);
+    border: 1px solid rgba(139, 95, 191, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 20px; /* Añadido para consistencia con contenedor-botones */
+
+    /* 💡 CAMBIOS CRÍTICOS: Fijamos la altura a 80vh y eliminamos 'height: auto' */
+    height: 60vh; 
+
+    max-height: none; /* Desactivamos el max-height ya que 'height' lo reemplaza */
+    
+    overflow: hidden; 
+    display: flex; 
+    flex-direction: column; 
+
+    box-sizing: border-box;
 }
 
+/* Estados vacío, loading y error */
+.inventario-vacio, .loading, .error {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: var(--text-light);
+    font-family: 'Comfortaa', Arial, sans-serif;
+}
 
+.inventario-vacio p, .loading p, .error p {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+}
+
+.loading {
+    color: var(--loading);
+}
+
+.error {
+    color: var(--danger-color);
+}
+
+/* Header de inventario */
+.inventario-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.inventario-header h3 {
+    color: var(--text-color);
+    font-size: 1.6rem;
+    font-weight: 700;
+    font-family: 'Comfortaa', Arial, sans-serif;
+}
+
+.total-items {
+    background: var(--accent-color);
+    color: var(--text-color);
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    font-family: 'Comfortaa', Arial, sans-serif;
+}
+
+/* Tabla mejorada */
+.table-container {
+    overflow: auto;
+    box-shadow: var(--shadow);
+    background: white;
+    flex: 1; 
+    
+    /* 💡 CAMBIOS CRÍTICOS: Eliminamos el cálculo de max-height. 
+       'flex: 1' ahora hace el cálculo automáticamente, tomando 
+       la altura restante del padre fijo (80vh) menos el header. */
+    max-height: none; 
+}
+
+.inventario-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+}
+
+.inventario-table thead {
+    background:#eadfe8;
+}
+.inventario-table th {
+    padding: 0.3rem 0.3rem;
+    text-align: center;
+}
+
+.inventario-table td {
+    padding: 1rem 1rem;
+    border-bottom: 1px solid var(--border-color);
+    font-family: 'Comfortaa', Arial, sans-serif;
+    text-align: center;
+}
+
+.inventario-table tbody tr:hover {
+    background: rgba(139, 95, 191, 0.05);
+    transform: scale(1.01);
+    transition: all 0.2s ease;
+}
+
+.inventario-table tbody tr:last-child td {
+    border-bottom: none;
+}
+/* Estados mejorados*/
+.estado {
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-family: 'Comfortaa', Arial, sans-serif;
+}
+
+.estado.disponible, .estado.activo {
+    background: rgba(0, 255, 106, 0.634);
+    color: var(--success-color);
+    border: 1px solid var(--success-color);
+}
+
+.estado.agotado, .estado.inactivo {
+    background: rgba(245, 101, 101, 0.1);
+    color: var(--danger-color);
+    border: 1px solid var(--danger-color);
+}
+
+.estado.bajo-stock {
+    background: rgba(237, 137, 54, 0.1);
+    color: var(--warning-color);
+    border: 1px solid var(--warning-color);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .inventario-layout {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+    
+    .contenedor-botones nav {
+        flex-direction: row;
+        overflow-x: auto;
+        padding-bottom: 10px;
+    }
+    
+    .botones {
+        white-space: nowrap;
+        min-width: 160px;
+    }
+    
+    /* En modo móvil/tablet, el contenedor debe ser flexible de nuevo */
+    .inventarios {
+        height: auto; 
+        max-height: 80vh; 
+    }
+}
+@media (max-width: 768px) {
+    .inventario-layout {
+        padding: 15px;
+    }
+    
+    .inventario-header {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+    
+    .inventario-table {
+        font-size: 0.9rem;
+    }
+    
+    .inventario-table th,
+    .inventario-table td {
+        padding: 1rem 1.2rem;
+    }
+    
+    .stats-container {
+        justify-content: center;
+    }
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.inventarios > * {
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* Scroll personalizado */
+.table-container::-webkit-scrollbar{
+    height: 4px;
+}

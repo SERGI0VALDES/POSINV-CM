@@ -23,3 +23,10 @@ git push origin main
 Cada pantalla ncesita estilos unicos, de hecho, algunas no necesitan el scroll. Se opto por diseñar un .css global donde manejaremos los estilos que si o si se repiten en toda la aplicación por ej. la barra de arriba (topbar) que contiene el logo y botones, :root que contiene información de colores fijos, la animación de entrada cuando cambias a diferentes screens, fuentes (fonts) e información del usuario(info-user, h2).
 
 Uso de varias apis de electron para meanejo de archivos externos y escritura de archivos .txt, cambios en => generadorFichas.js, abrir_folder.js, main.js y preload.js
+
+# Estructura Detallada para el server
+server/src/
+├── controllers/    <-- Funciones que manejan la lógica de negocio y preparan la respuesta.
+├── models/         <-- Definiciones de tus tablas/documentos de base de datos (Ej: Cliente.js, Producto.js).
+├── routes/         <-- Archivos para definir las URLs de tu API (Ej: /api/clientes, /api/productos).
+└── index.js        <-- El punto de entrada de tu servidor (donde inicializas Express).
