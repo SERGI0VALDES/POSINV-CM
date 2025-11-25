@@ -180,6 +180,35 @@ body {
     gap: 15px;
 }
 
+/* Nuevo estilo para el párrafo introductorio y el botón */
+.inventory-intro {
+    display: flex;
+    justify-content: space-between; /* Distribuye el texto a la izquierda y el botón a la derecha */
+    align-items: center; /* Centra verticalmente el texto y el botón */
+    margin-bottom: 20px; /* Espacio debajo del encabezado de introducción */
+    flex-wrap: wrap; /* Permite que el contenido se envuelva en pantallas pequeñas */
+}
+
+/* Estilo para el botón Añadir a inventario */
+.añadir {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: background-color 0.3s, transform 0.2s;
+    box-shadow: 0 4px 6px rgba(74, 144, 226, 0.3); /* Sombra suave basada en primary-color */
+    font-family: 'Comfortaa', Arial, sans-serif;
+}
+
+.añadir:hover {
+    background-color: #387cbe; /* Un poco más oscuro */
+    transform: translateY(-2px);
+}
+
 .botones {
     /* Aplica el degradado nacarado */
     background: linear-gradient(135deg, #ffffff 0%, #E0F7FF 50%, #ffe7ff 100%);
@@ -227,7 +256,7 @@ body {
     border-radius: 20px; /* Añadido para consistencia con contenedor-botones */
 
     /* 💡 CAMBIOS CRÍTICOS: Fijamos la altura a 80vh y eliminamos 'height: auto' */
-    height: 60vh; 
+    height: 55vh; 
 
     max-height: none; /* Desactivamos el max-height ya que 'height' lo reemplaza */
     
@@ -426,4 +455,189 @@ body {
 /* Scroll personalizado */
 .table-container::-webkit-scrollbar{
     height: 4px;
+}
+
+/* ESTILOS PARA MODALES */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    animation: fadeIn 0.3s ease;
+    
+    /* MODIFICACIONES PARA CENTRADO RESPONSIVE */
+    align-items: center; /* Centrado vertical */
+    justify-content: center; /* Centrado horizontal */
+}
+
+.modal-content {
+    background: white;
+    margin: 20px auto; 
+    border-radius: 10px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    animation: slideIn 0.3s ease;
+    overflow: hidden;
+    max-height: 90vh; /* Para pantallas pequeñas */
+    overflow-y: auto;
+    margin-top: 30vh;
+}
+
+.modal-content.large {
+    max-width: 700px;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 2rem;
+    background: var(--primary-color);
+    color: white;
+}
+
+.modal-header h3 {
+    margin: 0;
+    font-family: 'Ananda', Arial, sans-serif;
+    font-size: 1.5rem;
+}
+
+.modal-body {
+    width: auto; 
+    height: 10vh;
+    padding: 1rem 2rem; /* Añadir padding para que el contenido no toque los bordes */
+    overflow-x: auto; /* Permitir scroll horizontal si hay demasiados botones */
+    overflow-y: auto;
+}
+
+/* NUEVA REGLA: Contenedor de los botones (<nav>) para alinear horizontalmente */
+.modal-body nav {
+    display: flex; /* Habilitar Flexbox */
+    gap: 10px; /* Espacio entre botones */
+    align-items: center; /* Alineación vertical (si la altura de nav cambia) */
+    justify-content: center; /* Centrar los botones horizontalmente */
+    flex-wrap: nowrap; /* Evitar que los botones salten de línea (forzando el scroll horizontal si es necesario) */
+    padding: 0.5rem 0; /* Padding vertical ligero */
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    padding: 1.5rem 2rem;
+    background: var(--bg-light);
+    border-top: 1px solid var(--border-color);
+}
+
+/* Botones */
+.modal-footer button{
+    padding: 0.75rem 1.5rem;
+    border: none;
+    cursor: pointer;
+    font-family: 'Comfortaa', Arial, sans-serif;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.modal-footer button:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+/* Animaciones */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-50px) scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Estilos para el formulario dentro del modal */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    font-family: 'Comfortaa', Arial, sans-serif;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-family: 'Comfortaa', Arial, sans-serif;
+    transition: border-color 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(139, 95, 191, 0.1);
+}
+
+/* Mejoras para la tabla - hacer filas clickeables */
+.inventario-table tbody tr {
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.inventario-table tbody tr:hover {
+    background: rgba(139, 95, 191, 0.1);
+    transform: translateX(5px);
+}
+
+/* Responsive para modales */
+@media (max-width: 768px) {
+    .modal-content {
+        margin: 10% auto;
+        width: 95%;
+    }
+    
+    .modal-footer {
+        flex-direction: column;
+    }
+    
+    .btn {
+        width: 100%;
+    }
+}
+
+.detalles-producto {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.detalle-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background: var(--bg-light);
+    border-radius: 8px;
+    border-left: 4px solid var(--primary-color);
+}
+
+.detalle-item strong {
+    color: var(--text-dark);
+    font-family: 'Comfortaa', Arial, sans-serif;
 }

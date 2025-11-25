@@ -8,7 +8,34 @@
     <link rel="stylesheet" href="../../css/inventario.css">
 </head>
 
+
+
 <body>
+
+    <!-- Modal para el botón: añadir inventario-->
+ <div id="modal-añadir" class="modal">
+    <div class="modal-content">
+
+        <div class="modal-header">
+            <h3 class="modal-title">Selecciona una categoría</h3>
+        </div>
+
+        <div class="modal-body" id="modal-body">
+            <nav>
+                <button class="botones" id="agregar-vestido">Vestidos</button>
+                <button class="botones" id="agregr-tela">Telas</button>
+                <button class="botones" id="agregar-insumo">Insumos</button>
+                <button class="botones" id="agregar-producto">Productos</button>
+            </nav>
+        </div>
+
+        <div class="modal-footer">
+            <button id="btn-guardar">Agregar</button>
+            <button id="btn-cerrar-modal">Cerrar</button>
+        </div>
+    </div>
+</div>
+
     <header class="topbar">
         
         <div class="logo">
@@ -42,17 +69,21 @@
     </header>
 
     <main class="main-content">
-        <p style="font-family: Comfortaa;">Bienvenido al módulo de inventarios. Aquí podrás gestionar y revisar los inventarios de productos disponibles.</p>
         
+        <div class="inventory-intro">
+        <p style="font-family: Comfortaa;">Bienvenido al módulo de inventarios. Aquí podrás gestionar y revisar los inventarios de productos disponibles.</p>
+        <button class="añadir" id="btn-añadir-inv">Añadir a inventario</button>
+        </div>
+
         <!-- Aqui dividiremos la parte de los botones y el inventario en si -->
         
         <div class="inventario-layout">
             <div class="contenedor-botones">
                 <nav>
-                    <button class="botones" id="btn-vestidos">VESTIDOS</button>
-                    <button class="botones" id="btn-telas">TELAS</button>
-                    <button class="botones" id="btn-insumos">INSUMOS</button>
-                    <button class="botones" id="btn-productos">PRODUCTOS</button>
+                    <button class="botones" id="btn-vestidos">Vestidos</button>
+                    <button class="botones" id="btn-telas">Telas</button>
+                    <button class="botones" id="btn-insumos">Insumos</button>
+                    <button class="botones" id="btn-productos">Productos</button>
                 </nav>
             </div>
 
@@ -71,4 +102,6 @@
     <script src="../../js/inventario.js"></script>
     
 </body>
+
+
 </html>
