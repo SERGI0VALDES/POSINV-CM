@@ -1,0 +1,401 @@
+/* ------------------------------------------- */
+/* 1. Estilos Base del Modal de Categorías (Selección) */
+/* Clase única: #modal-inv-categorias */
+/* ------------------------------------------- */
+#modal-inv-categorias {
+    /* Ocultar por defecto */
+    display: none; 
+    
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Mostrar el modal cuando se le agrega la clase 'active' */
+#modal-inv-categorias.active {
+    display: flex;
+}
+
+/* ------------------------------------------- */
+/* 2. Estilos del Contenido del Modal (Caja Blanca) */
+/* Clase única: .modal-inv-content */
+/* ------------------------------------------- */
+.modal-inv-content {
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    width: 90%;
+    max-width: 500px; 
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transform: scale(0.9);
+    transition: transform 0.3s ease-out;
+}
+
+#modal-inv-categorias.active .modal-inv-content {
+    transform: scale(1);
+}
+
+/* ------------------------------------------- */
+/* 3. Encabezado y Cuerpo */
+/* ------------------------------------------- */
+.modal-inv-header {
+    padding: 15px 20px;
+    border-bottom: 1px solid #eeeeee;
+    text-align: center;
+    background-color: #f7f7f7;
+}
+
+.modal-inv-title {
+    margin: 0;
+    font-size: 1.5em;
+    color: #333333;
+}
+
+.modal-inv-body {
+    padding: 20px;
+    text-align: center;
+}
+
+/* ------------------------------------------- */
+/* 4. Estilos de Navegación (Botones de Categoría) */
+/* Clase única para todos los botones: .btn-inv-categoria */
+/* ------------------------------------------- */
+.modal-inv-body nav {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.btn-inv-categoria {
+    padding: 15px 20px;
+    border: 2px solid #007bff;
+    background-color: #ffffff;
+    color: #007bff;
+    border-radius: 8px;
+    font-size: 1.1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+    width: 100%;
+    text-align: center;
+}
+
+.btn-inv-categoria:hover {
+    background-color: #007bff;
+    color: #ffffff;
+}
+
+/* ------------------------------------------- */
+/* 5. Pie de Página (Botones de Acción) */
+/* ------------------------------------------- */
+.modal-inv-footer {
+    padding: 10px 20px;
+    border-top: 1px solid #eeeeee;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+/* Estilo base para todos los botones en el footer del modal de inventario */
+.modal-inv-footer button {
+    padding: 8px 15px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.2s;
+}
+
+/* ID específico para el botón "Agregar" (asumiendo que tiene lógica) */
+#btn-inv-guardar { 
+    background-color: #28a745;
+    color: white;
+}
+
+#btn-inv-guardar:hover {
+    background-color: #218838;
+}
+
+/* ID específico para el botón "Cerrar" */
+#btn-inv-cerrar-modal, #btn-inv-atras {
+    background-color: #6c757d;
+    color: white;
+}
+
+#btn-inv-cerrar-modal:hover, #btn-inv-atras:hover {
+    background-color: #5a6268;
+}
+
+/*----------------------------------------------*/
+
+/* ------------------------------------------- */
+/* 1. Contenedor del Modal de Formulario (FormularioManager) */
+/* ------------------------------------------- */
+.modal-inventario {
+    display: none; /* Oculto por defecto */
+    
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    
+    /* Centrar el contenido */
+    display: flex; 
+    justify-content: center;
+    align-items: center;
+    
+    /* Asegura que esté por encima de todo */
+    z-index: 1010; 
+}
+
+/* El JavaScript añade la clase 'active' */
+.modal-inventario.active {
+    display: flex;
+}
+
+/* Overlay (el fondo oscuro que se puede clicar para cerrar) */
+.modal-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    cursor: pointer;
+}
+
+/* ------------------------------------------- */
+/* 2. Contenido del Formulario (La Caja Blanca) */
+/* ------------------------------------------- */
+.modal-inventario .modal-content {
+    /* Mantenemos el nombre de la clase para que el JS no falle */
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.4);
+    
+    /* Tamaño y desplazamiento */
+    width: 90%;
+    max-width: 800px; /* Un poco más ancho para los formularios */
+    z-index: 1020;
+    position: relative;
+    overflow: hidden;
+    
+    /* Animación simple */
+    transform: translateY(-50px);
+    opacity: 0;
+    transition: all 0.3s ease-out;
+}
+
+.modal-inventario.active .modal-content {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+/* ------------------------------------------- */
+/* 3. Encabezado y Botón de Cierre (X) */
+/* ------------------------------------------- */
+.modal-inventario .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    border-bottom: 1px solid #e0e0e0;
+    background-color: #f8f8f8;
+}
+
+.modal-inventario .modal-header h2 {
+    margin: 0;
+    font-size: 1.6em;
+    color: #333;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    color: #777;
+    font-size: 1.5em;
+    cursor: pointer;
+    padding: 5px;
+    transition: color 0.2s;
+}
+
+.modal-close:hover {
+    color: #d9534f; /* Rojo de cierre */
+}
+
+/* ------------------------------------------- */
+/* 4. Cuerpo del Formulario */
+/* ------------------------------------------- */
+.modal-inventario .modal-body {
+    padding: 25px;
+    max-height: 70vh; /* Altura máxima para permitir scroll */
+    overflow-y: auto;
+}
+
+/* Estilos de los Formularios Específicos */
+.form-inventario {
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* Espacio entre grupos de formulario */
+}
+
+.form-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.form-header h3 {
+    color: #007bff;
+    margin-bottom: 5px;
+}
+
+/* ------------------------------------------- */
+/* 5. Grupos de Input y Diseño de Filas */
+/* ------------------------------------------- */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+}
+
+.form-group label {
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: #555;
+    font-size: 0.95em;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1em;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.form-group input[type="number"] {
+    /* Asegurar que los números no tengan flechas en algunos navegadores */
+    -moz-appearance: textfield;
+}
+
+.form-row {
+    display: flex;
+    gap: 20px;
+}
+
+.form-row .form-group {
+    flex: 1; /* Para que ocupen el mismo ancho */
+}
+
+.form-help {
+    font-size: 0.8em;
+    color: #888;
+    margin-top: 3px;
+}
+
+/* Iconos de input */
+.input-with-icon {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.input-with-icon input {
+    border: none;
+    padding: 10px 12px;
+    flex-grow: 1;
+}
+
+.currency, .unit {
+    padding: 10px;
+    background-color: #f0f0f0;
+    border-right: 1px solid #ccc;
+    color: #555;
+    font-weight: bold;
+}
+
+/* ------------------------------------------- */
+/* 6. Botones de Acción del Formulario (Guardar/Cancelar) */
+/* ------------------------------------------- */
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #eee;
+}
+
+.form-actions button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s, opacity 0.2s;
+}
+
+.btn-cancelar {
+    background-color: #f44336; /* Rojo */
+    color: white;
+}
+
+.btn-cancelar:hover {
+    background-color: #d32f2f;
+}
+
+.btn-guardar {
+    background-color: #007bff; /* Azul */
+    color: white;
+}
+
+.btn-guardar:hover {
+    background-color: #0056b3;
+}
+
+/* Estilos para el Loading */
+.btn-guardar[disabled] {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+/* ------------------------------------------- */
+/* 7. Mensajes de Error y Éxito */
+/* ------------------------------------------- */
+.errores-formulario {
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 6px;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    color: #721c24;
+}
+
+.error-message {
+    font-size: 0.9em;
+    margin: 5px 0;
+}
+
+.exito-formulario {
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 6px;
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+    color: #155724;
+    text-align: center;
+}

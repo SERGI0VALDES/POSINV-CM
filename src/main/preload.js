@@ -1,94 +1,102 @@
-// preload.js - CON DEBUG DETALLADO
-const { contextBridge, ipcRenderer } = require('electron');
+// ...archivo /posinvcm/src/main/preload
 
-// console.log('🔧 Script de [PRELOAD] cargado');
+const { 
+  contextBridge, 
+  ipcRenderer 
+} = require('electron');
+
+// Url del servidor de Nest
+const BASE_URL = 'http://localhost:3000'; 
+
+// Funcion auxiliar para contrlar las peticiones hacia la api...
+
+const apiRequest = async (endpoint, options = {}) => {
+  try {
+    const response = await fetch(`${BASE_URL}${endpoint}`, {
+      headers: { 'Content-Type': 'application/json' },
+      ...options,
+    });
+    if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Error en la petición');
+    }
+    return await response.json();
+  } catch (error) {
+    console.error(`[API ERROR] en ${endpoint}:`, error);
+    throw error;
+  }
+};
 
 // Exponer APIs seguras al renderer
 contextBridge.exposeInMainWorld('electronAPI', {
+  
+  // generador de fichas (compacto)
+  generarFicha: (datosFicha) => ipcRenderer.invoke('generar-ficha', datosFicha),
+  // abrir carpeta (compacto)
+  abrirCarpeta: (ruta) => ipcRenderer.invoke('abrir-carpeta', ruta),
+  ping: () => ipcRenderer.invoke('ping'),
 
-    generarFicha: (datosFicha) => {
-
-    console.log('📤 [PRELOAD] generarFicha llamado con datos:', datosFicha.nombre);
-    console.log('🔄 [PRELOAD] Invocando IPC generar-ficha...');
-    
+  // Código antiguo, que hacian lo mismo de arriba "más extensos" funcionales
+  /*
+  generarFicha: (datosFicha) => {
     try {
       const promise = ipcRenderer.invoke('generar-ficha', datosFicha);
-      console.log('PC invocado, promise creada');
       return promise;
     } catch (error) {
-      console.error('❌ [PRELOAD] Error en ipcRenderer.invoke:', error);
       throw error;
     }
   },
-  
   abrirCarpeta: (ruta) => {
     console.log('abrirCarpeta llamado:', ruta);
     return ipcRenderer.invoke('abrir-carpeta', ruta);
   },
-  
-  ping: () => {
-    console.log('📤 [PRELOAD] ping llamado');
+  ping: () => { console.log('📤 [PRELOAD] ping llamado'); 
     return ipcRenderer.invoke('ping');
+  },*/
+
+
+  // CONTROLADORES  =>
+  usuarios: {
+    getAll: () => apiRequest('/usuairos'),
+    login: (nombreUsuario, password) => apiRequest('/usuarios/login', {
+      method: 'POST',
+      body: JSON.stringify({ nombreUsuario, password}),
+    }),
   },
-
-  // Handlers (DB)
-
-  // USUARIOS
-    usuarios: {
-        getAll: () => ipcRenderer.invoke('usuarios:getAll'),
-        login: (user, pass) => ipcRenderer.invoke('usuarios:login', user, pass)
-    },
-    
-    // PRODUCTOS
-    productos: {
-        getAll: () => ipcRenderer.invoke('productos:getAll'),
-        create: (data) => ipcRenderer.invoke('productos:create', data),
-        bajoStock: () => ipcRenderer.invoke('productos:bajoStock')
-    },
-    
-  // INSUMOS
+  // Controlador maestro para el funcionamiento del inventario
+  productos: {
+    getAll: () => apiRequest('/productos-maestro'),
+    bajoStock: () => apiRequest('/productos-maestro/bajo-stock'),
+  },
   insumos: {
-    getAll: () => ipcRenderer.invoke('insumos:getAll'),
-    getById: (id) => ipcRenderer.invoke('insumos:getById', id),
-    create: (data) => ipcRenderer.invoke('insumos:create', data),
-    update: (id, data) => ipcRenderer.invoke('insumos:update', id, data),
-    delete: (id) => ipcRenderer.invoke('insumos:delete', id),
-    getByUnidad: (unidad) => ipcRenderer.invoke('insumos:getByUnidad', unidad),
-    getTotalMetros: () => ipcRenderer.invoke('insumos:getTotalMetros')
+    getAll: () => apiRequest('/insumos'),
+    getById: (id) => apiRequest(`/insumos/${id}`),
+    create: (data) => apiRequest('/insumo', {method: 'POST', body: JSON.stringify(data) }),
+    update: (id, data) => apiRequest(`/insumos/${id}`, { method: 'PATCH', body: JSON.stringify(data) }),
+    delete: (id) => apiRequest(`/insumos/${id}`, { method: 'DELETE' }),
   },
-    
-// TELAS
   telas: {
-    getAll: () => ipcRenderer.invoke('telas:getAll'),
-    getById: (id) => ipcRenderer.invoke('telas:getById', id),
-    create: (data) => ipcRenderer.invoke('telas:create', data),
-    update: (id, data) => ipcRenderer.invoke('telas:update', id, data),
-    delete: (id) => ipcRenderer.invoke('telas:delete', id),
-    getByComposicion: (comp) => ipcRenderer.invoke('telas:getByComposicion', comp),
-    getEstadisticas: () => ipcRenderer.invoke('telas:getEstadisticas'),
-    getBajaLongitud: (long) => ipcRenderer.invoke('telas:getBajaLongitud', long)
+    getAll: () => apiRequest('/telas'),
+    getById: (id) => apiRequest(`/telas/${id}`),
+    create: (data) => apiRequest('/telas', { method: 'POST', body: JSON.stringify(data) }),
+    update: (id, data) => apiRequest(`/telas/${id}`, { method: 'PATCH', body: JSON.stringify(data) }),
+    delete: (id) => apiRequest(`/telas/${id}`, { method: 'DELETE' }),
   },
-    
-// VESTIDOS
-  vestidos: {
-    getAll: () => ipcRenderer.invoke('vestidos:getAll'),
-    getById: (id) => ipcRenderer.invoke('vestidos:getById', id),
-    getBySku: (sku) => ipcRenderer.invoke('vestidos:getBySku', sku),
-    create: (data) => ipcRenderer.invoke('vestidos:create', data),
-    update: (id, data) => ipcRenderer.invoke('vestidos:update', id, data),
-    delete: (id) => ipcRenderer.invoke('vestidos:delete', id),
-    getByColor: (color) => ipcRenderer.invoke('vestidos:getByColor', color),
-    getDisponibles: () => ipcRenderer.invoke('vestidos:getDisponibles'),
-    getEstadisticas: () => ipcRenderer.invoke('vestidos:getEstadisticas'),
-    getColores: () => ipcRenderer.invoke('vestidos:getColores')
-  },
-
-// PRODUCTOS TERMINADOS
+  // Se unifico vestidos con los productos terminados, ambos usan el mismo controlador en NestJs
   prodTerminados: {
-    getAll: () => ipcRenderer.invoke('prodTerminados:getAll'),
-    create: (data) => ipcRenderer.invoke('prodTerminados:create', data),
-    getByTipo: (tipo) => ipcRenderer.invoke('prodTerminados:getByTipo', tipo)
+    getAll: () => apiRequest('/productos-terminados'),
+    getByTipo: (tipo) => apiRequest(`/productos-terminados/buscar?tipoProducto=${tipo}`),
+    create: (data) => apiRequest('/productos-terminados', { method: 'POST', body: JSON.stringify(data) }),
+    update: (id, data) => apiRequest(`/productos-terminados/${id}`, { method: 'PATCH', body: JSON.stringify(data) }),
+    delete: (id) => apiRequest(`/productos-terminados/${id}`, { method: 'DELETE' }),
+  },
+  // Nuevo controlador
+  pedidos: {
+    getAll: () => apiRequest('/pedidos'),
+    getById: (id) => apiRequest(`/pedidos/${id}`),
+    create: (data) => apiRequest('/pedidos', { method: 'POST', body: JSON.stringify(data) }),
   }
+
 });
 
 // console.log('✅ [PRELOAD] APIs expuestas correctamente');

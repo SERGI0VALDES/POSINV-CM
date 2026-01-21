@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Creaciones Madriz | Inventarios</title>
     <link rel="stylesheet" href="../../css/inventario.css">
+    <link rel="stylesheet" href="../../modules/modales.css">
+
+    
 </head>
 
 
@@ -13,29 +16,47 @@
 <body>
 
     <!-- Modal para el botón: añadir inventario-->
- <div id="modal-añadir" class="modal">
-    <div class="modal-content">
+    <div class="modal" id="modal-inv-categorias"> 
+    <div class="modal-inv-content">
+        <div class="modal-inv-header">
+            <h3 class="modal-inv-title">Selecciona una categoría</h3>
+            </div>
 
-        <div class="modal-header">
-            <h3 class="modal-title">Selecciona una categoría</h3>
-        </div>
-
-        <div class="modal-body" id="modal-body">
+        <div class="modal-inv-body" id="modal-inv-body">
             <nav>
-                <button class="botones" id="agregar-vestido">Vestidos</button>
-                <button class="botones" id="agregr-tela">Telas</button>
-                <button class="botones" id="agregar-insumo">Insumos</button>
-                <button class="botones" id="agregar-producto">Productos</button>
+                <button class="btn-inv-categoria" id="agregar-producto">Productos</button>
+                <button class="btn-inv-categoria" id="agregar-tela">Telas</button>
+                <button class="btn-inv-categoria" id="agregar-insumo">Insumos</button>
             </nav>
         </div>
 
-        <div class="modal-footer">
-            <button id="btn-guardar">Agregar</button>
-            <button id="btn-cerrar-modal">Cerrar</button>
+        <div class="modal-inv-footer">
+            
+            <button id="btn-inv-cerrar-modal">Cerrar</button>
+            <button id="btn-inv-atras" style="display: none;">← Atrás</button>
+            </div>
+
+    </div>
+
+    </div>
+
+    <!-- Modal Editar Item -->
+    <div id="modal-editar" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="titulo-editar">Editar Item</h2>
+                <button id="cerrar-editar" class="btn-cerrar">&times;</button>
+            </div>
+            <div class="modal-body" id="cuerpo-editar">
+                <!-- Aquí se cargará el formulario dinámicamente -->
+            </div>
+            <div class="modal-footer">
+                <button id="cancelar-editar" class="btn-secundario">Cancelar</button>
+                <button id="guardar-editar" class="btn-primario">Guardar Cambios</button>
+            </div>
         </div>
     </div>
-</div>
-
+    
     <header class="topbar">
         
         <div class="logo">
@@ -71,8 +92,9 @@
     <main class="main-content">
         
         <div class="inventory-intro">
-        <p style="font-family: Comfortaa;">Bienvenido al módulo de inventarios. Aquí podrás gestionar y revisar los inventarios de productos disponibles.</p>
+        <p style="font-family: Comfortaa;">Aquí podrás gestionar tus inventarios.</p>
         <button class="añadir" id="btn-añadir-inv">Añadir a inventario</button>
+        
         </div>
 
         <!-- Aqui dividiremos la parte de los botones y el inventario en si -->
@@ -80,13 +102,13 @@
         <div class="inventario-layout">
             <div class="contenedor-botones">
                 <nav>
-                    <button class="botones" id="btn-vestidos">Vestidos</button>
+                    <button class="botones" id="btn-productos">Productos</button>
                     <button class="botones" id="btn-telas">Telas</button>
                     <button class="botones" id="btn-insumos">Insumos</button>
-                    <button class="botones" id="btn-productos">Productos</button>
                 </nav>
             </div>
 
+            <!-- Contenedor donde se muestran los inventarios actuales -->
             <div class="inventarios" id="contenedor-inventario">
 
                 <div class="inventario-vacio">
@@ -94,13 +116,16 @@
                 </div>
 
             </div>
+
         </div>
         </div>
     </main>
 
     <!-- Scripts -->
-    <script src="../../js/inventario.js"></script>
-    
+    <script type="module"  src="../../js/inventario.js"></script>
+    <script src="../../js/database.js"></script>
+    <script type="module"  src="../../templates/formAñadir.js"></script>
+    <script type="module" src="../../modules/renderer_inventario.js"></script>
 </body>
 
 

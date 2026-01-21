@@ -1,42 +1,97 @@
 const { app, BrowserWindow, ipcMain, shell } = require('electron');
 const path = require('path');
 const fs = require('fs').promises;
+const { spawn } = require('child_process') // Necesario para Nestjs
 
+const registrarHandlers = require('./ipc/export/handlers.js');
 
-console.log('🚀 Iniciando aplicación Electron...');
+console.log('[INICIANDO PUNTO DE VENTA E INVENTARIO CREACIONES MADRIZ (POSINVCM)]');
+console.log('------------------------------------------------------------------');
 
-// ✅ CORRECCIÓN: Declarar la variable GLOBALMENTE
-let GeneradorFichaDocx;
-let dbInitialized = false;
+let serverProcess; // Control de procesos de NestJS
+let GeneradorFichaDocx; // Existente...
 
-// ✅ NUEVO: Inicializar base de datos
-async function initializeDatabase() {
-    try {
-        console.log('📊 Inicializando base de datos...');
-        
-        // Usar TU connection.js existente
-        const getDatabase = require('../../server/database/connection.js');
-        const db = getDatabase();
-        
-        console.log('✅ Base de datos inicializada via connection.js');
-        return true;
-    } catch (error) {
-        console.error('❌ Error inicializando base de datos:', error);
-        return false;
-    }
-}
-
-// GeneradorFichaDocx
+// Carga del documento generador de DOCX
 try {
     GeneradorFichaDocx = require('./generator/generarDocx.js');
-    console.log('Generador DOCX cargado correctamente');
+    console.log('Generador de archivos (DOCX): OK');
 } catch (error) {
     console.error('Error cargando generador DOCX:', error.message);
-    // Si hay error, usaremos versión temporal
 }
 
+// Función: Iniciar Servidor NestJS
+function startBackend() {
+    const { spawn } = require('child_process');
+    const path = require('path');
+    const isDev = !app.isPackaged;
+    
+    // 1. Definición de rutas según el entorno
+    // En desarrollo usamos tu ruta fija. En producción usamos la carpeta interna de la App.
+    const backendPath = isDev 
+        ? 'D:\\POSINVCM\\server' 
+        : path.join(process.resourcesPath, 'server'); 
+
+    const command = process.platform === 'win32' ? 'npm.cmd' : 'npm';
+    
+    let args;
+    if (isDev) {
+        // Modo Desarrollo: Ejecuta a través de npm para usar Nest CLI
+        args = ['run', 'start', '--prefix', backendPath];
+    } else {
+        // Modo Producción: Ejecuta el archivo compilado directamente 
+        // usando el binario de Node que ya viene dentro de Electron
+        args = [path.join(backendPath, 'dist', 'main.js')];
+    }
+
+    console.log(`[SISTEMA]: Iniciando servidor desde ${backendPath}`);
+    console.log(`[SISTEMA]: Modo: ${isDev ? 'DESARROLLO' : 'PRODUCCIÓN'}`);
+
+    // 2. Lanzamiento del proceso
+    serverProcess = spawn(isDev ? command : process.execPath, args, { 
+        shell: isDev, // Shell necesario solo para npm en Windows
+        cwd: backendPath,
+        env: { 
+            ...process.env, 
+            NODE_ENV: isDev ? 'development' : 'production' 
+        }
+    });
+
+    // 3. Listeners de Salida Estándar (Logs normales)
+    serverProcess.stdout.on('data', (data) => {
+        const output = data.toString().trim();
+        if (output) {
+            console.log(`[NestJS]: ${output}`);
+        }
+    });
+
+    // 4. Listeners de Errores del Servidor
+    serverProcess.stderr.on('data', (data) => {
+        const errorOutput = data.toString().trim();
+        if (errorOutput) {
+            console.error(`[NestJS-Error]: ${errorOutput}`);
+        }
+    });
+
+    // 5. Listener de Error al Iniciar (ej. ruta no encontrada)
+    serverProcess.on('error', (err) => {
+        console.error('❌ Error crítico: No se pudo lanzar el proceso NestJS.');
+        console.error(`Detalle: ${err.message}`);
+    });
+
+    // 6. Listener de Cierre de Proceso
+    serverProcess.on('exit', (code, signal) => {
+        if (code !== null) {
+            console.log(`[SISTEMA]: El servidor NestJS terminó con código ${code}`);
+        } else {
+            console.log(`[SISTEMA]: El servidor NestJS fue terminado por la señal ${signal}`);
+        }
+    });
+}
+
+
 const createWindow = () => {
-    console.log('Creando ventana principal...');
+
+    console.log('Ventana principal: Creada(OK)');
     const win = new BrowserWindow({
         minWidth: 1000,
         minHeight: 800,
@@ -58,7 +113,7 @@ const createWindow = () => {
     win.webContents.openDevTools();
 };
 
-// IPC Handlers
+// IPC Handlers básicos
 ipcMain.handle('ping', () => {
     console.log('Ping recibido');
     return 'pong';
@@ -75,7 +130,6 @@ ipcMain.handle('abrir-carpeta', async (event, folderPath) => {
     }
 });
 
-// ✅ CORRECCIÓN
 ipcMain.handle('generar-ficha', async (event, datosFicha) => {
     console.log('IPC "generar-ficha" RECIBIDO');
     console.log('Datos del formulario:', {
@@ -160,398 +214,63 @@ ipcMain.handle('generar-ficha', async (event, datosFicha) => {
     }
 });
 
-// ✅ NUEVA FUNCIÓN: Registrar todos los handlers IPC
-function registerDatabaseHandlers(
-    UsuarioController,
-    ProductoController,
-    PedidoController,
-    InventarioController,
-    InsumoController,
-    TelaController,
-    VestidoController,
-    ProdTerminadoController
-) {
-    //
-    ipcMain.handle('prodTerminados:getAll', async () => {
-    try {
-        return { success: true, data: ProdTerminadoController.getAll() };
-    } catch (error) {
-        return { success: false, error: error.message };
-    }
-    });
-
-ipcMain.handle('prodTerminados:create', async (event, data) => {
-    try {
-        return { success: true, data: ProdTerminadoController.create(data) };
-    } catch (error) {
-        return { success: false, error: error.message };
-    }
-    });
-    // ========== USUARIOS ==========
-    ipcMain.handle('usuarios:getAll', async () => {
-        try {
-            return { success: true, data: UsuarioController.getAll() };
-        } catch (error) {
-            return { success: false, error: error.message };
-        }
-    });
-
-    ipcMain.handle('usuarios:login', async (event, nombreUsuario, password) => {
-        try {
-            return { success: true, data: UsuarioController.login(nombreUsuario, password) };
-        } catch (error) {
-            return { success: false, error: error.message };
-        }
-    });
-
-    // ========== PRODUCTOS ==========
-    ipcMain.handle('productos:getAll', async () => {
-        try {
-            return { success: true, data: ProductoController.getAll() };
-        } catch (error) {
-            return { success: false, error: error.message };
-        }
-    });
-
-    ipcMain.handle('productos:create', async (event, data) => {
-        try {
-            return { success: true, data: ProductoController.create(data) };
-        } catch (error) {
-            return { success: false, error: error.message };
-        }
-    });
-
-    ipcMain.handle('productos:bajoStock', async () => {
-        try {
-            return { success: true, data: ProductoController.getBajoStock() };
-        } catch (error) {
-            return { success: false, error: error.message };
-        }
-    });
-
-    // ========== PEDIDOS ==========
-    ipcMain.handle('pedidos:getAll', async () => {
-        try {
-            return { success: true, data: PedidoController.getAll() };
-        } catch (error) {
-            return { success: false, error: error.message };
-        }
-    });
-
-    ipcMain.handle('pedidos:create', async (event, data) => {
-        try {
-            return { success: true, data: PedidoController.create(data) };
-        } catch (error) {
-            return { success: false, error: error.message };
-        }
-    });
-
-    // ========== INVENTARIO ==========
-    ipcMain.handle('inventario:getAll', async () => {
-        try {
-            return { success: true, data: InventarioController.getAll() };
-        } catch (error) {
-            return { success: false, error: error.message };
-        }
-    });
-
-    ipcMain.handle('inventario:registrar', async (event, data) => {
-        try {
-            return { success: true, data: InventarioController.registrarMovimiento(data) };
-        } catch (error) {
-            return { success: false, error: error.message };
-        }
-    });
-
-    // ========== INSUMOS ==========
-    ipcMain.handle('insumos:getAll', async () => {
-        try {
-            return { success: true, data: InsumoController.getAll() };
-        } catch (error) {
-            return { success: false, error: error.message };
-        }
-    });
-
-    ipcMain.handle('insumos:getById', async (event, id) => {
-        try {
-            return { success: true, data: InsumoController.getById(id) };
-        } catch (error) {
-            return { success: false, error: error.message };
-        }
-    });
-
-    ipcMain.handle('insumos:create', async (event, data) => {
-        try {
-            return { success: true, data: InsumoController.create(data) };
-        } catch (error) {
-            return { success: false, error: error.message };
-        }
-    });
-
-    ipcMain.handle('insumos:update', async (event, id, data) => {
-        try {
-            return { success: true, data: InsumoController.update(id, data) };
-        } catch (error) {
-            return { success: false, error: error.message };
-        }
-    });
-
-    ipcMain.handle('insumos:delete', async (event, id) => {
-        try {
-            return { success: true, data: InsumoController.delete(id) };
-        } catch (error) {
-            return { success: false, error: error.message };
-        }
-    });
-
-    ipcMain.handle('insumos:getByUnidad', async (event, unidad) => {
-        try {
-            return { success: true, data: InsumoController.getByUnidad(unidad) };
-        } catch (error) {
-            return { success: false, error: error.message };
-        }
-    });
-
-    ipcMain.handle('insumos:getTotalMetros', async () => {
-        try {
-            return { success: true, data: InsumoController.getTotalMetros() };
-        } catch (error) {
-            return { success: false, error: error.message };
-        }
-    });
-
-    // ========== TELAS ==========
-    ipcMain.handle('telas:getAll', async () => {
-        try {
-            return { success: true, data: TelaController.getAll() };
-        } catch (error) {
-            return { success: false, error: error.message };
-        }
-    });
-
-    ipcMain.handle('telas:getById', async (event, id) => {
-        try {
-            return { success: true, data: TelaController.getById(id) };
-        } catch (error) {
-            return { success: false, error: error.message };
-        }
-    });
-
-    ipcMain.handle('telas:create', async (event, data) => {
-        try {
-            return { success: true, data: TelaController.create(data) };
-        } catch (error) {
-            return { success: false, error: error.message };
-        }
-    });
-
-    ipcMain.handle('telas:update', async (event, id, data) => {
-        try {
-            return { success: true, data: TelaController.update(id, data) };
-        } catch (error) {
-            return { success: false, error: error.message };
-        }
-    });
-
-    ipcMain.handle('telas:delete', async (event, id) => {
-        try {
-            return { success: true, data: TelaController.delete(id) };
-        } catch (error) {
-            return { success: false, error: error.message };
-        }
-    });
-
-    ipcMain.handle('telas:getByComposicion', async (event, composicion) => {
-        try {
-            return { success: true, data: TelaController.getByComposicion(composicion) };
-        } catch (error) {
-            return { success: false, error: error.message };
-        }
-    });
-
-    ipcMain.handle('telas:getEstadisticas', async () => {
-        try {
-            return { success: true, data: TelaController.getEstadisticas() };
-        } catch (error) {
-            return { success: false, error: error.message };
-        }
-    });
-
-    ipcMain.handle('telas:getBajaLongitud', async (event, longitudMinima) => {
-        try {
-            return { success: true, data: TelaController.getBajaLongitud(longitudMinima) };
-        } catch (error) {
-            return { success: false, error: error.message };
-        }
-    });
-
-    // ========== VESTIDOS ==========
-    ipcMain.handle('vestidos:getAll', async () => {
-        try {
-            return { success: true, data: VestidoController.getAll() };
-        } catch (error) {
-            return { success: false, error: error.message };
-        }
-    });
-
-    ipcMain.handle('vestidos:getById', async (event, id) => {
-        try {
-            return { success: true, data: VestidoController.getById(id) };
-        } catch (error) {
-            return { success: false, error: error.message };
-        }
-    });
-
-    ipcMain.handle('vestidos:getBySku', async (event, sku) => {
-        try {
-            return { success: true, data: VestidoController.getBySku(sku) };
-        } catch (error) {
-            return { success: false, error: error.message };
-        }
-    });
-
-    ipcMain.handle('vestidos:create', async (event, data) => {
-        try {
-            return { success: true, data: VestidoController.create(data) };
-        } catch (error) {
-            return { success: false, error: error.message };
-        }
-    });
-
-    ipcMain.handle('vestidos:update', async (event, id, data) => {
-        try {
-            return { success: true, data: VestidoController.update(id, data) };
-        } catch (error) {
-            return { success: false, error: error.message };
-        }
-    });
-
-    ipcMain.handle('vestidos:delete', async (event, id) => {
-        try {
-            return { success: true, data: VestidoController.delete(id) };
-        } catch (error) {
-            return { success: false, error: error.message };
-        }
-    });
-
-    ipcMain.handle('vestidos:getByColor', async (event, color) => {
-        try {
-            return { success: true, data: VestidoController.getByColor(color) };
-        } catch (error) {
-            return { success: false, error: error.message };
-        }
-    });
-
-    ipcMain.handle('vestidos:getDisponibles', async () => {
-        try {
-            return { success: true, data: VestidoController.getDisponibles() };
-        } catch (error) {
-            return { success: false, error: error.message };
-        }
-    });
-
-    ipcMain.handle('vestidos:getEstadisticas', async () => {
-        try {
-            return { success: true, data: VestidoController.getEstadisticas() };
-        } catch (error) {
-            return { success: false, error: error.message };
-        }
-    });
-
-    ipcMain.handle('vestidos:getColores', async () => {
-        try {
-            return { success: true, data: VestidoController.getColores() };
-        } catch (error) {
-            return { success: false, error: error.message };
-        }
-    });
-
-    // ========== PRODUCTOS TERMINADOS ==========
-    
-    
-    ipcMain.handle('prodTerminados:getAll', async () => {
-        try {
-            return { success: true, data: ProdTerminadoController.getAll() };
-        } catch (error) {
-            return { success: false, error: error.message };
-        }
-    });
-
-    ipcMain.handle('prodTerminados:create', async (event, data) => {
-        try {
-            return { success: true, data: ProdTerminadoController.create(data) };
-        } catch (error) {
-            return { success: false, error: error.message };
-        }
-    });
-
-    ipcMain.handle('prodTerminados:getByTipo', async (event, tipo) => {
-        try {
-            return { success: true, data: ProdTerminadoController.getByTipo(tipo) };
-        } catch (error) {
-            return { success: false, error: error.message };
-        }
-    });
-    
-}
-
 // Manejo de errores no capturados
 process.on('uncaughtException', (error) => {
     console.error('Error no capturado:', error);
 });
 
-process.on('unhandledRejection', (reason, promise) => {
+process.on('unhandledRejection', (reason) => {
     console.error('Promise rechazada:', reason);
 });
 
 app.whenReady().then(async() => {
-    // Inicializar base de datos PRIMERO
-    await initializeDatabase();
-    
-    // Luego cargar los controllers (DESPUÉS de la BD)
-    if (dbInitialized) {
-        try {
-            // ✅ CORRECCIÓN: Usar las rutas correctas de tus controllers
-            const UsuarioController = require('./server/controllers/usuario/UsuarioController.js');
-            const ProductoController = require('./server/controllers/venta/ProductoController.js');
-            const PedidoController = require('./server/controllers/venta/PedidoController.js');
-            const InventarioController = require('./server/controllers/inv/InventarioController.js');
-            const InsumoController = require('./server/controllers/inv/InsumoController.js');
-            const TelaController = require('./server/controllers/inv/TelaController.js');
-            const VestidoController = require('./server/controllers/inv/VestidoController.js');
-            const ProdTerminadoController = require('./server/controllers/inv/ProdTerminadoController.js');
-            
-            // Registrar handlers IPC para la base de datos
-            registerDatabaseHandlers(
-                UsuarioController,
-                ProductoController,
-                PedidoController,
-                InventarioController,
-                InsumoController,
-                TelaController,
-                VestidoController,
-                ProdTerminadoController
-            );
-            
-            console.log('✅ Controllers cargados y handlers registrados');
-        } catch (error) {
-            console.error('❌ Error cargando controllers:', error);
-        }
-    }
-    
-    createWindow();
+
+    console.log('Entorno: OK')
+        
+    // 1. Levantamos el servidor de NestJS
+    startBackend();    
+
+    // 2. Nota. la BD la maneja ahora NestJS internamente
+
+    // 3. Espera para que el servidor responda antes de abrir la ventana
+    // en un futuro podemos usar un "Health Check"
+    setTimeout(() => {
+        createWindow();
+        // registrarHandlers(ipcMain); // Adaptar si handlers necesita conexión
+    }, 3000); 
+
+    app.on('activate', () => {
+        if (BrowserWindow.getAllWindows().length === 0) createWindow();
+    });
 });
 
+/*
+LIMPIEZA CRÍTICA
+*/
+
+const killBackend = () => {
+    if (serverProcess) {
+        console.log('Deteniendo servidor NestJS (Kill Tree)...');
+        const { exec } = require('child_process');
+        // /T mata los procesos hijos (el server), /F es forzado
+        exec(`taskkill /pid ${serverProcess.pid} /T /F`, (err) => {
+            if (err) console.error('Error al cerrar backend:', err.message);
+        });
+    }
+};
+
+// Se dispara cuando se cierran las ventanas
 app.on('window-all-closed', () => {
-    if (process.platform !== 'darwin') {
-        app.quit();
-    }
+    killBackend();
+    if (process.platform !== 'darwin') app.quit();
 });
 
-// Cerrar la base de datos cuando la app se cierra
+// Se dispara justo antes de que la app se cierre definitivamente
 app.on('before-quit', () => {
-    if (global.databaseInstance) {
-        global.databaseInstance.close();
-        console.log('🔒 Base de datos cerrada');
-    }
+    killBackend();
+});
+
+// Manejo de errores globales
+process.on('uncaughtException', (error) => {
+    console.error('Error no capturado:', error);
 });

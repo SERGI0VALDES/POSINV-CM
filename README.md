@@ -30,3 +30,10 @@ server/src/
 ├── models/         <-- Definiciones de tus tablas/documentos de base de datos (Ej: Cliente.js, Producto.js).
 ├── routes/         <-- Archivos para definir las URLs de tu API (Ej: /api/clientes, /api/productos).
 └── index.js        <-- El punto de entrada de tu servidor (donde inicializas Express).
+
+
+"scripts": {
+    "start": "electron .",
+    "test": "echo \"No hay pruebas definidas\"",
+    "dev": "electron . --no-sandbox",
+  },

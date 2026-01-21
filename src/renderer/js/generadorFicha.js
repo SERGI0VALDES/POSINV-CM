@@ -10,7 +10,7 @@ const TEMPLATE_MAPPINGS = {
     anotaciones: 'anotaciones',
 };
 
-// ✅ FUNCIÓN PARA RECOLECTAR DATOS DEL FORMULARIO
+//  FUNCIÓN PARA RECOLECTAR DATOS DEL FORMULARIO
 function recolectarDatos(form) {
     console.log('📊 [RENDERER] Recolectando datos del formulario...');
     const data = {};
@@ -26,7 +26,7 @@ function recolectarDatos(form) {
     return data;
 }
 
-// ✅ FUNCIÓN PARA GENERAR Y GUARDAR FICHA DOCX
+//  FUNCIÓN PARA GENERAR Y GUARDAR FICHA DOCX
 async function generarYGuardarFicha(formData) {
     console.log('🔧 [RENDERER] Iniciando generación de ficha DOCX...');
     
@@ -48,7 +48,7 @@ async function generarYGuardarFicha(formData) {
         console.log('📥 [RENDERER] Resultado recibido:', resultado);
         
         if (resultado.success) {
-            alert('✅ Ficha guardada correctamente!');
+            alert(' Ficha guardada correctamente!');
             document.getElementById('formularioFicha').reset();
         } else {
             alert('❌ Error al guardar ficha: ' + resultado.error);
@@ -59,7 +59,7 @@ async function generarYGuardarFicha(formData) {
     }
 }
 
-// ✅ FUNCIÓN PARA IMPRIMIR FORMULARIO ACTUAL
+//  FUNCIÓN PARA IMPRIMIR FORMULARIO ACTUAL
 function imprimirFormularioActual() {
     console.log('[RENDERER] Preparando impresión del formulario...');
     
@@ -213,7 +213,7 @@ function imprimirFormularioActual() {
     };
 }
 
-// ✅ FUNCIÓN PARA GENERAR HTML DEL FORMULARIO PARA IMPRIMIR
+//  FUNCIÓN PARA GENERAR HTML DEL FORMULARIO PARA IMPRIMIR
 function formularioParaImprimir(datos) {
     return `
         <div class="section">
@@ -270,7 +270,7 @@ function formularioParaImprimir(datos) {
     `;
 }
 
-// ✅ FUNCIÓN PARA GENERAR LAS MEDIDAS EN FORMATO IMPRIMIBLE
+//  FUNCIÓN PARA GENERAR LAS MEDIDAS EN FORMATO IMPRIMIBLE
 function generarMedidasParaImprimir(datos) {
     const medidas = [
         { label: 'Ancho de Espalda', value: datos.anchoEspalda },
@@ -302,14 +302,14 @@ function generarMedidasParaImprimir(datos) {
     `).join('');
 }
 
-// ✅ FUNCIÓN PARA ABRIR CARPETA DE FICHAS
+//  FUNCIÓN PARA ABRIR CARPETA DE FICHAS
 async function abrirCarpetaFichas() {
     console.log('📁 [RENDERER] Solicitando abrir carpeta de fichas...');
     
     if (window.electronAPI && typeof window.electronAPI.abrirCarpeta === 'function') {
         try {
             await window.electronAPI.abrirCarpeta('D:\\fichas');
-            console.log('✅ [RENDERER] Carpeta abierta exitosamente');
+            console.log(' [RENDERER] Carpeta abierta exitosamente');
         } catch (error) {
             console.error('❌ [RENDERER] Error al abrir carpeta:', error);
             alert('❌ Error al abrir carpeta: ' + error.message);
@@ -319,26 +319,26 @@ async function abrirCarpetaFichas() {
     }
 }
 
-/** ✅ FUNCIÓN PARA LIMPIAR FORMULARIO
+/**  FUNCIÓN PARA LIMPIAR FORMULARIO
 function limpiarFormulario() {
     console.log('🧹 [RENDERER] Limpiando formulario...');
     const form = document.getElementById('formularioFicha');
     if (form) {
         form.reset();
-        alert('✅ Formulario limpiado correctamente');
+        alert(' Formulario limpiado correctamente');
     } else {
         alert('❌ No se encontró el formulario');
     }
 }*/
 
-// ✅ FUNCIÓN PARA PROBAR CONEXIÓN CON ELECTRON
+//  FUNCIÓN PARA PROBAR CONEXIÓN CON ELECTRON
 async function probarConexionElectron() {
     console.log('🏓 [RENDERER] Probando conexión con Electron...');
     
     if (window.electronAPI && typeof window.electronAPI.ping === 'function') {
         try {
             const response = await window.electronAPI.ping();
-            console.log('✅ [RENDERER] Conexión exitosa:', response);
+            console.log(' [RENDERER] Conexión exitosa:', response);
             return true;
         } catch (error) {
             console.error('❌ [RENDERER] Error de conexión:', error);
@@ -350,7 +350,7 @@ async function probarConexionElectron() {
     }
 }
 
-// ✅ INICIALIZACIÓN Y EVENT LISTENERS
+//  INICIALIZACIÓN Y EVENT LISTENERS
 document.addEventListener('DOMContentLoaded', function() {
 
     // console.log('📄 [RENDERER] DOM cargado - Inicializando generadorFicha.js');
@@ -368,10 +368,10 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('  - Botón Imprimir:', !!imprimirBtn);
     console.log('  - Botón Guardar:', !!guardarBtn);*/
 
-    /**  ✅ 1. Probar conexión con Electron
+    /**   1. Probar conexión con Electron
     probarConexionElectron().then(conexionExitosa => {
         if (conexionExitosa) {
-            console.log('✅ [RENDERER] Aplicación lista para usar');
+            console.log(' [RENDERER] Aplicación lista para usar');
         } else {
             console.error('❌ [RENDERER] Problemas de conexión con Electron');
             alert('⚠️ Hay problemas de conexión. Algunas funciones pueden no estar disponibles.');
@@ -379,7 +379,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     */
 
-    // ✅ 2. Event Listener para GUARDAR FICHA (form submit)
+    //  2. Event Listener para GUARDAR FICHA (form submit)
     if (form) {
         form.addEventListener('submit', function(event) {
             console.log('🖱️ [RENDERER] Formulario enviado - Guardando ficha...');
@@ -391,18 +391,18 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error('❌ No se encontró el formulario con ID "formularioFicha"');
     }
 
-    // ✅ 3. Event Listener para IMPRIMIR FORMULARIO
+    //  3. Event Listener para IMPRIMIR FORMULARIO
     if (imprimirBtn) {
         imprimirBtn.addEventListener('click', imprimirFormularioActual);
-        // console.log('✅ Event listener de IMPRIMIR conectado');
+        // console.log(' Event listener de IMPRIMIR conectado');
     } else {
         console.error('❌ No se encontró el botón de imprimir con ID "imprimirFormulario"');
     }
 
-    // ✅ 4. Event Listener para ABRIR CARPETA
+    //  4. Event Listener para ABRIR CARPETA
     if (openFolderBtn) {
         openFolderBtn.addEventListener('click', abrirCarpetaFichas);
-        // console.log('✅ Event listener de ABRIR CARPETA conectado');
+        // console.log(' Event listener de ABRIR CARPETA conectado');
     } else {
         console.error('❌ No se encontró el botón de abrir carpeta con ID "openFolderFichas"');
     }
@@ -410,7 +410,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // console.log('🎯 [RENDERER] Inicialización completada - Todos los event listeners conectados');
 });
 
-// ✅ Exportar funciones para uso global (si es necesario)
+//  Exportar funciones para uso global (si es necesario)
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = {
         recolectarDatos,

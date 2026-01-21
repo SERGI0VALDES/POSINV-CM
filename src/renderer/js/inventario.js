@@ -1,66 +1,82 @@
+// 1. Importar el FormularioManager para que esté disponible dentro de esta clase
+import { FormularioManager } from '../templates/formAñadir.js';
+
 // inventario.js - VERSIÓN DEBUG
-class InventarioManager {
-    // Constructor =>
+export class InventarioManager {
     constructor() {
-        // Constructores (varios)
+       
+        console.log('InventarioManager inicializado');
+
         this.categoriaActual = null;
+        // CONTENEDOR PRINCIPAL DEL INVENTARIO
         this.contenedor = null;
+        // CONTENEDOR DEL MODAL AÑADIR INVENTARIO
+        this.contenedorAñadir = null;
+
         this.init();
-    
     }
 
-
     init() {
+        //console.log('🔍 DEBUG: Inicializando módulo de inventarios...');
 
-        //Checar si inicializa correctamente => //console.log'🔍 DEBUG: Inicializando módulo de inventarios...');
+        // ✅ DEBUG: Listar todos los elementos en la página
+        // this.debugElementosPagina();
         
-        //DEBUG: Listar todos los elementos en la página this.debugElementosPagina();
-        
-        //BUSCAR EL CONTENEDOR DE FORMA MÁS FLEXIBLE
+        // ✅ BUSCAR EL CONTENEDOR PRINCIPAL DE FORMA MÁS FLEXIBLE
         this.contenedor = document.getElementById('contenedor-inventario');
+
+        // BUSCAR EL CONTENEDOR DEL MODAL AÑADIR INVENTARIO
+        this.contenedorAñadir = document.getElementById('modal-inv-categorias');
         
+        // VERIFICAR SI SE ENCONTRO EL CONTENEDOR PRINCIPAL
         if (!this.contenedor) {
-            //console.error('❌ DEBUG: No se encontró elemento con id "contenedor-inventario"');
-            //console.log'🔍 DEBUG: Buscando elementos con clase "inventarios"...');
+            console.error('❌ DEBUG: No se encontró elemento con id "contenedor-inventario"');
+            console.log('🔍 DEBUG: Buscando elementos con clase "inventarios"...');
             
             // Intentar buscar por clase
             const elementosPorClase = document.getElementsByClassName('inventarios');
             if (elementosPorClase.length > 0) {
                 this.contenedor = elementosPorClase[0];
-                //console.log'✅ DEBUG: Encontrado por clase "inventarios"');
+                console.log('✅ DEBUG: Encontrado por clase "inventarios"');
             } else {
-                //console.error('❌ DEBUG: Tampoco se encontró por clase "inventarios"');
+                console.error('❌ DEBUG: Tampoco se encontró por clase "inventarios"');
                 this.mostrarErrorGlobal('Error crítico: No se pudo encontrar el contenedor de inventarios');
                 return;
             }
         }
         
-        // //console.log'✅ DEBUG: Contenedor encontrado:', this.contenedor);
+        // VERIFICAR SI SE ENCONTRO EL CONTENEDOR DEL MODAL AÑADIR INVENTARIO
+        if (!this.contenedorAñadir){
+            console.error('DEBUG: No se encontró elemento con id "modal-añadir"');
+        }
+
+        // LOGS DE VERIFICACIÓN
+        console.log('✅ DEBUG: Contenedores encontrados:', this.contenedor, ',' , this.contenedorAñadir);
         
+        // CARGAR FECHA ACTUAL
         this.cargarFechaActual();
+        // AGREGAR EVENT LISTENERS
         this.agregarEventListeners();
 
-        this.inicializarModales();
-        //console.log'✅ Módulo de inventarios inicializado correctamente');
+        // MENSAJE FINAL DE INICIALIZACIÓN
+        console.log('✅ Módulo de inventarios inicializado correctamente');
     }
 
-    // Debug para mostrar todos los elementos de la pagina =>
-    /**
-        debugElementosPagina() {
-        //console.log'🔍 DEBUG: Elementos en la página:');
-        //console.log'- Body:', document.body);
-        //console.log'- Main:', document.querySelector('main'));
-        //console.log'- Todos los divs:', document.querySelectorAll('div').length);
+    /*
+    debugElementosPagina() {
+        console.log('🔍 DEBUG: Elementos en la página:');
+        console.log('- Body:', document.body);
+        console.log('- Main:', document.querySelector('main'));
+        console.log('- Todos los divs:', document.querySelectorAll('div').length);
         
         // Listar todos los IDs en la página
         const todosLosElementos = document.querySelectorAll('*[id]');
-        //console.log'🔍 DEBUG: IDs encontrados en la página:');
+        console.log('🔍 DEBUG: IDs encontrados en la página:');
         todosLosElementos.forEach(el => {
-            //console.log`  - ${el.id}`);
+            console.log(`  - ${el.id}`);
         });
     }*/
 
-    // Cargar fecha actual
     cargarFechaActual() {
         try {
             const fechaElement = document.getElementById('currentDate');
@@ -73,7 +89,7 @@ class InventarioManager {
                     day: 'numeric' 
                 };
                 fechaElement.textContent = fecha.toLocaleDateString('es-ES', opciones);
-                //console.log'✅ Fecha cargada correctamente');
+                // console.log('✅ Fecha cargada correctamente');
             } else {
                 console.warn('⚠️ No se encontró el elemento para la fecha');
             }
@@ -82,44 +98,38 @@ class InventarioManager {
         }
     }
 
-    // EventListeners y logs para botones =>
     agregarEventListeners() {
-        //console.log'🔍 DEBUG: Agregando event listeners...');
+        console.log('🔍 DEBUG: Agregando event listeners...');
         
         const botones = {
-            //botones de los inventarios menu izquierdo
             'btn-vestidos': () => this.mostrarInventario('vestidos'),
             'btn-telas': () => this.mostrarInventario('telas'),
             'btn-insumos': () => this.mostrarInventario('insumos'),
-            'btn-productos': () => this.mostrarInventario('productos'),
-            //Modales
-            'btn-añadir-inv': () => this.mostrarModalAgregar() // Conectado al botón añadir en el html
+            'btn-productos': () => this.mostrarInventario('productos')
         };
 
-        // Log para mostrar los botones agregados en el html (todos) 
         Object.keys(botones).forEach(botonId => {
             const boton = document.getElementById(botonId);
             if (boton) {
                 boton.addEventListener('click', botones[botonId]);
-                //console.log`✅ Event listener agregado a: ${botonId}`);
+                console.log(`✅ Event listener agregado a: ${botonId}`);
             } else {
-                //console.error(`❌ NO SE ENCONTRÓ EL BOTÓN: ${botonId}`);
+                console.error(`❌ NO SE ENCONTRÓ EL BOTÓN: ${botonId}`);
                 
                 // Debug: mostrar todos los botones
                 const todosLosBotones = document.querySelectorAll('button');
-                //console.log'🔍 DEBUG: Todos los botones en la página:');
+                console.log('🔍 DEBUG: Todos los botones en la página:');
                 todosLosBotones.forEach((btn, index) => {
-                    //console.log`  ${index}:`, btn.textContent, btn.id);
+                    console.log(`  ${index}:`, btn.textContent, btn.id);
                 });
             }
         });
-
     }
 
-    
+    /*METODO PRINCIPAL PARA MOSTRAR INVENTARIO ->
     async mostrarInventario(categoria) {
-        //console.log`🔍 DEBUG: Mostrar inventario llamado para: ${categoria}`);
-        //console.log`🔍 DEBUG: this.contenedor =`, this.contenedor);
+        console.log(`🔍 DEBUG: Mostrar inventario llamado para: ${categoria}`);
+        console.log(`🔍 DEBUG: this.contenedor =`, this.contenedor);
         
         // ✅ VERIFICACIÓN EXTRA DEL CONTENEDOR
         if (!this.contenedor) {
@@ -135,7 +145,7 @@ class InventarioManager {
 
         try {
             this.categoriaActual = categoria;
-            //console.log`📦 Cargando inventario: ${categoria}`);
+            console.log(`📦 Cargando inventario: ${categoria}`);
             
             // Mostrar loading
             this.mostrarLoading();
@@ -162,7 +172,7 @@ class InventarioManager {
                     throw new Error(`Categoría desconocida: ${categoria}`);
             }
             
-            // //console.log`✅ Datos obtenidos para ${categoria}:`, datos);
+            console.log(`✅ Datos obtenidos para ${categoria}:`, datos);
             
             // Renderizar la tabla
             this.renderizarTabla(categoria, datos);
@@ -172,14 +182,163 @@ class InventarioManager {
             this.mostrarError('Error al cargar el inventario: ' + error.message);
         }
     }
+    **/
 
-    // ✅ MÉTODOS VISUALES CON VERIFICACIÓN DE CONTENEDOR
+    async mostrarInventario(categoria) {
+        console.log(`🔍 DEBUG: Solicitando inventario real de: ${categoria}`);
+        
+        try {
+            this.categoriaActual = categoria;
+            this.mostrarLoading();
+
+            // 1. Llamamos a la API usando el nombre de la categoría
+            // Ejemplo: window.electronAPI['vestidos'].getAll()
+            const respuesta = await window.electronAPI[categoria].getAll();
+
+            // 2. Verificamos si la respuesta fue exitosa según tus handlers
+            if (respuesta && respuesta.success) {
+                console.log(`✅ Datos recibidos para ${categoria}:`, respuesta.data);
+                
+                // 3. Pasamos respuesta.data (donde están los registros) a la tabla
+                this.renderizarTabla(categoria, respuesta.data);
+            } else {
+                throw new Error(respuesta.error || 'Error desconocido en el servidor');
+            }
+            
+        } catch (error) {
+            console.error('❌ Error cargando inventario:', error);
+            this.mostrarError('Error al conectar con la base de datos: ' + error.message);
+        }
+    }
+
+   // Abrir el modal de selección de categorías
+    abrirModalCategoria() {
+        // CAMBIO DE ID
+        const modal = document.getElementById('modal-inv-categorias'); 
+        if (modal) {
+            modal.classList.add('active'); 
+            console.log('✅ Modal de categorías #modal-inv-categorias abierto.');
+        } else {
+            console.error('❌ Elemento #modal-inv-categorias no encontrado.');
+        }
+    }
+
+    // Cerrar el modal de selección de categorías
+    cerrarModalCategoria() {
+        // CAMBIO DE ID
+        const modal = document.getElementById('modal-inv-categorias'); 
+        if (modal) {
+            modal.classList.remove('active');
+            console.log('✅ Modal de categorías #modal-inv-categorias cerrado.');
+        }
+    }
+
+    // ESTE MÉTODO NOS AYUDARA A ABRIR EL MODAL "AÑADIR INVENTARIO" SEGÚN LA CATEGORÍA
+    mostrarModalAgregar(categoria) {
+        // Cerrar el modal de categorias si esta abierto
+        this.cerrarModalCategoria();
+
+        console.log(`📝 Mostrando modal para agregar ${categoria}`);
+        
+        const titulos = {
+            'vestidos': 'Agregar Nuevo Vestido',
+            'telas': 'Agregar Nueva Tela',
+            'insumos': 'Agregar Nuevo Insumo',
+            'productos': 'Agregar Nuevo Producto'
+        };
+        
+        if (!FormularioManager) {
+            console.error('❌ FormularioManager no está disponible');
+            this.mostrarModalBasico(categoria);
+            return;
+        }
+        
+        try {
+            FormularioManager.abrirModalFormulario(categoria, titulos[categoria] || 'Agregar Item');
+        } catch (error) {
+            console.error('❌ Error abriendo modal:', error);
+            this.mostrarModalBasico(categoria);
+        }
+    }  
+
+    /*
+    async guardarItem(categoria, datos) {
+    console.log(`💾 Guardando ${categoria} vía API real:`, datos);
+    
+    try {
+        let resultado;
+        
+        // Llamamos dinámicamente al objeto de la API según la categoría
+        if (window.electronAPI[categoria] && window.electronAPI[categoria].create) {
+            resultado = await window.electronAPI[categoria].create(datos);
+        } else {
+            throw new Error(`La API para la categoría ${categoria} no está definida.`);
+        }
+
+        // Si el resultado es exitoso (dependiendo de cómo lo maneje tu main.js)
+        if (resultado) {
+            console.log(`✅ ${categoria} guardado con éxito`);
+            // Refrescar la vista actual para ver el nuevo registro
+            this.mostrarInventario(categoria); 
+            return { success: true, data: resultado };
+        }
+        
+    } catch (error) {
+        console.error(`❌ Error al guardar en ${categoria}:`, error);
+        alert(`No se pudo guardar: ${error.message}`);
+        throw error;
+    }
+    }**/
+
+    async guardarItem(categoria, datos) {
+        console.log(`💾 Guardando en ${categoria}:`, datos);
+        
+        try {
+            // Llamada dinámica al método create de la categoría
+            const respuesta = await window.electronAPI[categoria].create(datos);
+            
+            if (respuesta && respuesta.success) {
+                console.log(`✅ Registro creado exitosamente en ${categoria}`);
+                
+                // Recargamos la tabla para ver el nuevo registro inmediatamente
+                this.mostrarInventario(categoria);
+                
+                return respuesta;
+            } else {
+                throw new Error(respuesta.error || 'No se pudo guardar el registro');
+            }
+        } catch (error) {
+            console.error(`❌ Error en guardarItem:`, error);
+            alert('Error al guardar: ' + error.message);
+            throw error;
+        }
+    }
+
+    // Método de fallback para modal básico
+    mostrarModalBasico(categoria) {
+        const modalHtml = `
+            <div class="modal-basico">
+                <div class="modal-basico-overlay" onclick="this.parentElement.remove()"></div>
+                <div class="modal-basico-content">
+                    <h3>Agregar ${categoria}</h3>
+                    <p>Formulario no disponible temporalmente</p>
+                    <button onclick="this.closest('.modal-basico').remove()">Cerrar</button>
+                </div>
+            </div>
+        `;
+        
+        const modal = document.createElement('div');
+        modal.innerHTML = modalHtml;
+        document.body.appendChild(modal.firstElementChild);
+    }
+
+    // MÉTODOS VISUALES CON VERIFICACIÓN DE CONTENEDOR
     mostrarLoading() {
-        //console.log'🔍 DEBUG: mostrarLoading() llamado');
-        //console.log'🔍 DEBUG: this.contenedor en mostrarLoading:', this.contenedor);
+        console.log('🔍 DEBUG: mostrarLoading() llamado');
+        console.log('🔍 DEBUG: this.contenedor en mostrarLoading:', this.contenedor);
         
         if (!this.contenedor) {
-            //console.error('❌ ERROR: this.contenedor es null en mostrarLoading');
+            console.error('❌ ERROR: this.contenedor es null en mostrarLoading');
             return;
         }
         
@@ -192,8 +351,8 @@ class InventarioManager {
     }
 
     mostrarError(mensaje) {
-        //console.log'🔍 DEBUG: mostrarError() llamado');
-        //console.log'🔍 DEBUG: this.contenedor en mostrarError:', this.contenedor);
+        console.log('🔍 DEBUG: mostrarError() llamado');
+        console.log('🔍 DEBUG: this.contenedor en mostrarError:', this.contenedor);
         
         if (!this.contenedor) {
             console.error('❌ ERROR: this.contenedor es null en mostrarError');
@@ -231,8 +390,8 @@ class InventarioManager {
     }
 
     renderizarTabla(categoria, datos) {
-        //console.log'🔍 DEBUG: renderizarTabla() llamado');
-        //console.log'🔍 DEBUG: this.contenedor en renderizarTabla:', this.contenedor);
+        console.log('🔍 DEBUG: renderizarTabla() llamado');
+        console.log('🔍 DEBUG: this.contenedor en renderizarTabla:', this.contenedor);
         
         if (!this.contenedor) {
             console.error('❌ ERROR: this.contenedor es null en renderizarTabla');
@@ -270,85 +429,50 @@ class InventarioManager {
         `;
 
         this.contenedor.innerHTML = tablaHTML;
-        //console.log'✅ Tabla renderizada correctamente');
+        console.log('✅ Tabla renderizada correctamente');
     }
 
-    // ✅ MÉTODOS PARA OBTENER DATOS (igual que antes)
+    // MÉTODOS PARA OBTENER DATOS UTILIZANDO LA API DE ELECTRON
+    // inventario.js - MÉTODOS ACTUALIZADOS PARA API REAL
+
     async obtenerVestidos() {
         try {
-            //console.log'🔍 Obteniendo vestidos...');
-            // Datos de ejemplo para pruebas
-            return this.datosEjemploVestidos();
+            console.log('🔍 Obteniendo vestidos reales...');
+            const respuesta = await window.electronAPI.vestidos.getAll();
+            // Si tu main.js devuelve directamente el array de filas:
+            return respuesta || []; 
         } catch (error) {
-            console.error('Error obteniendo vestidos:', error);
-            return this.datosEjemploVestidos();
+            console.error('Error al conectar con API de vestidos:', error);
+            return [];
         }
     }
 
     async obtenerTelas() {
         try {
-            //console.log'🔍 Obteniendo telas...');
-            return this.datosEjemploTelas();
+            const respuesta = await window.electronAPI.telas.getAll();
+            return respuesta || [];
         } catch (error) {
-            console.error('Error obteniendo telas:', error);
-            return this.datosEjemploTelas();
+            console.error('Error en API telas:', error);
+            return [];
         }
     }
 
     async obtenerInsumos() {
         try {
-            //console.log'🔍 Obteniendo insumos...');
-            return this.datosEjemploInsumos();
+            const respuesta = await window.electronAPI.insumos.getAll();
+            return respuesta || [];
         } catch (error) {
-            console.error('Error obteniendo insumos:', error);
-            return this.datosEjemploInsumos();
+            return [];
         }
     }
 
     async obtenerProductos() {
         try {
-            //console.log'🔍 Obteniendo productos...');
-            return this.datosEjemploProductos();
+            const respuesta = await window.electronAPI.productos.getAll();
+            return respuesta || [];
         } catch (error) {
-            console.error('Error obteniendo productos:', error);
-            return this.datosEjemploProductos();
+            return [];
         }
-    }
-
-    // ✅ DATOS DE EJEMPLO
-    datosEjemploVestidos() {
-        return [
-            { codigoSku: 'VEST-001', nombreProducto: 'Vestido Floral', color: 'Rojo', stockActual: 5, precioVenta: 299.99 },
-            { codigoSku: 'VEST-002', nombreProducto: 'Vestido Noche', color: 'Negro', stockActual: 3, precioVenta: 459.99 },
-            { codigoSku: 'VEST-002', nombreProducto: 'Vestido Noche', color: 'Negro', stockActual: 3, precioVenta: 459.99 },
-            { codigoSku: 'VEST-002', nombreProducto: 'Vestido Noche', color: 'Negro', stockActual: 3, precioVenta: 459.99 },
-            { codigoSku: 'VEST-002', nombreProducto: 'Vestido Noche', color: 'Negro', stockActual: 3, precioVenta: 459.99 },
-            { codigoSku: 'VEST-002', nombreProducto: 'Vestido Noche', color: 'Negro', stockActual: 3, precioVenta: 459.99 },
-            { codigoSku: 'VEST-002', nombreProducto: 'Vestido Noche', color: 'Negro', stockActual: 3, precioVenta: 459.99 },
-            { codigoSku: 'VEST-002', nombreProducto: 'Vestido Noche', color: 'Negro', stockActual: 3, precioVenta: 459.99 },
-            { codigoSku: 'VEST-002', nombreProducto: 'Vestido Noche', color: 'Negro', stockActual: 3, precioVenta: 459.99 },
-            { codigoSku: 'VEST-002', nombreProducto: 'Vestido Noche', color: 'Negro', stockActual: 3, precioVenta: 459.99 },
-            { codigoSku: 'VEST-002', nombreProducto: 'Vestido Noche', color: 'Negro', stockActual: 3, precioVenta: 459.99 },
-            { codigoSku: 'VEST-002', nombreProducto: 'Vestido Noche', color: 'Negro', stockActual: 3, precioVenta: 459.99 },
-        ];
-    }
-
-    datosEjemploTelas() {
-        return [
-            { nombreProducto: 'Seda Natural', composicion: '100% Seda', ancho: 1.5, longitudTotal: 50, stockActual: 10, precioVenta: 89.99 }
-        ];
-    }
-
-    datosEjemploInsumos() {
-        return [
-            { nombreProducto: 'Hilo Polyester', unidadMedida: 'carrete', longitudTotal: 1000, stockActual: 15, stockMinimo: 5, precioVenta: 12.99 }
-        ];
-    }
-
-    datosEjemploProductos() {
-        return [
-            { codigo: 'PROD-001', nombre: 'Conjunto Casual', stockActual: 2, stockMinimo: 3, precioVenta: 349.99, activo: true }
-        ];
     }
 
     generarEncabezados(categoria) {
@@ -365,137 +489,69 @@ class InventarioManager {
     }
 
     generarFilas(categoria, datos) {
-        return datos.map(item => {
-            switch(categoria) {
-                case 'vestidos':
-                    return `
-                        <tr>
-                            <td>${item.codigoSku || 'N/A'}</td>
-                            <td>${item.nombreProducto || 'N/A'}</td>
-                            <td>${item.color || 'N/A'}</td>
-                            <td>${item.stockActual || 0}</td>
-                            <td>$${item.precioVenta || 0}</td>
-                            <td><span class="estado ${item.stockActual > 0 ? 'disponible' : 'agotado'}">${item.stockActual > 0 ? 'Disponible' : 'Agotado'}</span></td>
-                        </tr>
-                    `;
-                case 'telas':
-                    return `
-                        <tr>
-                            <td>${item.nombreProducto || 'N/A'}</td>
-                            <td>${item.composicion || 'N/A'}</td>
-                            <td>${item.ancho || 'N/A'} m</td>
-                            <td>${item.longitudTotal || 0} m</td>
-                            <td>${item.stockActual || 0}</td>
-                            <td>$${item.precioVenta || 0}</td>
-                        </tr>
-                    `;
-                case 'insumos':
-                    return `
-                        <tr>
-                            <td>${item.nombreProducto || item.nombreInsumo || 'N/A'}</td>
-                            <td>${item.unidadMedida || 'unidad'}</td>
-                            <td>${item.longitudTotal || item.stockActual || 0}</td>
-                            <td>${item.stockMinimo || 0}</td>
-                            <td>$${item.precioVenta || 0}</td>
-                            <td><span class="estado ${item.stockActual > (item.stockMinimo || 0) ? 'disponible' : 'bajo-stock'}">${item.stockActual > (item.stockMinimo || 0) ? 'OK' : 'Bajo Stock'}</span></td>
-                        </tr>
-                    `;
-                case 'productos':
-                    return `
-                        <tr>
-                            <td>${item.codigo || 'N/A'}</td>
-                            <td>${item.nombre || 'N/A'}</td>
-                            <td>${item.stockActual || 0}</td>
-                            <td>${item.stockMinimo || 0}</td>
-                            <td>$${item.precioVenta || 0}</td>
-                            <td><span class="estado ${item.activo ? 'activo' : 'inactivo'}">${item.activo ? 'Activo' : 'Inactivo'}</span></td>
-                        </tr>
-                    `;
-            }
-        }).join('');
+    if (!datos || datos.length === 0) {
+        return `<tr><td colspan="10" style="text-align:center;">No hay registros en esta categoría</td></tr>`;
     }
 
-// Modales
-// Agrega estos métodos a tu clase InventarioManager
-inicializarModales() {
+    return datos.map(item => {
+        switch (categoria) {
+            case 'vestidos':
+                return `
+                    <tr>
+                        <td>${item.codigo_sku || 'N/A'}</td>
+                        <td>${item.nombre_producto || 'N/A'}</td>
+                        <td>${item.color || 'N/A'}</td>
+                        <td>${item.stock_actual || 0}</td>
+                        <td>$${item.precio_venta || 0}</td>
+                        <td><span class="estado ${item.stock_actual > 0 ? 'disponible' : 'agotado'}">
+                            ${item.stock_actual > 0 ? 'Disponible' : 'Agotado'}
+                        </span></td>
+                    </tr>`;
 
-    // Traemos el identificador de los Modales (del html..)
-    // this.modalDetalles = document.getElementById('modal-detalles');
-    // this.modalEditar = document.getElementById('modal-editar');
-    this.modalAñadir = document.getElementById('modal-añadir');
-    
-    // Event listeners para cerrar modales
-    document.querySelectorAll('.close-modal').forEach(closeBtn => {
-        closeBtn.addEventListener('click', () => this.cerrarModales());
-    });
-    
-    // botones "Cerrar" y "Cancelar" =>
-    document.getElementById('btn-guardar').addEventListener('click', () => this.guardarProducto());
-    document.getElementById('btn-cerrar-modal').addEventListener('click', () => this.cerrarModales());
-    
-    // Cerrar modal haciendo click fuera del contenido
-    window.addEventListener('click', (e) => {
-        if (e.target.classList.contains('modal')) {
-            this.cerrarModales();
+            case 'telas':
+                return `
+                    <tr>
+                        <td>${item.nombre_producto || 'N/A'}</td>
+                        <td>${item.composicion || 'N/A'}</td>
+                        <td>${item.ancho || 0} m</td>
+                        <td>${item.longitud_total || 0} m</td>
+                        <td>${item.stock_actual || 0}</td>
+                        <td>$${item.precio_venta || 0}</td>
+                    </tr>`;
+
+            case 'insumos':
+                return `
+                    <tr>
+                        <td>${item.nombre_producto || 'N/A'}</td>
+                        <td>${item.unidad_medida || 'Unid.'}</td>
+                        <td>${item.stock_actual || 0}</td>
+                        <td>$${item.precio_venta || 0}</td>
+                        <td>${item.descripcion || '-'}</td>
+                    </tr>`;
+
+            case 'productos':
+            case 'prodTerminados':
+                return `
+                    <tr>
+                        <td>${item.nombre_producto || 'N/A'}</td>
+                        <td>${item.tipo || 'General'}</td>
+                        <td>${item.stock_actual || 0}</td>
+                        <td>$${item.precio_venta || 0}</td>
+                        <td><button class="btn-accion" onclick="verDetalle(${item.id})">👁️</button></td>
+                    </tr>`;
+
+            default:
+                return `<tr><td colspan="5">Categoría no reconocida</td></tr>`;
         }
-    });
-
-    // Event listener para el botón guardar/agregar
-    document.getElementById('btn-guardar').addEventListener('click', (e) => {
-        e.preventDefault();
-        this.guardarProducto();
-    });
+    }).join('');
 }
-
-// Método para mostrar el modal para agregar un item al inventario
-mostrarModalAgregar(titulo) { // Renombramos a 'titulo' para evitar confusiones
-    console.log('📝 Abriendo modal para agregar producto...');
-    
-    // 1. OBTENER EL ELEMENTO DEL TÍTULO
-    // Buscamos el elemento HTML del título dentro del contenedor del modal (this.modalAñadir)
-    const tituloElemento = this.modalAñadir.querySelector('#modal-title'); 
-
-    // 2. CAMBIAR TÍTULO (Usando el elemento DOM correcto)
-    // Si pasamos un título, lo usamos; si no, usamos el valor por defecto ('Selecciona una Categoria').
-    if (tituloElemento) {
-        tituloElemento.textContent = titulo || 'Selecciona una Categoría';
-    }
-    
-    const formulario = this.modalAñadir.querySelector('form');
-    
-    // Limpiar formulario
-    if (formulario) {
-        formulario.reset();
-    }
-    
-    // 3. MOSTRAR MODAL (Usamos 'this.modalAñadir' en lugar de la variable 'modal' no definida)
-    if (this.modalAñadir) {
-        this.modalAñadir.style.display = 'block';
-    }
-    
-    // 4. CAMBIAR TEXTO DEL BOTÓN GUARDAR
-    // Buscamos el botón dentro del modal si es posible, o globalmente si no.
-    const btnGuardar = this.modalAñadir.querySelector('#btn-guardar') || document.getElementById('btn-guardar');
-    if (btnGuardar) {
-        btnGuardar.textContent = 'Agregar Producto';
-    }
-}
-
-// Cierre de modales 
-cerrarModales() {
-    // Este modal se abre cuando el usuario quiere editar un prodcuto, el botón que lo abre esta a un lado del item a editar
-    // if (this.modalEditar) this.modalEditar.style.display = 'none';
-    // Este modal sirve para añadir "algo" al inventario, en el modal se selecciona la categoria(producto, vestido, etc..)
-    if (this.modalAñadir) this.modalAñadir.style.display = 'none';
-}
-
 }
 
 // ✅ INICIALIZAR
 let inventarioManager;
 
 document.addEventListener('DOMContentLoaded', () => {
-    //console.log'🔍 DEBUG: DOM completamente cargado');
+    // console.log('🔍 DEBUG: DOM completamente cargado');
     inventarioManager = new InventarioManager();
 });
 

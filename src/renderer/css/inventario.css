@@ -1,643 +1,1047 @@
-/* Colores y tipografía base */
+/* ==========================================================================
+   VARIABLES Y CONFIGURACIÓN GLOBAL
+   ========================================================================== */
+
 :root {
-    --primary-color: #4A90E2;
-    --secondary-color: #F5A623;
-    --text-color: #333;
-    --bg-color: #F8F9FA;
-    --card-bg: #FFF;
-    --border-color: #E0E0E0;
-    --primary-dark: #E0F7FF;
-    --loading: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-    --danger-color: #F56565;
-    --shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
-    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
-    --warning-color: #ED8936;
+  /* Colores principales */
+  --primary-color: #4A90E2;
+  --secondary-color: #F5A623;
+  --danger-color: #F56565;
+  --warning-color: #ED8936;
+  --success-color: #48BB78;
+  --accent-color: #8B5FBF;
+  
+  /* Colores de texto */
+  --text-color: #333;
+  --text-color-dark: #1a1a1a;
+  --text-color-light: #666;
+  
+  /* Colores de fondo */
+  --bg-color: #F8F9FA;
+  --bg-light: #f5f5f5;
+  --card-bg: #FFF;
+  --primary-dark: #E0F7FF;
+  
+  /* Colores de borde */
+  --border-color: #E0E0E0;
+  
+  /* Efectos visuales */
+  --shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+  --loading: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
 }
 
-/* Animación de entrada suave */
+/* ==========================================================================
+   TIPOGRAFÍA
+   ========================================================================== */
+
+@font-face {
+  font-family: 'Ananda';
+  src: url('../../assets/fonts/Ananda.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Comfortaa';
+  src: url('../../assets/fonts/Comfortaa.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ==========================================================================
+   ANIMACIONES
+   ========================================================================== */
+
 @keyframes screenFadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+  from { 
+    opacity: 0; 
+    transform: translateY(10px); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
 }
 
-/* Estilos base para el cuerpo */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes modalEntradaSuave {
+  0% {
+    opacity: 0;
+    transform: translateY(-30px) scale(0.95);
+  }
+  50% {
+    opacity: 0.8;
+    transform: translateY(-5px) scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes expansionUltraFluida {
+  0% {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes cambioContenidoSuave {
+  0% {
+    opacity: 0;
+    transform: translateX(8px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes botonesEntrada {
+  0% {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ==========================================================================
+   ANIMACIONES OPTIMIZADAS SIN PARPADEO
+   ========================================================================== */
+
+@keyframes expansionSinParpadeo {
+  0% {
+    transform: scale(0.98);
+    opacity: 0;
+    visibility: hidden;
+  }
+  1% {
+    visibility: visible;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+@keyframes contraccionSinParpadeo {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+    visibility: visible;
+  }
+  99% {
+    visibility: visible;
+  }
+  100% {
+    transform: scale(0.98);
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+/* ==========================================================================
+   ESTILOS BASE Y RESET
+   ========================================================================== */
+
+* {
+  box-sizing: border-box;
+}
+
 body {
-
-    opacity: 0; /* Inicialmente invisible para la animación */
-    font-family: Arial, sans-serif; /* Fuente base */
-    margin: 0; /* Elimina el margen por defecto */
-    padding: 0; /* Elimina el padding por defecto */
-    background-color: var(--bg-color); /* Fondo claro y neutro */
-    color: var(--text-color); /* Texto base */
-    animation: screenFadeIn 0.8s ease-out forwards; /* Suaviza la aparición de la pantalla */
-
-    height: 100vh;  /* Asegura que el cuerpo ocupe toda la altura de la ventana */
-    overflow: hidden; /* Evita el scroll si no es necesario */
-
+  opacity: 0;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  animation: screenFadeIn 0.8s ease-out forwards;
+  height: 100vh;
+  overflow: hidden;
+  line-height: 1.5;
 }
 
-/* Estilos para la barra superior */
-.topbar {
+/* ==========================================================================
+   COMPONENTES REUTILIZABLES
+   ========================================================================== */
 
-    display: grid; /* 1. Habilitar el sistema Grid */
-    text-align: center;
-    grid-template-columns: auto 1fr auto; /* 2. Definimos las tres columnas (Izquierda | Centro | Derecha) */
-    /* - auto: La columna del Logo ocupa solo el espacio de su contenido.
-        - 1fr: La columna de Info-Usuario ocupa todo el espacio restante (Centro).
-        - auto: La columna del Menú ocupa solo el espacio de su contenido.
-    */
-    align-items: center; /* 3. Asegura que los ítems dentro de las celdas se alineen verticalmente al centro */
-    justify-items: center; /* 4. Centra horizontalmente los ítems dentro de sus celdas */  
-    padding: 10px 30px; /* Espaciado interno */
-    background-color: var(--card-bg);
-    border-bottom: 1px solid var(--border-color);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
- 
+/* Botones Base */
+.btn {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-family: 'Comfortaa', Arial, sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  text-align: center;
+  text-decoration: none;
 }
 
-.logo img {
-    height: 130px;
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
 }
 
-.info-usuario {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+.btn-primary {
+  background-color: var(--primary-color);
+  color: white;
+  box-shadow: 0 4px 6px rgba(74, 144, 226, 0.3);
 }
 
-.info-usuario h2, .info-usuario p {
-    margin: 0;
+.btn-primary:hover {
+  background-color: #387cbe;
 }
 
-/* Estilos para el menú con los iconos */
-.nav-menu ul {
-    list-style: none; 
-    padding: 0; /* Elimina el padding por defecto */
-    margin: 0; /* Elimina el margen por defecto */
-    display: flex; /* Usa flexbox para alinear los iconos */
-    justify-content: center; /* Centra los iconos horizontalmente */
-    gap: 2rem; /* Espacio entre los iconos */
+.btn-secondary {
+  background: #e7e7e7;
+  color: #333;
 }
 
-.nav-menu li {
-    margin: 0 15px;
+.btn-secondary:hover {
+  background: var(--text-color-dark);
+  color: white;
 }
 
-.nav-menu a {
-    text-decoration: none;
-    color: var(--text-color);
-    display: flex; /* Convierte el enlace en un flexbox para centrar la imagen */
-    flex-direction: column ; /* Alinea los elementos en columna */
-    align-items: center; /* Centra la imagen horizontalmente */
-    transition: color 0.3s;
-}
-
-.nav-menu img {
-    /* Estandariza el tamaño de los iconos */
-    width: 60px; 
-    height: 60px;
-    object-fit: contain;
-    margin-bottom: 5px; /* Espacio entre la imagen y el texto (si lo hay) */
-}
-
-.nav-menu a span {
-    font-size: 0.9rem;
-    font-weight: bold;
-    text-align: center;
-}
-
-.nav-menu a:hover, .nav-menu li.active a {
-    color: var(--primary-color);
-}
-
-/* Contenido principal para las tarjetas */
-.main-content {
-    padding: 30px;
-}
-
-/* Importamos la fuente "Ananda" */
-@font-face {
-    font-family: 'Ananda'; /* El nombre que usarás en tu CSS */
-    src: url('../../assets/fonts/Ananda.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
-}
-
-/* Importamos la fuente "Comfortaa" */
-@font-face {
-    font-family: 'Comfortaa'; /* El nombre que usarás en tu CSS */
-    src: url('../../assets/fonts/Comfortaa.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
-}
-
-/* Aplicamos la fuente a los textos de la barra superior */
-.info-usuario h2 {
-    font-family: 'Ananda', Arial, sans-serif;
-    font-size: 38px;
-    padding-left: 48px;
-    padding-bottom: 10px;
-}
-.info-usuario p {
-    font-family: 'Comfortaa', Arial, sans-serif;
-    font-size: 15px;
-}
-
-/* Contenedor Principal: Define las dos columnas */
-.inventario-layout {
-    display: grid;
-    /* Define las dos columnas: 
-        - 300px: La Caja 1 tiene un ancho fijo de 300px.
-        - 1fr: La Caja 2 ocupa todo el espacio restante (flexible).
-    */
-    grid-template-columns: 300px 1fr; /* <--- Definición de anchos */
-    gap: 60px; /* Espacio horizontal entre la Caja 1 y la Caja 2 */
-    padding: 20px; /* Espacio interno alrededor de ambas cajas */
-    margin-right: auto; /* Centra el contenedor en la pantalla */
-    margin-left: auto; /* Centra el contenedor en la pantalla */
-    align-items: flex-start; /* Asegura que los hijos se alineen a la parte superior */
-}
-
-/*============================================================*/
-
-/* Caja 1. ⬅️ Contenedor Izquierdo (Barra de Botones) */
-.contenedor-botones {
-    /* Ocupa el 100% de los 300px asignados */
-    background: linear-gradient(135deg, #ffffff 0%, #f8f9ff 100%);
-    border-radius: 20px;
-    padding: 25px 20px;
-    box-shadow: var(--shadow-lg);
-    border: 1px solid rgba(139, 95, 191, 0.1);
-    backdrop-filter: blur(10px);
-    /* Puedes fijar la altura si es necesario: height: 400px; */
-    /* Estilos adicionales para el contenedor */
-}
-
-/* Estilos de la línea y botones internos (solo si la quieres bajo los botones): */
-.contenedor-botones nav {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-/* Nuevo estilo para el párrafo introductorio y el botón */
-.inventory-intro {
-    display: flex;
-    justify-content: space-between; /* Distribuye el texto a la izquierda y el botón a la derecha */
-    align-items: center; /* Centra verticalmente el texto y el botón */
-    margin-bottom: 20px; /* Espacio debajo del encabezado de introducción */
-    flex-wrap: wrap; /* Permite que el contenido se envuelva en pantallas pequeñas */
-}
-
-/* Estilo para el botón Añadir a inventario */
+/* Botones Específicos */
 .añadir {
-    background-color: var(--primary-color);
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 1rem;
-    font-weight: 600;
-    transition: background-color 0.3s, transform 0.2s;
-    box-shadow: 0 4px 6px rgba(74, 144, 226, 0.3); /* Sombra suave basada en primary-color */
-    font-family: 'Comfortaa', Arial, sans-serif;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: background-color 0.3s, transform 0.2s;
+  box-shadow: 0 4px 6px rgba(74, 144, 226, 0.3);
+  font-family: 'Comfortaa', Arial, sans-serif;
 }
 
 .añadir:hover {
-    background-color: #387cbe; /* Un poco más oscuro */
-    transform: translateY(-2px);
+  background-color: #387cbe;
+  transform: translateY(-2px);
 }
 
 .botones {
-    /* Aplica el degradado nacarado */
-    background: linear-gradient(135deg, #ffffff 0%, #E0F7FF 50%, #ffe7ff 100%);
-    padding: 15px 20px; 
-    border: none;
-    border-radius: 5px;
-    color: rgb(0, 0, 0);
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    text-align: left;
-    font-size: 1rem;
-    box-shadow: var(--shadow);
-    position: relative;
-    overflow: hidden;
-    font-family: 'Comfortaa', Arial, sans-serif;
+  background: linear-gradient(135deg, #ffffff 0%, #E0F7FF 50%, #ffe7ff 100%);
+  padding: 15px 20px;
+  border: none;
+  border-radius: 5px;
+  color: rgb(0, 0, 0);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: left;
+  font-size: 1rem;
+  box-shadow: var(--shadow);
+  position: relative;
+  overflow: hidden;
+  font-family: 'Comfortaa', Arial, sans-serif;
+  width: 100%;
 }
+
 .botones::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-    transition: left 0.5s;
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: left 0.5s;
 }
+
 .botones:hover::before {
-    left: 100%;
+  left: 100%;
 }
+
 .botones:hover {
-    transform: translateY(-3px);
-    box-shadow: var(--shadow-lg);
-    background: linear-gradient(135deg, #ffe7ff, var(--primary-dark));
-}
-/*============================================================*/
-
-/* Caja 2. ➡️ Contenedor Derecho (Inventario Actual) */
-.inventarios{
-    background: linear-gradient(135deg, #ffffff 0%, #f8f9ff 100%);
-    padding: 20px;
-    box-shadow: var(--shadow-lg);
-    border: 1px solid rgba(139, 95, 191, 0.1);
-    backdrop-filter: blur(10px);
-    border-radius: 20px; /* Añadido para consistencia con contenedor-botones */
-
-    /* 💡 CAMBIOS CRÍTICOS: Fijamos la altura a 80vh y eliminamos 'height: auto' */
-    height: 55vh; 
-
-    max-height: none; /* Desactivamos el max-height ya que 'height' lo reemplaza */
-    
-    overflow: hidden; 
-    display: flex; 
-    flex-direction: column; 
-
-    box-sizing: border-box;
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg);
+  background: linear-gradient(135deg, #ffe7ff, var(--primary-dark));
 }
 
-/* Estados vacío, loading y error */
-.inventario-vacio, .loading, .error {
-    text-align: center;
-    padding: 4rem 2rem;
-    color: var(--text-light);
-    font-family: 'Comfortaa', Arial, sans-serif;
-}
-
-.inventario-vacio p, .loading p, .error p {
-    font-size: 1rem;
-    margin-bottom: 1rem;
-}
-
-.loading {
-    color: var(--loading);
-}
-
-.error {
-    color: var(--danger-color);
-}
-
-/* Header de inventario */
-.inventario-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 2px solid var(--border-color);
-}
-
-.inventario-header h3 {
-    color: var(--text-color);
-    font-size: 1.6rem;
-    font-weight: 700;
-    font-family: 'Comfortaa', Arial, sans-serif;
-}
-
-.total-items {
-    background: var(--accent-color);
-    color: var(--text-color);
-    padding: 8px 16px;
-    border-radius: 20px;
-    font-weight: 600;
-    font-size: 0.9rem;
-    font-family: 'Comfortaa', Arial, sans-serif;
-}
-
-/* Tabla mejorada */
-.table-container {
-    overflow: auto;
-    box-shadow: var(--shadow);
-    background: white;
-    flex: 1; 
-    
-    /* 💡 CAMBIOS CRÍTICOS: Eliminamos el cálculo de max-height. 
-       'flex: 1' ahora hace el cálculo automáticamente, tomando 
-       la altura restante del padre fijo (80vh) menos el header. */
-    max-height: none; 
-}
-
-.inventario-table {
-    width: 100%;
-    border-collapse: collapse;
-    text-align: center;
-}
-
-.inventario-table thead {
-    background:#eadfe8;
-}
-.inventario-table th {
-    padding: 0.3rem 0.3rem;
-    text-align: center;
-}
-
-.inventario-table td {
-    padding: 1rem 1rem;
-    border-bottom: 1px solid var(--border-color);
-    font-family: 'Comfortaa', Arial, sans-serif;
-    text-align: center;
-}
-
-.inventario-table tbody tr:hover {
-    background: rgba(139, 95, 191, 0.05);
-    transform: scale(1.01);
-    transition: all 0.2s ease;
-}
-
-.inventario-table tbody tr:last-child td {
-    border-bottom: none;
-}
-/* Estados mejorados*/
+/* Estados */
 .estado {
-    padding: 8px 16px;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    font-family: 'Comfortaa', Arial, sans-serif;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-family: 'Comfortaa', Arial, sans-serif;
 }
 
-.estado.disponible, .estado.activo {
-    background: rgba(0, 255, 106, 0.634);
-    color: var(--success-color);
-    border: 1px solid var(--success-color);
+.estado.disponible,
+.estado.activo {
+  background: rgba(72, 187, 120, 0.2);
+  color: var(--success-color);
+  border: 1px solid var(--success-color);
 }
 
-.estado.agotado, .estado.inactivo {
-    background: rgba(245, 101, 101, 0.1);
-    color: var(--danger-color);
-    border: 1px solid var(--danger-color);
+.estado.agotado,
+.estado.inactivo {
+  background: rgba(245, 101, 101, 0.1);
+  color: var(--danger-color);
+  border: 1px solid var(--danger-color);
 }
 
 .estado.bajo-stock {
-    background: rgba(237, 137, 54, 0.1);
-    color: var(--warning-color);
-    border: 1px solid var(--warning-color);
+  background: rgba(237, 137, 54, 0.1);
+  color: var(--warning-color);
+  border: 1px solid var(--warning-color);
 }
 
-/* Responsive */
-@media (max-width: 1024px) {
-    .inventario-layout {
-        grid-template-columns: 1fr;
-        gap: 30px;
-    }
-    
-    .contenedor-botones nav {
-        flex-direction: row;
-        overflow-x: auto;
-        padding-bottom: 10px;
-    }
-    
-    .botones {
-        white-space: nowrap;
-        min-width: 160px;
-    }
-    
-    /* En modo móvil/tablet, el contenedor debe ser flexible de nuevo */
-    .inventarios {
-        height: auto; 
-        max-height: 80vh; 
-    }
-}
-@media (max-width: 768px) {
-    .inventario-layout {
-        padding: 15px;
-    }
-    
-    .inventario-header {
-        flex-direction: column;
-        gap: 1rem;
-        text-align: center;
-    }
-    
-    .inventario-table {
-        font-size: 0.9rem;
-    }
-    
-    .inventario-table th,
-    .inventario-table td {
-        padding: 1rem 1.2rem;
-    }
-    
-    .stats-container {
-        justify-content: center;
-    }
+/* ==========================================================================
+   LAYOUT PRINCIPAL
+   ========================================================================== */
+
+/* Topbar */
+.topbar {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  justify-items: center;
+  padding: 10px 30px;
+  background-color: var(--card-bg);
+  border-bottom: 1px solid var(--border-color);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
-/* Animaciones */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+.logo img {
+  height: 130px;
+  max-width: 100%;
 }
 
-.inventarios > * {
-    animation: fadeIn 0.5s ease-out;
+.info-usuario {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
-/* Scroll personalizado */
-.table-container::-webkit-scrollbar{
-    height: 4px;
+.info-usuario h2,
+.info-usuario p {
+  margin: 0;
 }
 
-/* ESTILOS PARA MODALES */
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(5px);
-    animation: fadeIn 0.3s ease;
-    
-    /* MODIFICACIONES PARA CENTRADO RESPONSIVE */
-    align-items: center; /* Centrado vertical */
-    justify-content: center; /* Centrado horizontal */
+.info-usuario h2 {
+  font-family: 'Ananda', Arial, sans-serif;
+  font-size: 38px;
+  padding-left: 48px;
+  padding-bottom: 10px;
 }
 
-.modal-content {
-    background: white;
-    margin: 20px auto; 
-    border-radius: 10px;
-    width: 90%;
-    max-width: 500px;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-    animation: slideIn 0.3s ease;
-    overflow: hidden;
-    max-height: 90vh; /* Para pantallas pequeñas */
-    overflow-y: auto;
-    margin-top: 30vh;
+.info-usuario p {
+  font-family: 'Comfortaa', Arial, sans-serif;
+  font-size: 15px;
 }
 
-.modal-content.large {
-    max-width: 700px;
+/* Navegación */
+.nav-menu ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
 }
 
-.modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1.5rem 2rem;
-    background: var(--primary-color);
-    color: white;
+.nav-menu a {
+  text-decoration: none;
+  color: var(--text-color);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: color 0.3s;
 }
 
-.modal-header h3 {
-    margin: 0;
-    font-family: 'Ananda', Arial, sans-serif;
-    font-size: 1.5rem;
+.nav-menu img {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+  margin-bottom: 5px;
 }
 
-.modal-body {
-    width: auto; 
-    height: 10vh;
-    padding: 1rem 2rem; /* Añadir padding para que el contenido no toque los bordes */
-    overflow-x: auto; /* Permitir scroll horizontal si hay demasiados botones */
-    overflow-y: auto;
+.nav-menu a span {
+  font-size: 0.9rem;
+  font-weight: bold;
+  text-align: center;
 }
 
-/* NUEVA REGLA: Contenedor de los botones (<nav>) para alinear horizontalmente */
-.modal-body nav {
-    display: flex; /* Habilitar Flexbox */
-    gap: 10px; /* Espacio entre botones */
-    align-items: center; /* Alineación vertical (si la altura de nav cambia) */
-    justify-content: center; /* Centrar los botones horizontalmente */
-    flex-wrap: nowrap; /* Evitar que los botones salten de línea (forzando el scroll horizontal si es necesario) */
-    padding: 0.5rem 0; /* Padding vertical ligero */
+.nav-menu a:hover,
+.nav-menu li.active a {
+  color: var(--primary-color);
 }
 
-.modal-footer {
-    display: flex;
-    justify-content: flex-end;
-    gap: 1rem;
-    padding: 1.5rem 2rem;
-    background: var(--bg-light);
-    border-top: 1px solid var(--border-color);
+/* Contenido principal */
+.main-content {
+  padding: 30px;
 }
 
-/* Botones */
-.modal-footer button{
-    padding: 0.75rem 1.5rem;
-    border: none;
-    cursor: pointer;
-    font-family: 'Comfortaa', Arial, sans-serif;
-    font-weight: 600;
-    transition: all 0.3s ease;
+/* ==========================================================================
+   LAYOUT DE INVENTARIO
+   ========================================================================== */
+
+.inventario-layout {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 60px;
+  padding: 20px;
+  margin: 0 auto;
+  align-items: flex-start;
 }
 
-.modal-footer button:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-lg);
+/* Panel lateral de botones */
+.contenedor-botones {
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9ff 100%);
+  border-radius: 20px;
+  padding: 25px 20px;
+  box-shadow: var(--shadow-lg);
+  border: 1px solid rgba(139, 95, 191, 0.1);
+  backdrop-filter: blur(10px);
 }
 
-/* Animaciones */
-@keyframes slideIn {
-    from {
-        opacity: 0;
-        transform: translateY(-50px) scale(0.9);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
+.contenedor-botones nav {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 }
 
-/* Estilos para el formulario dentro del modal */
-.form-group {
-    margin-bottom: 1.5rem;
+.inventory-intro {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
 }
 
-.form-group label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 600;
-    color: var(--text-dark);
-    font-family: 'Comfortaa', Arial, sans-serif;
+/* Panel de inventario */
+.inventarios {
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9ff 100%);
+  padding: 20px;
+  box-shadow: var(--shadow-lg);
+  border: 1px solid rgba(139, 95, 191, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  height: 55vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
-.form-group input,
-.form-group select,
-.form-group textarea {
-    width: 100%;
-    padding: 0.75rem;
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    font-family: 'Comfortaa', Arial, sans-serif;
-    transition: border-color 0.3s ease;
+.inventario-vacio,
+.loading,
+.error {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: var(--text-light);
+  font-family: 'Comfortaa', Arial, sans-serif;
 }
 
-.form-group input:focus,
-.form-group select:focus,
-.form-group textarea:focus {
-    outline: none;
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(139, 95, 191, 0.1);
+.inventario-vacio p,
+.loading p,
+.error p {
+  font-size: 1rem;
+  margin-bottom: 1rem;
 }
 
-/* Mejoras para la tabla - hacer filas clickeables */
-.inventario-table tbody tr {
-    cursor: pointer;
-    transition: all 0.3s ease;
+.loading {
+  background: var(--loading);
+}
+
+.error {
+  color: var(--danger-color);
+}
+
+.inventario-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--border-color);
+}
+
+.inventario-header h3 {
+  color: var(--text-color);
+  font-size: 1.6rem;
+  font-weight: 700;
+  font-family: 'Comfortaa', Arial, sans-serif;
+}
+
+.total-items {
+  background: var(--accent-color);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  font-family: 'Comfortaa', Arial, sans-serif;
+}
+
+.table-container {
+  overflow: auto;
+  box-shadow: var(--shadow);
+  background: white;
+  flex: 1;
+}
+
+.inventario-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: center;
+}
+
+.inventario-table thead {
+  background: #eadfe8;
+}
+
+.inventario-table th {
+  padding: 0.8rem 0.5rem;
+  text-align: center;
+  font-weight: 600;
+  font-family: 'Comfortaa', Arial, sans-serif;
+}
+
+.inventario-table td {
+  padding: 1rem 0.5rem;
+  border-bottom: 1px solid var(--border-color);
+  font-family: 'Comfortaa', Arial, sans-serif;
+  text-align: center;
 }
 
 .inventario-table tbody tr:hover {
-    background: rgba(139, 95, 191, 0.1);
-    transform: translateX(5px);
+  background: rgba(139, 95, 191, 0.05);
+  transition: all 0.2s ease;
 }
 
-/* Responsive para modales */
+.inventario-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* ==========================================================================
+   MODALES
+   ========================================================================== */
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(5px);
+  animation: fadeIn 0.3s ease;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal.show {
+  display: flex;
+  /* Aislar el contexto de apilamiento */
+  isolation: isolate;
+}
+
+/* Asegurar que las animaciones usen composición GPU */
+.modal-content * {
+  transform: translateZ(0);
+}
+
+.modal-content {
+  background: white;
+  margin: 5% auto;
+  border-radius: 15px;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+  
+  /* Transición ultra optimizada */
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: scale(0.95);
+  opacity: 0;
+  animation: modalEntradaSuave 0.6s ease-out forwards;
+  
+  /* Propiedades para máxima fluidez */
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  perspective: 1000px;
+  transform-style: preserve-3d;
+  
+}
+
+.modal-content.expanded {
+  max-width: 700px;
+  
+  /* Animación específica para expansión */
+  animation: expansionUltraFluida 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  
+  /* Forzar aceleración GPU */
+  transform: translateZ(0);
+  opacity: 1;
+}
+
+.modal-content.large {
+  max-width: 700px;
+}
+
+#modal-añadir .modal-content:not(.expanded) {
+  max-width: 450px;
+  max-height: 500px;
+}
+
+#modal-añadir .modal-content.expanded {
+  max-width: 700px;
+  max-height: 90vh;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 2rem;
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+  color: white;
+  transition: all 0.3s ease;
+}
+
+.modal-header,
+.modal-footer {
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: padding;
+}
+
+.modal-content.expanded .modal-header {
+  padding: 1.8rem 2rem;
+}
+
+.modal-header h3 {
+  margin: 0;
+  font-family: 'Ananda', Arial, sans-serif;
+  font-size: 1.5rem;
+}
+
+.modal-body {
+  padding: 2rem;
+  overflow: hidden;
+  
+  /* Transición suave para el contenido */
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  
+  /* Prevenir repaints costosos */
+  will-change: padding, max-height;
+}
+
+.modal-content.expanded .modal-body {
+  max-height: 60vh;
+  padding: 2.5rem;
+  
+  /* Animación separada para el contenido */
+  animation: cambioContenidoSuave 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
+}
+
+.modal-content:not(.expanded) .modal-body {
+  max-height: 300px;
+}
+
+.modal-content.expanded .modal-body {
+  max-height: 60vh;
+  padding: 2.5rem;
+}
+
+.modal-body nav {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  padding: 0.5rem 0;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  padding: 1.5rem 2rem;
+  background: var(--bg-light);
+  border-top: 1px solid var(--border-color);
+  transition: all 0.3s ease;
+}
+
+.modal-content.expanded .modal-footer {
+  padding: 1.8rem 2.5rem;
+}
+
+.modal-footer button {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-family: 'Comfortaa', Arial, sans-serif;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.modal-footer button:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+#btn-atras {
+  background: #e7e7e7;
+  color: #333;
+}
+
+.acciones {
+    text-align: center;
+    width: 60px;
+}
+
+.btn-editar {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 5px 8px;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.btn-editar:hover {
+    background-color: #e9ecef;
+}
+
+/* ==========================================================================
+   FORMULARIOS
+   ========================================================================== */
+
+.form-categoria {
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+.form-categoria fieldset {
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  margin-bottom: 25px;
+  padding: 20px 0;
+  border-bottom: 1px solid #E0E0E0;
+  transition: border-bottom-color 0.3s ease;
+}
+
+.form-categoria fieldset:last-of-type {
+  border-bottom: none;
+}
+
+.form-categoria fieldset:hover {
+  border-bottom: 1px solid var(--accent-color);
+}
+
+.form-categoria legend {
+  font-size: 1.1rem;
+  font-weight: 400;
+  color: var(--text-color-dark);
+  padding: 5px 0;
+  background-color: transparent;
+  border-radius: 0;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  border-bottom: 2px solid var(--primary-color);
+  margin-bottom: 15px;
+  font-family: 'Comfortaa', Arial, sans-serif;
+  width: 100%;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: var(--text-dark);
+  font-family: 'Comfortaa', Arial, sans-serif;
+}
+
+.form-categoria .form-group {
+  margin-bottom: 18px;
+}
+
+.form-categoria .form-group label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: var(--text-color-dark);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  font-family: 'Comfortaa', Arial, sans-serif;
+}
+
+.form-categoria .form-group label.required::after {
+  content: " *";
+  color: #dc3545;
+}
+
+.form-categoria input[type="text"],
+.form-categoria input[type="number"],
+.form-categoria select,
+.form-categoria textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #CCCCCC;
+  border-radius: 4px;
+  font-size: 0.95rem;
+  box-sizing: border-box;
+  color: var(--text-color-dark);
+  background-color: #fff;
+  box-shadow: none;
+  transition: border-color 0.3s ease;
+  font-family: 'Comfortaa', Arial, sans-serif;
+}
+
+.form-categoria input:focus,
+.form-categoria select:focus,
+.form-categoria textarea:focus {
+  border: 2px solid var(--primary-color);
+  outline: none;
+}
+
+.form-categoria .form-row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+
+/* ==========================================================================
+   RESPONSIVE DESIGN
+   ========================================================================== */
+
+/* Optimizar para dispositivos con alta tasa de refresco */
+@media (prefers-reduced-motion: no-preference) {
+  .modal-content {
+    /* Reducir duración para mayor fluidez percibida */
+    transition-duration: 0.3s;
+  }
+  
+  .modal-content.expanded {
+    animation-duration: 0.25s;
+  }
+}
+
+/* Para usuarios que prefieren movimiento reducido */
+@media (prefers-reduced-motion: reduce) {
+  .modal-content,
+  .modal-content.expanded {
+    transition: none;
+    animation: none;
+  }
+}
+
+@media (max-width: 1024px) {
+  .inventario-layout {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+  
+  .contenedor-botones nav {
+    flex-direction: row;
+    overflow-x: auto;
+    padding-bottom: 10px;
+  }
+  
+  .botones {
+    white-space: nowrap;
+    min-width: 160px;
+  }
+  
+  .inventarios {
+    height: auto;
+    max-height: 80vh;
+  }
+}
+
 @media (max-width: 768px) {
-    .modal-content {
-        margin: 10% auto;
-        width: 95%;
-    }
-    
-    .modal-footer {
-        flex-direction: column;
-    }
-    
-    .btn {
-        width: 100%;
-    }
-}
-
-.detalles-producto {
-    display: flex;
+  .inventario-layout {
+    padding: 15px;
+  }
+  
+  .inventario-header {
     flex-direction: column;
     gap: 1rem;
+    text-align: center;
+  }
+  
+  .modal-content {
+    margin: 10% auto;
+    width: 95%;
+  }
+  
+  .modal-footer {
+    flex-direction: column;
+  }
+  
+  .btn, .añadir, .botones {
+    width: 100%;
+  }
+  
+  .form-categoria .form-row {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+  
+  .modal-body nav {
+    flex-direction: column;
+    align-items: stretch;
+  }
 }
 
-.detalle-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem;
-    background: var(--bg-light);
+@media (max-width: 480px) {
+  .topbar {
+    grid-template-columns: 1fr;
+    gap: 15px;
+    padding: 10px 15px;
+  }
+  
+  .info-usuario h2 {
+    padding-left: 0;
+    font-size: 28px;
+    text-align: center;
+  }
+  
+  .nav-menu ul {
+    gap: 1rem;
+  }
+  
+  .nav-menu img {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+/* ==========================================================================
+   UTILIDADES Y MEJORAS
+   ========================================================================== */
+
+.inventarios > * {
+  animation: fadeIn 0.5s ease-out;
+}
+
+.table-container::-webkit-scrollbar {
+  height: 6px;
+  width: 6px;
+}
+
+.table-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.table-container::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+.table-container::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* Clases de utilidad para botones */
+.btn-block {
+  width: 100%;
+}
+
+.btn-sm {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+}
+
+/* ==========================================================================
+   NOTIFICACIONES
+   ========================================================================== */
+
+.notificacion {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 20px;
     border-radius: 8px;
-    border-left: 4px solid var(--primary-color);
+    color: white;
+    font-weight: 600;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    animation: fadeIn 0.3s ease;
+    max-width: 400px;
+    box-shadow: var(--shadow-lg);
+    font-family: 'Comfortaa', Arial, sans-serif;
 }
 
-.detalle-item strong {
-    color: var(--text-dark);
-    font-family: 'Comfortaa', Arial, sans-serif;
+.notificacion-success {
+    background: var(--success-color);
+}
+
+.notificacion-error {
+    background: var(--danger-color);
+}
+
+.notificacion-warning {
+    background: var(--warning-color);
+}
+
+.notificacion-info {
+    background: var(--primary-color);
+}
+
+.notificacion button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 0;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.notificacion button:hover {
+    opacity: 0.8;
 }
