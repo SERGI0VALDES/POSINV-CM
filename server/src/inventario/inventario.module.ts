@@ -1,20 +1,61 @@
+// D:\POSINVCM\server\src\inventario\inventario.module.ts
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-// Servicios y controladores
-import { InventarioService } from '../inventario/inventario.service';
+// Controladores
+import { InsumoController } from './controllers/insumo.controller';
+import { ProductoBaseController } from './controllers/producto-base.controller';
+import { ProductoTerminadoController } from './controllers/producto-terminado.controller';
+import { TelaController } from './controllers/tela.controller';
 import { InventarioController } from '../inventario/inventario.controller';
-import { ProductoBaseController } from '../inventario/controllers/producto-base.controller';
-import { ProductoBaseService } from '../inventario/services/producto-base.service'; // Ajusta la ruta del import
+import { VestidosController } from './controllers/vestidos.controller';
+// Servicios
+import { InsumoService } from './services/insumo.service';
+import { ProductoBaseService } from './services/producto-base.service';
+import { ProductoTerminadoService } from './services/producto-terminado.service';
+import { TelaService } from './services/tela.service';
+import { InventarioService } from './inventario.service';
+import { VestidosService } from './services/vestido.service';
 // Entidades involucradas
-import { ProductoBase } from '../inventario/entities/producto-base.entity';
-import { MovimientoInventario } from '../inventario/entities/movimiento-inventario.entity';
+import { Insumo } from './entities/insumo.entity';
+import { Inventario } from './entities/inventario.entity';
+import { MovimientoInventario } from './entities/movimiento-inventario.entity';
+import {
+  ProductoBase,
+  ProductoCompleto,
+} from './entities/producto-base.entity';
+import { ProductoTerminado } from './entities/producto-terminado.entity';
+import { Tela } from './entities/tela.entity';
+import { Vestido } from './entities/vestido.entity';
 
 @Module({
   imports: [
     // Aquí es donde le decimos a Nest qué entidades usar en este módulo
-    TypeOrmModule.forFeature([ProductoBase, MovimientoInventario]),
+    TypeOrmModule.forFeature([
+      ProductoCompleto,
+      ProductoBase,
+      MovimientoInventario,
+      Insumo,
+      Inventario,
+      Tela,
+      ProductoTerminado,
+      Vestido,
+    ]),
   ],
-  providers: [InventarioService, ProductoBaseService],
-  controllers: [InventarioController, ProductoBaseController],
+  providers: [
+    InventarioService,
+    ProductoBaseService,
+    InsumoService,
+    ProductoTerminadoService,
+    TelaService,
+    VestidosService,
+  ],
+  controllers: [
+    InventarioController,
+    TelaController,
+    ProductoBaseController,
+    InsumoController,
+    ProductoTerminadoController,
+    VestidosController,
+  ],
 })
 export class InventarioModule {}

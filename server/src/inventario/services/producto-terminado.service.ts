@@ -13,74 +13,194 @@ export class ProductoTerminadoService {
     private readonly dataSource: DataSource,
   ) {}
 
-  // Equivale al getAll() con JOIN
-  async obtenerTodos() {
+  /**
+   * Obtiene todos los productos terminados activos con sus relaciones
+   */
+  async obtenerTodos(): Promise<ProductoTerminado[]> {
     return await this.prodTerminadoRepo.find({
       relations: ['producto'],
-      where: { producto: { activo: 1 } },
-      order: { producto: { nombre: 'ASC' } },
+      where: {
+        producto: { activo: 1 },
+      },
+      order: {
+        producto: { nombre: 'ASC' },
+      },
     });
   }
 
-  // Crear con Transacción
-  async crear(dto: CrearProductoTerminadoDto) {
+  /**
+   * Crea un nuevo producto terminado
+   */
+  async crear(dto: CrearProductoTerminadoDto): Promise<ProductoTerminado> {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
 
     try {
-      const nuevoProductoBase = queryRunner.manager.create(ProductoBase, {
-        idProducto: dto.idProducto,
+      // 1. Crear ProductoBase (NO pasar idProducto si es auto-increment)
+      const productoBase = queryRunner.manager.create(ProductoBase, {
+        // idProducto: dto.idProducto, // ❌ COMENTAR si es auto-generado
         nombre: dto.nombre,
+        descripcion: dto.descripcion || '',
         stockActual: dto.stockActual || 0,
         stockMinimo: dto.stockMinimo || 0,
         precioVenta: dto.precioVenta,
-        activo: 1,
+        activo: dto.activo ?? 1, // Usar valor del DTO o 1 por defecto
       });
-      await queryRunner.manager.save(nuevoProductoBase);
 
-      const nuevoProdTerminado = queryRunner.manager.create(ProductoTerminado, {
+      const productoBaseGuardado = await queryRunner.manager.save(productoBase);
+
+      // 2. Crear ProductoTerminado
+      const productoTerminado = queryRunner.manager.create(ProductoTerminado, {
         codigoSku: dto.codigoSku,
-        tipoProducto: dto.tipoProducto,
-        producto: nuevoProductoBase,
+        color: dto.color, // ✅ Asegurar que este campo existe
+        idProducto: productoBaseGuardado.idProducto, // Usar ID generado
       });
-      const resultado = await queryRunner.manager.save(nuevoProdTerminado);
+
+      await queryRunner.manager.save(productoTerminado);
+
+      // 3. Obtener el objeto completo con relaciones
+      const productoCompleto = await queryRunner.manager.findOne(
+        ProductoTerminado,
+        {
+          where: { idProducto: productoBaseGuardado.idProducto },
+          relations: ['producto'],
+        },
+      );
 
       await queryRunner.commitTransaction();
-      return resultado;
-    } catch (err) {
+      return productoCompleto;
+    } catch (error) {
       await queryRunner.rollbackTransaction();
-      throw err;
+      console.error('Error al crear producto:', error.message);
+      throw error;
     } finally {
       await queryRunner.release();
     }
   }
 
-  // Buscar por SKU
-  async obtenerPorSku(sku: string) {
-    const item = await this.prodTerminadoRepo.findOne({
+  /**
+   * Obtiene un producto terminado por su SKU
+   */
+  async obtenerPorSku(sku: string): Promise<ProductoTerminado> {
+    const producto = await this.prodTerminadoRepo.findOne({
       where: { codigoSku: sku },
       relations: ['producto'],
     });
-    if (!item) throw new NotFoundException('Producto con SKU no encontrado');
-    return item;
+
+    if (!producto) {
+      throw new NotFoundException(`Producto con SKU '${sku}' no encontrado`);
+    }
+
+    return producto;
   }
 
-  // Búsqueda por nombre (Equivale al search)
-  async buscarPorNombre(nombre: string) {
+  /**
+   * Busca productos terminados por nombre
+   */
+  async buscarPorNombre(nombre: string): Promise<ProductoTerminado[]> {
+    if (!nombre || nombre.trim().length === 0) {
+      return this.obtenerTodos();
+    }
+
     return await this.prodTerminadoRepo.find({
-      where: { producto: { nombre: Like(`%${nombre}%`), activo: 1 } },
+      where: {
+        producto: {
+          nombre: Like(`%${nombre.trim()}%`),
+          activo: 1,
+        },
+      },
       relations: ['producto'],
     });
   }
 
-  // Obtener stock bajo
-  async obtenerBajoStock() {
+  /**
+   * Obtiene productos terminados con stock bajo
+   */
+  async obtenerBajoStock(): Promise<ProductoTerminado[]> {
     return await this.prodTerminadoRepo
       .createQueryBuilder('pt')
       .leftJoinAndSelect('pt.producto', 'pb')
       .where('pb.stockActual <= pb.stockMinimo')
-      .andWhere('pb.activo = 1')
+      .andWhere('pb.activo = :activo', { activo: 1 })
       .getMany();
+  }
+
+  /**
+   * Actualiza un producto terminado
+   */
+  async actualizar(
+    id: number,
+    dto: any,
+  ): Promise<{ success: boolean; message: string }> {
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+
+    try {
+      // 1. Actualizar la parte de PRODUCTO_BASE
+      await queryRunner.manager.update(ProductoBase, id, {
+        nombre: dto.nombre,
+        descripcion: dto.descripcion,
+        stockActual: dto.stockActual,
+        stockMinimo: dto.stockMinimo,
+        precioVenta: dto.precioVenta,
+      });
+
+      // 2. Actualizar la parte de PROD_TERMINADO (color, sku)
+      await queryRunner.manager.update(
+        ProductoTerminado,
+        { idProducto: id },
+        {
+          codigoSku: dto.codigoSku,
+          color: dto.color,
+          categoria: dto.categoria,
+        },
+      );
+
+      await queryRunner.commitTransaction();
+      return { success: true, message: 'Producto actualizado' };
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      throw error;
+    } finally {
+      await queryRunner.release();
+    }
+  }
+
+  /**
+   * Elimina un producto terminado
+   */
+  async eliminar(id: number): Promise<{ success: boolean; message: string }> {
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+
+    try {
+      // Verificar existencia
+      const existe = await this.prodTerminadoRepo.findOne({
+        where: { producto: { idProducto: id } },
+      });
+
+      if (!existe) {
+        throw new NotFoundException('Producto no encontrado');
+      }
+
+      // Eliminar en orden correcto
+      await queryRunner.manager.delete(ProductoTerminado, { idProducto: id });
+      await queryRunner.manager.delete(ProductoBase, { idProducto: id });
+
+      await queryRunner.commitTransaction();
+      return {
+        success: true,
+        message: 'Producto eliminado correctamente',
+      };
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      console.error('Error al eliminar:', error.message);
+      throw error;
+    } finally {
+      await queryRunner.release();
+    }
   }
 }

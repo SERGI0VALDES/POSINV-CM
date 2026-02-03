@@ -37,15 +37,20 @@ export class InventarioService {
 
   async obtenerPorId(id: number) {
     const producto = await this.productoRepo.findOne({
-      where: { int: id }, // O 'idProducto' según tu @PrimaryColumn
+      // Cambiamos 'int' por 'idProducto'
+      where: { idProducto: id },
     });
+
     if (!producto) throw new NotFoundException('Producto no encontrado');
     return producto;
   }
 
   async eliminar(id: number) {
-    // Soft delete como en tu controlador antiguo
-    return await this.productoRepo.update(id, { activo: 0 });
+    return await this.productoRepo.delete({ idProducto: id });
+  }
+
+  async actualizar(id: number, data: any) {
+    return await this.productoRepo.update({ idProducto: id }, data);
   }
 
   // --- MÉTODOS DE MOVIMIENTOS ---
@@ -59,11 +64,24 @@ export class InventarioService {
   }
 
   async registrar(dto: RegistrarMovimientoDto) {
-    const nuevoMovimiento = this.movRepo.create({
-      ...dto,
-      producto: { idProducto: dto.idProducto } as any,
+    return await this.movRepo.manager.transaction(async (manager) => {
+      // 1. Crear el registro del movimiento
+      const nuevoMovimiento = manager.create(MovimientoInventario, {
+        ...dto,
+        producto: { idProducto: dto.idProducto } as any,
+      });
+
+      // 2. Actualizar el stock en ProductoBase
+      const factor = dto.tipoMovimiento === 'entrada' ? 1 : -1;
+      await manager.increment(
+        ProductoBase,
+        { idProducto: dto.idProducto },
+        'stockActual',
+        dto.cantidad * factor,
+      );
+
+      return await manager.save(nuevoMovimiento);
     });
-    return await this.movRepo.save(nuevoMovimiento);
   }
 
   async obtenerPorProducto(idProducto: number) {

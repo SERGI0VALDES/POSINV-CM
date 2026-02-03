@@ -1,3 +1,5 @@
+// D:\POSINVCM\server\src\inventario\controllers\producto-base.controller.ts
+
 import {
   Controller,
   Get,
@@ -6,35 +8,47 @@ import {
   Body,
   Delete,
   ParseIntPipe,
+  Post, // Añadimos Post para poder crear
 } from '@nestjs/common';
 import { ProductoBaseService } from '../services/producto-base.service';
 
-@Controller('productos-maestro') // Nombre distinto para no chocar con los específicos
+@Controller('productos-maestro')
 export class ProductoBaseController {
   constructor(private readonly service: ProductoBaseService) {}
 
   @Get()
-  getAll() {
-    return this.service.findAll();
+  async getAll() {
+    // Esto devolverá los objetos con el formato de ProductoCompleto (la vista)
+    return await this.service.findAll();
+  }
+
+  @Post()
+  async create(@Body() data: any) {
+    // Para crear un nuevo registro en la tabla base
+    return await this.service.create(data);
   }
 
   @Get('bajo-stock')
-  getAlerts() {
-    return this.service.getBajoStock();
+  async getAlerts() {
+    // Asegúrate de tener este método en el service o créalo usando la vista
+    return await this.service.getBajoStock();
   }
 
   @Get(':id')
-  getOne(@Param('id', ParseIntPipe) id: number) {
-    return this.service.findOne(id);
+  async getOne(@Param('id', ParseIntPipe) id: number) {
+    // Buscamos en la vista para traer los detalles (tela, vestido, etc)
+    return await this.service.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id', ParseIntPipe) id: number, @Body() data: any) {
-    return this.service.update(id, data);
+  async update(@Param('id', ParseIntPipe) id: number, @Body() data: any) {
+    // El update debe hacerse sobre la tabla real (baseRepo en el service)
+    return await this.service.update(id, data);
   }
 
   @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number) {
-    return this.service.softDelete(id);
+  async remove(@Param('id', ParseIntPipe) id: number) {
+    // El borrado debe ser sobre la tabla real
+    return await this.service.remove(id);
   }
 }

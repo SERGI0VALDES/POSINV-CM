@@ -358,3 +358,20 @@ FROM PEDIDO
 WHERE estado = 'Completado'
 GROUP BY strftime('%Y-%m', fechaVenta)
 ORDER BY mes DESC;
+
+CREATE VIEW v_productos_completos AS
+SELECT 
+    pb.idProducto,
+    pb.nombre,
+    pb.descripcion,
+    pb.stockActual,
+    pb.stockMinimo,
+    pb.precioVenta,
+    pb.activo,
+    v.int AS vestidoId,
+    v.color,
+    v.codigoSku,
+    v.categoria,
+    v.created_at AS fecha_registro
+FROM PRODUCTO_BASE pb
+INNER JOIN VESTIDO v ON pb.idProducto = v.idProducto;

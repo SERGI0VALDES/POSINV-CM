@@ -4,7 +4,7 @@ import {
   Post,
   Body,
   Param,
-  Query,
+  Patch,
   Delete,
   ParseIntPipe,
   HttpCode,
@@ -23,24 +23,13 @@ export class TelaController {
     return await this.telaService.obtenerTodas();
   }
 
-  // 2. Estadísticas globales (Valor del inventario, metros totales, etc.)
-  @Get('estadisticas')
-  async getStats() {
-    return await this.telaService.obtenerEstadisticas();
-  }
-
-  // 3. Telas con longitud baja (Rollos que se están acabando)
-  // GET /telas/baja-longitud?min=10
-  @Get('baja-longitud')
-  async getLowLength(@Query('min') min?: number) {
-    return await this.telaService.obtenerBajaLongitud(min);
-  }
-
-  // 4. Buscar por composición (Ej: "Algodón", "Lycra")
-  // GET /telas/buscar?composicion=algodon
-  @Get('buscar')
-  async findByComposition(@Query('composicion') composicion: string) {
-    return await this.telaService.buscarPorComposicion(composicion);
+  @Patch(':id')
+  async update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() dto: Partial<CrearTelaDto>, // Usamos Partial porque en edición a veces no mandas todo
+  ) {
+    // Asegúrate de tener el método 'actualizar' definido en tu telaService
+    return await this.telaService.actualizar(id, dto);
   }
 
   // 5. Crear Tela + Producto Base (Transaccional)
@@ -54,5 +43,10 @@ export class TelaController {
   @Delete(':id')
   async remove(@Param('id', ParseIntPipe) id: number) {
     return await this.telaService.eliminar(id);
+  }
+
+  @Get(':id')
+  async findOne(@Param('id', ParseIntPipe) id: number) {
+    return await this.telaService.obtenerUna(id);
   }
 }

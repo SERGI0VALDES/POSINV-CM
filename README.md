@@ -37,3 +37,6 @@ server/src/
     "test": "echo \"No hay pruebas definidas\"",
     "dev": "electron . --no-sandbox",
   },
+
+
+  npx kill-port 3000   

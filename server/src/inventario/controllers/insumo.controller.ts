@@ -2,9 +2,11 @@ import {
   Controller,
   Get,
   Post,
+  Patch,
+  Delete,
   Body,
-  //Query,
-  //ParseIntPipe,
+  Param,
+  ParseIntPipe,
   HttpCode,
   HttpStatus,
 } from '@nestjs/common';
@@ -15,30 +17,33 @@ import { CrearInsumoDto } from '../dto/crear-insumo.dto';
 export class InsumoController {
   constructor(private readonly insumoService: InsumoService) {}
 
-  // 1. Obtener todos los insumos (con su relación a ProductoBase)
   @Get()
   async findAll() {
     return await this.insumoService.obtenerTodos();
   }
 
-  // 2. Crear un nuevo Insumo (usa la transacción que definimos)
+  @Get(':id')
+  async findOne(@Param('id', ParseIntPipe) id: number) {
+    return await this.insumoService.obtenerUno(id);
+  }
+
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  async create(@Body() crearInsumoDto: CrearInsumoDto) {
-    return await this.insumoService.crear(crearInsumoDto);
+  async create(@Body() dto: CrearInsumoDto) {
+    return await this.insumoService.crear(dto);
   }
 
-  // 3. Alertas de Stock Bajo
-  // GET /insumos/stock-bajo
-  @Get('stock-bajo')
-  async getLowStock() {
-    return await this.insumoService.obtenerStockBajo();
+  @Patch(':id')
+  async update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() dto: Partial<CrearInsumoDto>,
+  ) {
+    return await this.insumoService.actualizar(id, dto);
   }
 
-  // 4. Estadísticas de metros totales
-  // GET /insumos/metros-totales
-  @Get('metros-totales')
-  async getTotalMeters() {
-    return await this.insumoService.calcularMetrosTotales();
+  @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async remove(@Param('id', ParseIntPipe) id: number) {
+    return await this.insumoService.eliminar(id);
   }
 }

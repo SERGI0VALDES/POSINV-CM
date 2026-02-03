@@ -7,11 +7,14 @@ import {
   Query,
   HttpCode,
   HttpStatus,
+  Patch,
+  Delete,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { ProductoTerminadoService } from '../services/producto-terminado.service';
 import { CrearProductoTerminadoDto } from '../dto/crear-producto-terminado.dto';
 
-@Controller('productos-terminados')
+@Controller('productos')
 export class ProductoTerminadoController {
   constructor(private readonly productoService: ProductoTerminadoService) {}
 
@@ -19,6 +22,16 @@ export class ProductoTerminadoController {
   @Get()
   async findAll() {
     return await this.productoService.obtenerTodos();
+  }
+
+  @Patch(':id')
+  async update(@Param('id', ParseIntPipe) id: number, @Body() dto: any) {
+    return await this.productoService.actualizar(id, dto);
+  }
+
+  @Delete(':id')
+  async remove(@Param('id', ParseIntPipe) id: number) {
+    return await this.productoService.eliminar(id);
   }
 
   // 2. Alertas de Stock Bajo (Específico para productos terminados)

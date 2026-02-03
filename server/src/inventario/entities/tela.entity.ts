@@ -2,26 +2,35 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
-  OneToOne,
-  JoinColumn,
+  UpdateDateColumn,
 } from 'typeorm';
-import { ProductoBase } from '../entities/producto-base.entity';
 
 @Entity('TELA')
 export class Tela {
-  @PrimaryGeneratedColumn({ name: 'int' })
+  @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
-  composicion: string;
+  @Column({ name: 'nombre' })
+  nombreTela: string;
 
   @Column('decimal', { precision: 10, scale: 2 })
   ancho: number;
 
   @Column('decimal', { precision: 10, scale: 2 })
-  longitudTotal: number;
+  largoTotal: number;
 
-  @OneToOne(() => ProductoBase)
-  @JoinColumn({ name: 'idProducto', referencedColumnName: 'idProducto' })
-  producto: ProductoBase;
+  @Column({ name: 'stockRollo' })
+  stockRollo: number;
+
+  @Column({ name: 'minimoStock' })
+  minimoStock: number;
+
+  @Column({ name: 'color' })
+  color: string;
+
+  @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
+  created_at: Date;
+
+  @UpdateDateColumn()
+  updated_at: Date;
 }

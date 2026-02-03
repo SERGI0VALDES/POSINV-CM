@@ -1,6 +1,6 @@
 // main.js
 
-import { SCREENS_PATHS} from '../utils/rutas.js'; // Ajusta la ruta
+import { SCREENS_PATHS } from '../utils/rutas.js'; // Ajusta la ruta
 
 
 function cargar_rutas() {

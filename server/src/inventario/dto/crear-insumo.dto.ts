@@ -1,26 +1,27 @@
-import { IsString, IsNumber, IsOptional, Min } from 'class-validator';
+import {
+  IsString,
+  IsNumber,
+  IsOptional,
+  IsNotEmpty,
+  Min,
+} from 'class-validator';
 
 export class CrearInsumoDto {
-  @IsNumber()
-  idProducto: number;
+  @IsString()
+  @IsNotEmpty()
+  categoria: string;
 
   @IsString()
-  nombre: string; // Para PRODUCTO_BASE
+  @IsNotEmpty()
+  nombre: string;
 
   @IsString()
-  nombreInsumo: string; // Para INSUMO
+  @IsNotEmpty()
+  unidadMedida: string;
 
-  @IsOptional()
-  @IsString()
-  unidadMedida?: string;
-
-  @IsOptional()
   @IsNumber()
-  ancho?: number;
-
-  @IsOptional()
-  @IsNumber()
-  longitudTotal?: number;
+  @Min(0.01)
+  cantidadUnidad: number;
 
   @IsNumber()
   @Min(0)
@@ -30,7 +31,40 @@ export class CrearInsumoDto {
   @Min(0)
   stockMinimo: number;
 
+  // Campos dinámicos opcionales
+  @IsString()
+  @IsOptional()
+  tipoHilo?: string;
+
+  @IsString()
+  @IsOptional()
+  tipoAguja?: string;
+
+  @IsString()
+  @IsOptional()
+  tipoCierre?: string;
+
   @IsNumber()
-  @Min(0)
-  precioVenta: number;
+  @IsOptional()
+  medidaCierre?: number;
+
+  @IsString()
+  @IsOptional()
+  tipoBroche?: string;
+
+  @IsString()
+  @IsOptional()
+  tipoAdorno?: string;
+
+  @IsString()
+  @IsOptional()
+  tipoEspecial?: string;
+
+  @IsString()
+  @IsOptional()
+  colorHilo?: string;
+
+  @IsString()
+  @IsOptional()
+  colorCierre?: string;
 }

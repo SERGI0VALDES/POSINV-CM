@@ -1,30 +1,65 @@
 import {
-  Column,
   Entity,
-  OneToOne,
   PrimaryGeneratedColumn,
-  JoinColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
 } from 'typeorm';
-import { ProductoBase } from './producto-base.entity';
 
 @Entity('INSUMO')
 export class Insumo {
-  @PrimaryGeneratedColumn({ name: 'int' })
+  @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
-  nombreInsumo: string;
+  categoria: string; // hilos, agujas, cierres, etc.
 
-  @Column({ default: 'unidad' })
+  @Column()
+  nombre: string;
+
+  @Column()
   unidadMedida: string;
 
-  @Column({ type: 'decimal', nullable: true })
-  ancho: number;
+  @Column('decimal', { precision: 10, scale: 2 })
+  cantidadUnidad: number;
 
-  @Column({ type: 'decimal', nullable: true })
-  longitudTotal: number;
+  @Column('int')
+  stockActual: number;
 
-  @OneToOne(() => ProductoBase, (producto) => producto.insumo)
-  @JoinColumn({ name: 'idProducto' })
-  producto: ProductoBase;
+  @Column('int')
+  stockMinimo: number;
+
+  // Campos condicionales (según categoría)
+  @Column({ nullable: true })
+  tipoHilo: string;
+
+  @Column({ nullable: true })
+  tipoAguja: string;
+
+  @Column({ nullable: true })
+  tipoCierre: string;
+
+  @Column('decimal', { precision: 10, scale: 2, nullable: true })
+  medidaCierre: number;
+
+  @Column({ nullable: true })
+  tipoBroche: string;
+
+  @Column({ nullable: true })
+  tipoAdorno: string;
+
+  @Column({ nullable: true })
+  tipoEspecial: string;
+
+  @Column({ nullable: true })
+  colorHilo: string;
+
+  @Column({ nullable: true })
+  colorCierre: string;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
 }

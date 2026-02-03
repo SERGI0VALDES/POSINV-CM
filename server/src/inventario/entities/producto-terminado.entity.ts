@@ -12,13 +12,19 @@ export class ProductoTerminado {
   @PrimaryGeneratedColumn({ name: 'int' })
   id: number;
 
-  @Column({ unique: true })
+  @Column({ name: 'idProducto', unique: true })
+  idProducto: number;
+
+  @Column({ name: 'codigoSku', unique: true })
   codigoSku: string;
 
-  @Column()
-  tipoProducto: string; // Ej: Vestido, Pantalón
+  @Column({ name: 'categoria', type: 'varchar', length: 50, nullable: true })
+  categoria: string;
 
-  @OneToOne(() => ProductoBase)
-  @JoinColumn({ name: 'idProducto', referencedColumnName: 'idProducto' })
+  @Column({ name: 'color' })
+  color: string;
+
+  @OneToOne(() => ProductoBase, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'idProducto' })
   producto: ProductoBase;
 }

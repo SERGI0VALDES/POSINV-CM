@@ -1,9 +1,11 @@
+// En tu archivo JS principal (ej: app.js o main.js)
+
+
 const { app, BrowserWindow, ipcMain, shell } = require('electron');
 const path = require('path');
 const fs = require('fs').promises;
 const { spawn } = require('child_process') // Necesario para Nestjs
 
-const registrarHandlers = require('./ipc/export/handlers.js');
 
 console.log('[INICIANDO PUNTO DE VENTA E INVENTARIO CREACIONES MADRIZ (POSINVCM)]');
 console.log('------------------------------------------------------------------');

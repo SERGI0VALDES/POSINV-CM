@@ -1,26 +1,43 @@
-import { IsString, IsNumber, IsOptional } from 'class-validator';
+// dto/crear-producto-terminado.dto.ts
+import { IsString, IsNumber, IsOptional, IsNotEmpty } from 'class-validator';
 
 export class CrearProductoTerminadoDto {
+  @IsOptional() // Debe ser opcional si es auto-generado
   @IsNumber()
-  idProducto: number;
+  idProducto?: number;
 
   @IsString()
+  @IsNotEmpty()
   nombre: string;
 
   @IsString()
+  @IsNotEmpty()
   codigoSku: string;
 
-  @IsString()
-  tipoProducto: string;
-
-  @IsNumber()
   @IsOptional()
+  @IsNumber()
   stockActual?: number;
 
-  @IsNumber()
   @IsOptional()
+  @IsNumber()
   stockMinimo?: number;
+
+  @IsOptional()
+  @IsString()
+  descripcion?: string;
+
+  @IsString()
+  @IsNotEmpty()
+  color: string;
 
   @IsNumber()
   precioVenta: number;
+
+  @IsString()
+  @IsOptional()
+  categoria?: string;
+
+  @IsOptional()
+  @IsNumber()
+  activo?: number;
 }

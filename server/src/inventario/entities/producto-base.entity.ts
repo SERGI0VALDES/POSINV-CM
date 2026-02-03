@@ -4,20 +4,16 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
-  OneToOne,
+  ViewEntity,
+  ViewColumn,
 } from 'typeorm';
-// Recordatorio. Un Insumo hereda de un "producto-terminado"
-import { Insumo } from './insumo.entity';
 
 @Entity('PRODUCTO_BASE')
 export class ProductoBase {
-  @PrimaryGeneratedColumn({ name: 'int' })
-  int: number;
-
-  @Column({ unique: true, type: 'integer' }) // Asegúrate de que sea number
+  @PrimaryGeneratedColumn() // Este será 1, 2, 3... y será el ID de negocio también
   idProducto: number;
 
-  @Column()
+  @Column({ type: 'varchar', length: 100, nullable: false }) // nullable: false es el NOT NULL
   nombre: string;
 
   @Column()
@@ -40,7 +36,27 @@ export class ProductoBase {
 
   @UpdateDateColumn()
   updated_at: Date;
+}
 
-  @OneToOne(() => Insumo, (insumo) => insumo.producto)
-  insumo: Insumo;
+@ViewEntity({
+  name: 'v_productos_completos',
+  expression: `SELECT * FROM v_productos_completos`,
+  synchronize: false,
+})
+export class ProductoCompleto {
+  @ViewColumn() idProducto: number;
+  @ViewColumn() nombre: string;
+  @ViewColumn() descripcion: string;
+  @ViewColumn() stockActual: number;
+  @ViewColumn() stockMinimo: number;
+  @ViewColumn() precioVenta: number;
+  @ViewColumn() activo: number;
+
+  // Campos de VESTIDO
+  @ViewColumn() color: string;
+  @ViewColumn() skuVestido: string;
+  @ViewColumn() categoria: string;
+
+  // Campos de PROD_TERMINADO
+  @ViewColumn() skuProductoTerminado: string;
 }

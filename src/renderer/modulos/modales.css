@@ -140,21 +140,16 @@
 /* 1. Contenedor del Modal de Formulario (FormularioManager) */
 /* ------------------------------------------- */
 .modal-inventario {
-    display: none; /* Oculto por defecto */
-    
+    display: none;
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    
-    /* Centrar el contenido */
-    display: flex; 
+    z-index: 1010;
     justify-content: center;
-    align-items: center;
-    
-    /* Asegura que esté por encima de todo */
-    z-index: 1010; 
+    align-items: center; /* Centrado vertical */
+    padding: 20px; /* Espacio alrededor en móviles */
 }
 
 /* El JavaScript añade la clase 'active' */
@@ -177,22 +172,25 @@
 /* 2. Contenido del Formulario (La Caja Blanca) */
 /* ------------------------------------------- */
 .modal-inventario .modal-content {
-    /* Mantenemos el nombre de la clase para que el JS no falle */
     background: #ffffff;
     border-radius: 10px;
     box-shadow: 0 5px 25px rgba(0, 0, 0, 0.4);
     
-    /* Tamaño y desplazamiento */
+    /* Cambiamos para que la altura sea flexible */
     width: 90%;
-    max-width: 800px; /* Un poco más ancho para los formularios */
+    max-width: 800px;
+    max-height: 90vh; /* Altura máxima del viewport */
     z-index: 1020;
     position: relative;
-    overflow: hidden;
     
-    /* Animación simple */
-    transform: translateY(-50px);
+    /* Animación desde abajo */
+    transform: translateY(100px);
     opacity: 0;
     transition: all 0.3s ease-out;
+    
+    /* Flexbox para manejar el crecimiento */
+    display: flex;
+    flex-direction: column;
 }
 
 .modal-inventario.active .modal-content {
@@ -237,8 +235,9 @@
 /* ------------------------------------------- */
 .modal-inventario .modal-body {
     padding: 25px;
-    max-height: 70vh; /* Altura máxima para permitir scroll */
     overflow-y: auto;
+    flex-grow: 1; /* Esto hace que crezca según el contenido */
+    min-height: 550px; /* Altura mínima */
 }
 
 /* Estilos de los Formularios Específicos */

@@ -6,11 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Creaciones Madriz | Inventarios</title>
     <link rel="stylesheet" href="../../css/inventario.css">
-    <link rel="stylesheet" href="../../modules/modales.css">
+    <link rel="stylesheet" href="../../modulos/modales.css">
 
     
 </head>
-
 
 
 <body>
@@ -24,6 +23,7 @@
 
         <div class="modal-inv-body" id="modal-inv-body">
             <nav>
+                <button class="btn-inv-categoria" id="agregar-vestido">Vestidos</button>
                 <button class="btn-inv-categoria" id="agregar-producto">Productos</button>
                 <button class="btn-inv-categoria" id="agregar-tela">Telas</button>
                 <button class="btn-inv-categoria" id="agregar-insumo">Insumos</button>
@@ -102,6 +102,7 @@
         <div class="inventario-layout">
             <div class="contenedor-botones">
                 <nav>
+                    <button class="botones" id="btn-vestidos">Vestidos</button>
                     <button class="botones" id="btn-productos">Productos</button>
                     <button class="botones" id="btn-telas">Telas</button>
                     <button class="botones" id="btn-insumos">Insumos</button>
@@ -124,9 +125,8 @@
     <!-- Scripts -->
     <script type="module"  src="../../js/inventario.js"></script>
     <script src="../../js/database.js"></script>
-    <script type="module"  src="../../templates/formAñadir.js"></script>
-    <script type="module" src="../../modules/renderer_inventario.js"></script>
+    <script type="module"  src="../../templates/formulariosAdd.js"></script>
+    <script type="module" src="../../modulos/renderer_inventario.js"></script>
 </body>
-
 
 </html>
