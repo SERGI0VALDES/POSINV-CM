@@ -1,8 +1,8 @@
 import {
   Controller,
   Get,
-  Post,
-  Body,
+  // Post,
+  // Body,
   Param,
   Query,
   Delete,
@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 
 import { InventarioService } from '../inventario/inventario.service';
-import { RegistrarMovimientoDto } from './dto/registrar-movimiento.dto';
+//import { RegistrarMovimientoDto } from './dto/registrar-movimiento.dto';
 // Nota: Importa también tu CreateInventarioDto si sigues usándolo para crear productos base
 
 @Controller('inventario')
@@ -25,11 +25,11 @@ export class InventarioController {
     return this.inventoryService.obtenerHistorial();
   }
 
-  // POST /inventory/move -> Registrar una entrada, salida o ajuste
+  /* POST /inventory/move -> Registrar una entrada, salida o ajuste
   @Post('inventarioMover')
   registerMovement(@Body() registrarMovimientoDto: RegistrarMovimientoDto) {
     return this.inventoryService.registrar(registrarMovimientoDto);
-  }
+  }*/
 
   // GET /inventory/history/product/:id -> Movimientos por producto específico
   @Get('historial/producto/:id')

@@ -8,6 +8,7 @@
     <title>Creaciones Madriz | Punto de Venta</title>
     <link rel="stylesheet" href="../../css/globals.css">
     <link rel="stylesheet" href="../../css/pos.css">
+
 </head>
 
 <body>
@@ -17,17 +18,17 @@
         <div class="logo">
             <a data-screen="DASHBOARD">
                 <img src="../../../assets/img/logo.png" alt="logo">
-            </a> 
+            </a>
         </div>
-        
+
         <!-- Informacion del usuario y fecha actual -->
         <div class="info-usuario">
-        <h2>¡Bienvenido al punto de venta!   
-        </h2>
-        <!-- Traemos la fecha y hora actual-->
-        <p id="currentDate"></p>
+            <h2>¡Bienvenido al punto de venta!
+            </h2>
+            <!-- Traemos la fecha y hora actual-->
+            <p id="currentDate"></p>
         </div>
-        
+
         <!-- Menu de navegacion -->
         <nav class="nav-menu">
             <ul>
@@ -37,39 +38,22 @@
                         <img src="../../../assets/img/img_inventario.png">
                         <span style="font-family: Comfortaa;">Revisar inventarios</span>
                     </a>
-                </li>      
+                </li>
             </ul>
         </nav>
 
     </header>
 
     <main class="main-content">
-        
+
         <!-- En esta caja se encuentra el lado izquierdo de la pantalla; contiene el buscador de productos, el h3="Products" y donde 
          se refleja la busqueda de los productos. -->
         <div class="cajaIzq">
-            
-            <!-- bucador y botón buscar-->        
             <input id="buscador" type="text" placeholder="Buscar producto...">
-            <!-- <button id="boton_buscar">Buscar</button> -->
-
-            <!-- Titulo de productos -->
-            <p> Productos </p>
-
-            <!-- Lista de productos disponibles -->
-
-            <!-- Aqui se mostrara la lista de productos disponibles (productos) -->
-            <div class="listaProductos">
-                <ul id="ulInterno">
-                    <!-- Los elementos de la lista se generarán dinámicamente con JavaScript -->
-                    <li class="producto-item">
-                        <!-- Como recordatorio, esta ruta se va actualizar despues con una ruta dinamica 
-                        <img src="../../assets/img/logo.png" alt="Vestido 1" width="50">-->
-                        <span class="#"></span>
-                        <span class="#"></span>
-                    </li>
-                    
-                </ul>
+            <p>Productos</p>
+            <!-- Asegúrate que este ID coincida con el JS -->
+            <div class="listaProductos" id="listaProductos">
+                <!-- Se llenará dinámicamente -->
             </div>
         </div>
 
@@ -79,35 +63,41 @@
             <div class="carrito-contenedor">
 
                 <!-- Titulo de el apartado -->
-                <h3> Pedido Actual </h3>
+                <span> Pedido Actual </span>
 
                 <!-- lista de compras -->
-                <ul class="ulInterno">
-                    <!-- Los elementos del carrito se generarán dinámicamente con JavaScript -->
-                    <li class="carrito-item">
-                        <span class="carrito-nombre"></span>
-                        <span class="carrito-cantidad"></span>
-                        <span class="carrito-precio"></span>
-                    </li>
+                <ul id="listaCarrito" class="ulInterno">
+                    <!-- Los elementos del carrito se generan dinámicamente con JavaScript -->
                 </ul>
-                
-            </div> 
+
+            </div>
 
             <!--Contenedor del sumario final del carrito de compras-->
             <div class="total-contenedor">
                 <span>Sumario de venta</span>
-                <span>Subtotal.</span>
-                <span>Total a pagar.</span>
-                <span id="totalPrecio" class="total-precio"></span>
 
-                <button id="finalizarCompraBtn" class="finalizar-compra-btn">Finalizar Compra</button>
+                <span id="subtotalTexto">Subtotal: $0.00</span>
+
+                <span id="descuento">
+                </span>
+
+                <span id="totalPrecio" class="total-precio">$0.00</span>
+
+                <span id="totalTexto" style="display:none;"></span>
+
+                <div class="funciones-compra">
+                    <button class="btn btn-primary finalizar-compra-btn" id="finalizarCompraBtn">Finalizar</button>
+                    <button class="btn btn-secondary agregar-descuento-btn">Descuento</button>
+                </div>
             </div>
         </div>
-              
-    </main> 
+
+    </main>
 
     <!-- Scripts -->
     <script type="module" src="../../js/cargar_rutas.js"></script>
-    
+    <script src="../../js/modules/pos/pos.js"></script>
+
 </body>
+
 </html>

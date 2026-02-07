@@ -1,19 +1,84 @@
+/* ============================================
+   VARIABLES CSS GLOBALES - AÑADE AL INICIO
+============================================= */
+:root {
+    --primary-color: #ff00e1;
+    --secondary-color: #4CAF50;
+    --accent-color: #3498db;
+    --border-color: #e0e0e0;
+    --card-bg: #ffffff;
+    --text-color: #333333;
+    --text-light: #666666;
+    --hover-bg: #f8f9fa;
+    --success-color: #27ae60;
+    --warning-color: #e74c3c;
+    --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
+    --shadow-lg: 0 6px 18px rgba(0,0,0,0.15);
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 10px;
+    --transition-fast: 0.2s ease;
+    --transition-base: 0.3s ease;
+    --transition-slow: 0.5s ease;
+    --spacing-xs: 4px;
+    --spacing-sm: 8px;
+    --spacing-md: 16px;
+    --spacing-lg: 24px;
+    --spacing-xl: 32px;
+}
+
+/* ============================================
+   RESET Y BASE MEJORADO
+============================================= */
 html, body {
     margin: 0;
     padding: 0;
-    height: 100%; /* Asegura que el body ocupe el 100% de la ventana */
-    overflow: hidden; /* Evita el scroll si no es necesario */
-    font-family: 'Comfortaa', cursive;
+    height: 100%;
+    overflow: hidden; /* CAMBIO: de hidden a auto */
+    font-family: 'Comfortaa', cursive, sans-serif;
 }
-/* Estilos de el contenido de la caja izquierda, vamos desde el primer obj al ultimo*/
 
-.cajaIzq {
-   width: 100%;
-   height: 100%;
-   display: flex;
-   flex-direction: column;
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
 }
-/* Estilos de el buscador */
+
+/* ============================================
+   LAYOUT PRINCIPAL - GRID MODERNO
+============================================= */
+.main-content {
+    width: 100%;
+    height: auto; /* CAMBIO: de calc(100vh - 150px) a auto */
+    min-height: calc(100vh - 150px); /* Añadir esto */
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-lg);
+    padding: var(--spacing-lg);
+}
+
+/* ============================================
+   CAJA IZQUIERDA - ESTRUCTURA FLEXIBLE
+============================================= */
+.cajaIzq {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    min-height: 0;
+    height: 100%; /* Añadir esto */
+}
+
+/* ============================================
+   COMPONENTE BUSCADOR MEJORADO (TAMAÑO ARREGLADO)
+============================================= */
+.search-container {
+    display: flex;
+    gap: var(--spacing-sm);
+    align-items: center;
+    margin-bottom: var(--spacing-md);
+}
+
 #buscador {
     width: 80%; /* Ocupa el 80% del contenedor padre */
     margin-bottom: 20px; /* Espacio inferior */
@@ -26,191 +91,702 @@ html, body {
     color: rgb(0, 0, 0); /* Color del texto por defecto */
     font-family: 'Comfortaa', bold; /* Fuente cómoda y legible */}
 
-#buscador:focus {
-    border-color: var(--primary-color);
-    outline: none;
-    box-shadow: 0 0 5px rgba(255, 0, 225, 0.5);}
+#buscador::placeholder {
+    color: #888;
+    font-weight: 400;
+    opacity: 0.8;
+}
 
-/* Estilos del botón buscar */
-#boton_buscar {
-    display: flex;
-    padding: 10px 35px; /* Espaciado interno */
-    margin-left: 0px;
-    background-color: var(--primary-color);
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 1rem;
-    transition: background-color 0.3s;
-    font-family: 'Comfortaa', bold;}
-
-/* Estilos de la lista de productos */
+/* ============================================
+   LISTA DE PRODUCTOS - SCROLL SEGURO
+============================================= */
 .listaProductos {
-    /* Altura fija con max-height para asegurar el scroll */
-    height: 45vh; 
-    max-height: 45vh; 
-            
-    /* Habilita el scroll vertical cuando el contenido excede 45vh */
-    overflow-y: auto; 
-    overflow-x: hidden; 
-            
-    margin-top: 15px; /* Espacio superior */
-
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+    overflow-y: auto; /* Scroll vertical cuando se llena */
+    overflow-x: hidden;
     background-color: var(--card-bg);
-    border-radius: 5px; 
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); 
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
     border: 1px solid var(--border-color);
-            
-    /* PASO CLAVE 1: Eliminamos todo el padding del contenedor de scroll */
-    padding: 0; 
+    padding: var(--spacing-sm);
+    min-height: 300px; /* Altura mínima */
+    max-height: 330px; /* ALTURA MÁXIMA FIJA - ajusta este valor */
+    height: 330px; /* Añade altura fija también */
 }
 
-.producto-item {
-    display: flex; /* Usamos flexbox para alinear los elementos */
-    justify-content:space-between; /* PASO CLAVE 2: Distribuye el espacio entre los elementos */
-    align-items: center;
-    /* PASO CLAVE 3: Usamos 10px vertical (arriba/abajo) y 0px horizontal (izquierda/derecha) */
-    padding: 10px ;
-    margin-right: 30px;  
-    border-bottom: 1px solid rgba(0, 0, 0, 0.05); 
-    border-top: 1px solid rgba(0, 0, 0, 0.05); 
-    cursor: pointer;
-    transition: background-color 0.2s; 
-    color: var(--text-color);
+/* Contenedor unificado para items de lista */
+.carrito-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-bottom: 1px solid #e0e0e0;
+  background-color: white;
+  transition: all 0.3s ease;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
-.producto-item:hover {
-    background-color: #f0f0f0;
+.carrito-nombre {
+  font-weight: 600;
+  font-size: 16px;
+  color: #333;
+  flex-grow: 1;
+  margin-right: 16px;
+  max-width: 200px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .ulInterno {
-    list-style: none; /* Elimina los puntos de la lista */
-    margin: 0 !important; /* Elimina el margen por defecto */
-    padding: 0 !important; /* Elimina el padding por defecto */
-}
-
-/* ------------------------------------------- */
-/* ESTILOS PARA LA BARRA DE SCROLL (Opcional, mejora visual) */
-/* ------------------------------------------- */
-.listaProductos::-webkit-scrollbar {
-    width: 8px;
-}
-
-.listaProductos::-webkit-scrollbar-thumb {
-    background-color: #ccc;
-    border-radius: 4px;
-}
-
-.listaProductos::-webkit-scrollbar-track {
-    background-color: #f1f1f1;
-}
-
-.main-content p{
-    color: rgb(84, 84, 84);
-    font-family: Comfortaa;
-}
-
-.main-content{
-    width: 100%; /* Ocupa todo el ancho disponible */
-    /* CORRECCIÓN CLAVE: El topbar mide 150px (130px img + 20px padding) */
-    height: calc(100vh - 150px); 
-    
-    display: grid; /* Usa grid para la disposición */
-    grid-template-columns: 50% 1fr; /* Dos columnas de igual tamaño */
-    gap: 20px; /* Espacio entre las columnas */
-    padding: 20px; /* Espacio interno */
-    box-sizing: border-box; /* Incluye el padding en el tamaño total */
-}
-
-/* Estilos de el contenido de la caja derecha, vamos desde el primer obj al ultimo*/
-.cajaDer{
-   width: 95%;
-   height: 85%;
-   display: flex;
-   flex-direction: column;
-}
-
-/*Estilos del contenedor que contiene los objetos del agregados al carrito */
-.carrito-contenedor{
-    width: auto; /* Ocupa todo el ancho disponible en su columna */
-    height:43vh; 
-    max-height: 43vh; /* Es una buena práctica usar max-height también */
-    background-color: var(--card-bg);
-    border-radius: 5px; 
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); 
-    border: 1px solid var(--border-color);
-    overflow-y: auto;
-    padding: 10px;
-}
-
-.carrito-item {
-    display: flex; /* Usamos flexbox para alinear los elementos */
-    justify-content: space-between; /* PASO CLAVE 2: Distribuye el espacio entre los elementos */
-    align-items: center;
-    /* PASO CLAVE 3: Usamos 10px vertical (arriba/abajo) y 0px horizontal (izquierda/derecha) */
-    padding: 10px 0;  
-    border-bottom: 1px solid rgba(0, 0, 0, 0.05); 
-    cursor: pointer;
-    transition: background-color 0.2s; 
-    color: var(--text-color);
-}
-.carrito-item:hover {
-    background-color: #f0f0f0;
-}
-
-.total-contenedor {
-    /* 1. LAYOUT: Usamos Flexbox para control interno */
+    list-style: none;
+    margin: 0;
+    padding: 0;
     display: flex;
-    flex-direction:column; /* Apila los elementos (Total y Botón) verticalmente */
-    align-items:flex-start; /* Centra horizontalmente el contenido */
-    
-    /* 2. APARIENCIA: Se destaca del fondo */
-    background-color: var(--card-bg, #ffffff); /* Fondo blanco o de tarjeta */
-    border: 1px solid var(--border-color, #ccc);
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    
-    /* 3. ESPACIADO */
-    padding: 20px;
-    margin-top: 10px; /* Espacio superior para separarlo de otros elementos */
-    width: auto; /* Ocupa todo el ancho disponible en su columna */
-    height: 1fr; /* Altura completa del contenedor padre */
+    flex-direction: column;
+    gap: var(--spacing-xs);
 }
 
-/* --- ESTILOS DEL TOTAL (TEXTOS) --- */
-.total-contenedor span {
-    font-size: 1.2rem;
-    color: var(--text-color, #333);
-    margin-bottom: 10px; /* Espacio debajo del texto "Total" */
+/* Contenedor de controles (botones + cantidad) */
+.item-controles {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 25px;
+  margin-right: 20px;
 }
 
-/* 4. TOTAL FINAL: Se destaca el valor */
+/* Botones de incremento/decremento */
+.btn-incremento, .btn-decremento {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  color: white;
+  font-weight: bold;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-incremento::after, .btn-decremento::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 5px;
+  height: 5px;
+  background: rgba(255, 255, 255, 0.5);
+  opacity: 0;
+  border-radius: 100%;
+  transform: scale(1, 1) translate(-50%, -50%);
+  transform-origin: 50% 50%;
+}
+
+.btn-incremento:active::after, .btn-decremento:active::after {
+  animation: ripple 0.6s ease-out;
+}
+
+@keyframes ripple {
+  0% {
+    transform: scale(0, 0);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(20, 20);
+    opacity: 0;
+  }
+}
+
+.btn-incremento:hover {
+  background: linear-gradient(135deg, #2980b9, #1c5d87);
+  box-shadow: 0 6px 12px rgba(52, 152, 219, 0.4);
+}
+
+.btn-decremento:hover {
+  background: linear-gradient(135deg, #e74c3c, #c0392b);
+  box-shadow: 0 6px 12px rgba(231, 76, 60, 0.4);
+}
+
+.btn-incremento:active, .btn-decremento:active {
+  transform: scale(0.95);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.btn-incremento i, .btn-decremento i {
+  font-size: 14px;
+  transition: transform 0.3s ease;
+}
+
+.btn-incremento:hover i {
+  transform: scale(1.2);
+}
+
+.btn-decremento:hover i {
+  transform: scale(1.2);
+}
+
+/* CANTIDAD (entre los botones) */
+.carrito-cantidad {
+  font-weight: 700;
+  font-size: 16px;
+  min-width: 36px;
+  text-align: center;
+  color: #2c3e50;
+  padding: 4px 8px;
+  background: white;
+  border-radius: 10px;
+
+}
+
+/* Estado deshabilitado */
+.btn-incremento:disabled, .btn-decremento:disabled {
+  background: linear-gradient(135deg, #95a5a6, #7f8c8d);
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.btn-incremento:disabled:hover, .btn-decremento:disabled:hover {
+  background: linear-gradient(135deg, #95a5a6, #7f8c8d);
+  transform: none !important;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+
+
+/* Botón eliminar */
+.btn-eliminar-item {
+  background: #e74c3c;
+  color: white;
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s;
+}
+
+.btn-eliminar-item:hover {
+  background: #c0392b;
+  transform: scale(1.1);
+}
+/* ============================================
+   CAJA DERECHA - LAYOUT CONSISTENTE
+============================================= */
+.cajaDer {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+    height: 100%;
+    min-height: 0;
+}
+
+.carrito-contenedor {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto; /* Scroll vertical */
+    overflow-x: hidden;
+    background-color: var(--card-bg);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border-color);
+    padding: var(--spacing-sm);
+    min-height: 240px; /* Altura mínima */
+    max-height: 240px; /* ALTURA MÁXIMA FIJA - ajusta este valor */
+    height: 240px; /* Añade altura fija */
+}
+
+/* ============================================
+   COMPONENTE TOTAL - REDISEÑADO
+============================================= */
+.total-contenedor {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    padding: var(--spacing-lg);
+    gap: var(--spacing-md);
+}
+
+.total-info {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+.total-label {
+    font-size: 1rem;
+    color: var(--text-light);
+}
+
 .total-precio {
-    font-size: 2rem; /* Tamaño grande para el monto */
-    font-weight: bold;
-    color: var(--primary-color, #ff00e1); /* Usa el color de marca */
-    margin-bottom: 30px; /* Más espacio para separar el total del botón */
+    font-size: 1rem;
+    color: var(--text-light);
 }
 
-/* --- ESTILOS DEL BOTÓN --- */
-.finalizar-compra-btn {
-    width: 90%; /* Ancho completo o casi completo del contenedor */
-    padding: 15px 20px;
-    
-    background-color:#7bff5d; /* Color principal de la marca */
-    color: white; /* Texto blanco para contraste */
-    
+.funciones-compra {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-md);
+}
+
+/* ============================================
+   BOTONES MEJORADOS - SISTEMA COHERENTE (SIN COMPOSES)
+============================================= */
+.finalizar-compra-btn,
+.agregar-descuento-btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-md) var(--spacing-xl);
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: var(--radius-lg);
     border: none;
-    border-radius: 5px;
     cursor: pointer;
-    font-size: 1.1rem;
-    font-weight: bold;
-    text-transform: uppercase;
-    transition: background-color 0.3s ease;
+    transition: all var(--transition-base);
+    min-width: 200px;
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+    z-index: 1;
+    font-family: system-ui, -apple-system, sans-serif;
+    text-decoration: none;
+    text-align: center;
+}
+
+.finalizar-compra-btn:hover,
+.agregar-descuento-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.finalizar-compra-btn:active,
+.agregar-descuento-btn:active {
+    transform: translateY(0);
+}
+
+.finalizar-compra-btn:focus-visible,
+.agregar-descuento-btn:focus-visible {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+}
+
+/* Botón Finalizar Compra */
+.finalizar-compra-btn {
+    background: linear-gradient(135deg, var(--success-color), #2ecc71);
+    color: white;
 }
 
 .finalizar-compra-btn:hover {
-    /* Oscurecer o cambiar color al pasar el ratón */
-    background-color: #d100b8; 
+    background: linear-gradient(135deg, #229954, #27ae60);
+}
+
+/* Botón Agregar Descuento */
+.agregar-descuento-btn {
+    background: linear-gradient(135deg, var(--accent-color), #2980b9);
+    color: white;
+}
+
+.agregar-descuento-btn:hover {
+    background: linear-gradient(135deg, #2980b9, #2471a3);
+}
+
+/* ============================================
+   GRID DE PRODUCTOS - RESPONSIVE MEJORADO
+============================================= */
+.productos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
+    gap: var(--spacing-md);
+    padding: var(--spacing-sm);
+}
+
+.producto-card {
+  background: white;
+  border-radius: 12px;
+  padding: 18px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  border: 1px solid #eaeaea;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Efecto de borde sutil en hover */
+.producto-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #3498db, #cc2eb7);
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+.producto-card:hover::after {
+  transform: scaleX(1);
+}
+
+.btn-add-carrito {
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  color: white;
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
+  flex-shrink: 0;
+}
+
+.btn-add-carrito:hover {
+  background: linear-gradient(135deg, #2980b9, #1c5d87);
+  box-shadow: 0 6px 12px rgba(52, 152, 219, 0.4);
+}
+
+.btn-add-carrito:active {
+  transform: scale(0.95);
+}
+
+.btn-add-carrito:disabled {
+  background: #95a5a6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.btn-add-carrito i {
+  font-size: 16px;
+  transition: transform 0.3s ease;
+}
+
+.btn-add-carrito:hover i {
+  transform: scale(1.2);
+}
+
+.prod-info {
+  flex-grow: 1;
+  margin-right: 15px;
+  min-width: 0; /* Para que el texto no desborde */
+}
+
+/* Categoría */
+.prod-cat {
+  display: inline-block;
+  background: #f8f9fa;
+  color: #6c757d;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 12px;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Nombre del producto */
+.prod-nombre {
+  display: block;
+  font-size: 15px;
+  font-weight: 600;
+  color: #2c3e50;
+  line-height: 1.4;
+  margin-bottom: 8px;
+  /* Para manejar texto largo */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+mark {
+  background-color: #ffeaa7;
+  color: #2d3436;
+  padding: 1px 4px;
+  border-radius: 3px;
+  font-weight: bold;
+}
+
+/* Precio */
+.prod-precio {
+  display: block;
+  font-size: 20px;
+  font-weight: 700;
+  color: #2c3e50;
+  margin: 8px 0;
+  background: linear-gradient(90deg, #2c3e50, #3498db);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Stock */
+.prod-stock {
+  display: block;
+  font-size: 12px;
+  color: #7f8c8d;
+  padding: 4px 8px;
+}
+/* ============================================
+   ANIMACIONES UNIFICADAS
+============================================= */
+
+/* Spinner de carga */
+.loader-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.7);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    backdrop-filter: blur(2px);
+}
+
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid #3498db;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Efecto de parpadeo para el stock actualizado */
+.stock-update-flash {
+    animation: flash-green 1.5s;
+}
+
+@keyframes flash-green {
+    0% { background-color: transparent; }
+    50% { background-color: #d4edda; }
+    100% { background-color: transparent; }
+}
+
+@keyframes slideIn {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    to { opacity: 1; }
+}
+
+@keyframes slideOutLeft {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+}
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* ============================================
+   SCROLLBAR CONSISTENTE
+============================================= */
+.listaProductos::-webkit-scrollbar,
+.carrito-contenedor::-webkit-scrollbar {
+    width: 8px;
+}
+
+.listaProductos::-webkit-scrollbar-track,
+.carrito-contenedor::-webkit-scrollbar-track {
+    background-color: #f1f1f1;
+    border-radius: var(--radius-md);
+}
+
+.listaProductos::-webkit-scrollbar-thumb,
+.carrito-contenedor::-webkit-scrollbar-thumb {
+    background-color: #ccc;
+    border-radius: var(--radius-md);
+}
+
+.listaProductos::-webkit-scrollbar-thumb:hover,
+.carrito-contenedor::-webkit-scrollbar-thumb:hover {
+    background-color: #aaa;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN MEJORADO
+============================================= */
+
+@media (max-width: 768px) {
+  .productos-grid {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 15px;
+    padding: 15px;
+  }
+  
+  
+.producto-card {
+  animation: slideInRight 0.3s ease-out;
+}
+  
+  .prod-nombre {
+    font-size: 14px;
+  }
+  
+  .prod-precio {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .productos-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+}
+
+@media (max-width: 1200px) {
+    .main-content {
+        grid-template-columns: 1fr;
+        height: auto;
+        min-height: calc(100vh - 150px);
+    }
+    
+    .cajaIzq,
+    .cajaDer {
+        height: auto;
+        min-height: 50vh;
+    }
+}
+
+@media (max-width: 768px) {
+    :root {
+        --spacing-lg: 16px;
+        --spacing-md: 12px;
+    }
+    
+    .main-content {
+        padding: var(--spacing-md);
+        gap: var(--spacing-md);
+    }
+    
+    .funciones-compra {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .finalizar-compra-btn,
+    .agregar-descuento-btn {
+        min-width: 100%;
+    }
+    
+    .productos-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .producto-card {
+        flex-direction: column;
+        align-items: stretch;
+        gap: var(--spacing-sm);
+    }
+}
+
+@media (max-width: 480px) {
+    .search-container {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    #buscador,
+    #boton_buscar {
+        width: 100%;
+        height: 42px; /* Un poco más pequeño en mobile */
+    }
+    
+    #boton_buscar {
+        margin-top: 8px;
+    }
+    
+    .total-precio {
+        font-size: 2rem;
+    }
+    
+    .finalizar-compra-btn,
+    .agregar-descuento-btn {
+        padding: 12px 20px;
+        font-size: 0.95rem;
+    }
+}
+
+/* ============================================
+   UTILITY CLASSES (OPCIONAL PERO RECOMENDADO)
+============================================= */
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.text-truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.flex-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }

@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ProductoBase } from '../inventario/entities/producto-base.entity';
 import { MovimientoInventario } from './entities/movimiento-inventario.entity';
-import { RegistrarMovimientoDto } from './dto/registrar-movimiento.dto';
+//import { RegistrarMovimientoDto } from './dto/registrar-movimiento.dto';
 
 @Injectable()
 export class InventarioService {
@@ -63,6 +63,7 @@ export class InventarioService {
     });
   }
 
+  /*
   async registrar(dto: RegistrarMovimientoDto) {
     return await this.movRepo.manager.transaction(async (manager) => {
       // 1. Crear el registro del movimiento
@@ -82,7 +83,7 @@ export class InventarioService {
 
       return await manager.save(nuevoMovimiento);
     });
-  }
+  }*/
 
   async obtenerPorProducto(idProducto: number) {
     return await this.movRepo.find({
