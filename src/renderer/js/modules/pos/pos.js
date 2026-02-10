@@ -2,12 +2,18 @@ const PosManager = {
   productos: [],
   carrito: [],
   total: 0,
+  descuentoAplicado: 0,
 
   async init() {
     console.log("POS Inicializado");
     await this.cargarDB();
     this.setEventListeners();
     this.mostrarMensajeInicial();
+    const btnDescuento = document.querySelector(".agregar-descuento-btn");
+    if (btnDescuento) {
+      // CAMBIA ESTO:
+      btnDescuento.onclick = () => this.abrirModalDescuento();
+    }
   },
 
   async cargarDB() {
@@ -49,6 +55,14 @@ const PosManager = {
         }
       });
     }
+
+    document.querySelector(".agregar-descuento-btn").onclick = () =>
+      this.abrirModalDescuento();
+
+    document.getElementById("btnCerrarModal").onclick = () =>
+      this.cerrarModalDescuento();
+    document.getElementById("btnConfirmarDescuento").onclick = () =>
+      this.confirmarDescuento();
   },
 
   mostrarMensajeInicial() {
@@ -312,12 +326,34 @@ const PosManager = {
   },
 
   actualizarTotales() {
-    const totalUI = document.getElementById("totalPrecio");
-    this.total = this.carrito.reduce(
+    // 1. Calcular Subtotal (suma simple de productos)
+    const subtotal = this.carrito.reduce(
       (acc, item) => acc + item.precio * item.cantidad,
       0,
     );
-    if (totalUI) totalUI.innerText = `$${this.total.toFixed(2)}`;
+
+    // 2. Calcular monto a restar
+    const montoDescuento = subtotal * (this.descuentoAplicado / 100);
+
+    // 3. Calcular Total final
+    this.total = subtotal - montoDescuento;
+
+    // 4. Pintar en el HTML
+    const subtotalElem = document.getElementById("subtotalTexto");
+    const descuentoElem = document.getElementById("descuento");
+    const totalElem = document.getElementById("totalPrecio");
+
+    if (subtotalElem)
+      subtotalElem.textContent = `Subtotal: $${subtotal.toFixed(2)}`;
+
+    if (descuentoElem) {
+      descuentoElem.textContent =
+        this.descuentoAplicado > 0
+          ? `Descuento (${this.descuentoAplicado}%): -$${montoDescuento.toFixed(2)}`
+          : "";
+    }
+
+    if (totalElem) totalElem.textContent = `$${this.total.toFixed(2)}`;
   },
 
   crearItemCarrito(item) {
@@ -406,19 +442,33 @@ const PosManager = {
             idProducto: item.id,
             cantidad: item.cantidad,
           })),
+          porcentajeDescuento: this.descuentoAplicado,
         }),
       });
 
       if (response.ok) {
-        // Esperar un pequeño delay artificial para que la animación se aprecie
-        await new Promise((resolve) => setTimeout(resolve, 800));
+        const resultado = await response.json(); // Obtenemos el ID de venta y totales del backend
+        // GUARDAMOS una copia del carrito antes de limpiarlo para el ticket
+        const copiaCarrito = [...this.carrito];
 
+        // Esperar un pequeño delay artificial para que la animación se aprecie
+        await new Promise((resolve) => setTimeout(resolve, 500));
+
+        // 1. Limpiamos el carrito
         this.carrito = [];
-        this.actualizarCarrito();
+        // 2. Reseteamos el descuento aplicado a 0 de nuevo
+        this.descuentoAplicado = 0;
+        // 3. Actualizamos la interfaz
+        this.actualizarCarrito(); // Esto llamará a actualizarTotales y pondrá todo en $0
+
         await this.cargarDB();
 
         // Quitar el cargador antes del alert
         loader.remove();
+
+        if (confirm("¿Desea imprimir el ticket?")) {
+          this.imprimirTicket(resultado, copiaCarrito);
+        }
 
         // Refrescar inventario
         const buscador = document.getElementById("buscador");
@@ -438,6 +488,112 @@ const PosManager = {
       btn.disabled = false;
       if (document.querySelector(".loader-overlay")) loader.remove();
     }
+  },
+
+  abrirModalDescuento() {
+    const modal = document.getElementById("modalDescuento");
+    const input = document.getElementById("inputPorcentaje");
+    if (modal && input) {
+      input.value = this.descuentoAplicado || "";
+      modal.style.display = "flex";
+      input.focus();
+    } else {
+      console.error("No se encontró el HTML del modal de descuento");
+    }
+  },
+
+  cerrarModalDescuento() {
+    document.getElementById("modalDescuento").style.display = "none";
+  },
+
+  confirmarDescuento() {
+    const input = document.getElementById("inputPorcentaje");
+    const porcentaje = parseFloat(input.value) || 0;
+
+    if (porcentaje < 0 || porcentaje > 100) {
+      alert("El descuento debe estar entre 0 y 100");
+      return;
+    }
+
+    this.descuentoAplicado = porcentaje;
+    this.actualizarTotales();
+    input.value = ""; // Limpiar el input para la próxima vez
+    this.cerrarModalDescuento();
+  },
+
+  imprimirTicket(datosVenta, itemsCarrito) {
+    const ticketElement = document.getElementById("ticket-impresion");
+    const cuerpo = document.getElementById("ticket-cuerpo");
+    const idVenta = document.getElementById("ticket-id");
+    const fechaElem = document.getElementById("ticket-fecha");
+
+    // Usar solo tu formateador
+    fechaElem.textContent = `Fecha: ${this.formatearFechaTicket(new Date())}`;
+    idVenta.textContent = `Ticket #: ${datosVenta.idVenta}`;
+
+    // Llenar productos
+    cuerpo.innerHTML = itemsCarrito
+      .map(
+        (item) => `
+        <tr>
+            <td>${item.cantidad}</td>
+            <td>${item.nombre.substring(0, 18)}${item.nombre.length > 18 ? ".." : ""}</td>
+            <td>$${(item.precio * item.cantidad).toFixed(2)}</td>
+        </tr>
+    `,
+      )
+      .join("");
+
+    // Llenar totales
+    document.getElementById("t-subtotal").textContent =
+      `$${datosVenta.subtotal.toFixed(2)}`;
+    const descFila = document.getElementById("t-descuento-fila");
+    if (datosVenta.porcentajeDescuento > 0) {
+      descFila.style.display = "block";
+      document.getElementById("t-descuento").textContent =
+        `-$${datosVenta.descuento.toFixed(2)}`;
+    } else {
+      descFila.style.display = "none";
+    }
+    document.getElementById("t-total").textContent =
+      `$${datosVenta.total.toFixed(2)}`;
+
+    ticketElement.style.display = "block";
+
+    // Lanzar impresión
+    window.print();
+
+    ticketElement.style.display = "none";
+  },
+
+  formatearFechaTicket(fecha) {
+    const meses = [
+      "Ene",
+      "Feb",
+      "Mar",
+      "Abr",
+      "May",
+      "Jun",
+      "Jul",
+      "Ago",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dic",
+    ];
+
+    const dia = fecha.getDate().toString().padStart(2, "0");
+    const mes = meses[fecha.getMonth()];
+    const anio = fecha.getFullYear();
+
+    let horas = fecha.getHours();
+    const minutos = fecha.getMinutes().toString().padStart(2, "0");
+    const ampm = horas >= 12 ? "PM" : "AM";
+
+    horas = horas % 12;
+    horas = horas ? horas : 12; // el número 0 se convierte en 12
+
+    return `${dia}/${mes}/${anio} - ${horas}:${minutos} ${ampm}`;
   },
 };
 

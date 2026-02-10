@@ -8,6 +8,7 @@
     <title>Creaciones Madriz | Punto de Venta</title>
     <link rel="stylesheet" href="../../css/globals.css">
     <link rel="stylesheet" href="../../css/pos.css">
+    <link rek="stylesheet" href="../../css/ticket.css">
 
 </head>
 
@@ -92,12 +93,64 @@
             </div>
         </div>
 
+        <!-- MODAL: DESCUENTOS -->
+        <div id="modalDescuento" class="modal-overlay" style="display: none;">
+            <div class="modal-content">
+                <h3>Aplicar Descuento</h3>
+                <p>Introduce el porcentaje de descuento para esta venta:</p>
+                <div class="input-group-descuento">
+                    <input type="number" id="inputPorcentaje" min="0" max="100" placeholder="0">
+                    <span>%</span>
+                </div>
+                <div class="modal-actions">
+                    <button class="btn-cancelar" id="btnCerrarModal">Cancelar</button>
+                    <button class="btn-aplicar" id="btnConfirmarDescuento">Aplicar</button>
+                </div>
+            </div>
+        </div>
     </main>
 
     <!-- Scripts -->
     <script type="module" src="../../js/cargar_rutas.js"></script>
     <script src="../../js/modules/pos/pos.js"></script>
 
+    <!-- BLOQUE DE TICKET -->
+    <div id="ticket-impresion" class="ticket-container" style="display: none;">
+        <div class="ticket-header">
+            <strong>Creaciones Madriz</strong><br>
+            <span>+52 453 103 9314</span><br>
+            <span>Martínez de Navarrete #490</span><br>
+            <span>Col. Jardines de Cdral</span>
+            <div class="separador"></div>
+            <p id="ticket-fecha"></p>
+            <p id="ticket-id"></p>
+        </div>
+
+        <table class="ticket-tabla">
+            <thead>
+                <tr>
+                    <th width="15%">Cant</th>
+                    <th width="55%">Producto</th>
+                    <th width="30%">Total</th>
+                </tr>
+            </thead>
+            <tbody id="ticket-cuerpo">
+            </tbody>
+        </table>
+
+        <div class="separador"></div>
+
+        <div class="ticket-totales">
+            <div class="fila-total"><span>Subtotal:</span> <span id="t-subtotal"></span></div>
+            <div id="t-descuento-fila" class="fila-total"><span>Descuento:</span> <span id="t-descuento"></span></div>
+            <div class="fila-total total-negrita"><span>TOTAL:</span> <span id="t-total"></span></div>
+        </div>
+
+        <div class="ticket-footer">
+            <p>Conserve este ticket. Válido para cambios o aclaraciones solo durante los 4 días hábiles siguientes.</p>
+            <p><strong>¡Gracias por su compra!</strong></p>
+        </div>
+    </div>
 </body>
 
 </html>

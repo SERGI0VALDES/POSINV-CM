@@ -4,6 +4,7 @@ import {
   IsNotEmpty,
   ValidateNested,
   Min,
+  IsOptional,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 
@@ -24,4 +25,8 @@ export class CreateVentaDto {
   @ValidateNested({ each: true })
   @Type(() => CreateVentaDetalleDto)
   items: CreateVentaDetalleDto[];
+
+  @IsNumber()
+  @IsOptional() // Por si no hay descuento
+  porcentajeDescuento?: number;
 }

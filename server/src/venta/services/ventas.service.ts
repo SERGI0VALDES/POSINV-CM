@@ -18,8 +18,7 @@ export class VentasService {
     private readonly ventaRepo: Repository<Venta>,
   ) {}
 
-  async procesarVenta(carrito: any[]) {
-    // 1. Crear el QueryRunner para la transacción
+  async procesarVenta(carrito: any[], porcentajeDescuento: number = 0) {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
@@ -28,7 +27,7 @@ export class VentasService {
       let totalVenta = 0;
       const detalles: DetalleVenta[] = [];
 
-      // 2. Primero calculamos el total y validamos stock de todo el carrito
+      // 1. CALCULAR TOTAL Y VALIDAR STOCK
       for (const item of carrito) {
         const producto = await queryRunner.manager.findOne(ProductoBase, {
           where: { idProducto: item.idProducto },
@@ -49,7 +48,7 @@ export class VentasService {
         const subtotal = Number(producto.precioVenta) * item.cantidad;
         totalVenta += subtotal;
 
-        // Creamos el objeto detalle (pero no lo guardamos aún)
+        // Crear detalle
         const detalle = new DetalleVenta();
         detalle.idProducto = producto.idProducto;
         detalle.cantidad = item.cantidad;
@@ -58,20 +57,28 @@ export class VentasService {
         detalles.push(detalle);
       }
 
-      // 3. Crear y guardar la cabecera de la Venta
+      // 2. CALCULAR DESCUENTO SOBRE EL TOTAL (fuera del loop)
+      const montoDescuento = totalVenta * (porcentajeDescuento / 100);
+      const totalFinal = totalVenta - montoDescuento;
+
+      // 3. CREAR VENTA CON DESCUENTO (SOLO UNA VEZ)
       const nuevaVenta = queryRunner.manager.create(Venta, {
-        total: totalVenta,
+        total: totalFinal, // Total CON descuento
+        subtotal: totalVenta, // Total SIN descuento (opcional, pero útil)
+        porcentajeDescuento: porcentajeDescuento,
+        montoDescuento: montoDescuento,
         fecha: new Date(),
         estado: 'completada',
       });
+
       const ventaGuardada = await queryRunner.manager.save(nuevaVenta);
 
-      // 4. Guardar detalles y actualizar stock/movimientos
+      // 4. GUARDAR DETALLES Y ACTUALIZAR STOCK
       for (const det of detalles) {
         det.idVenta = ventaGuardada.idVenta;
         await queryRunner.manager.save(det);
 
-        // Descontar stock en ProductoBase
+        // Descontar stock
         await queryRunner.manager.decrement(
           ProductoBase,
           { idProducto: det.idProducto },
@@ -79,34 +86,33 @@ export class VentasService {
           det.cantidad,
         );
 
-        // 2. Registrar el movimiento de salida con TUS campos exactos
-        // Generamos un código único para idMovimiento (ej: V-1715632...)
+        // Registrar movimiento
         const codigoMov = `V-${Date.now()}-${det.idProducto}`;
         await queryRunner.manager.save(MovimientoInventario, {
-          idMovimiento: codigoMov, // Campo único obligatorio
-          tipoMovimiento: 'salida', // 'entrada' | 'salida' | 'ajuste'
-          cantidad: det.cantidad, // Cantidad vendida
-          observaciones: `Venta POS #${ventaGuardada.idVenta}`, // En lugar de 'motivo'
+          idMovimiento: codigoMov,
+          tipoMovimiento: 'salida',
+          cantidad: det.cantidad,
+          observaciones: `Venta POS #${ventaGuardada.idVenta}`,
           fechaMovimiento: new Date(),
-          idUsuario: 1, // Usuario por defecto
+          idUsuario: 1,
           producto: { idProducto: det.idProducto } as any,
         });
       }
 
-      // 5. Si todo salió bien, confirmamos (commit)
       await queryRunner.commitTransaction();
 
       return {
         success: true,
         idVenta: ventaGuardada.idVenta,
-        total: totalVenta,
+        subtotal: totalVenta, // Sin descuento
+        descuento: montoDescuento,
+        total: totalFinal, // Con descuento
+        porcentajeDescuento: porcentajeDescuento,
       };
     } catch (error) {
-      // Si algo falla, revertimos todo (rollback)
       await queryRunner.rollbackTransaction();
       throw error;
     } finally {
-      // Liberamos el query runner
       await queryRunner.release();
     }
   }

@@ -375,7 +375,7 @@ export class InventarioManager {
       vestidos: ["Código SKU","Nombre","Color","Categoría","Stock","Precio","Descripción","Estado","Editar"],
       productos: ["Código SKU","Nombre","Color","Categoría","Stock","Precio","Descripción","Estado","Editar"],
       telas: ["Nombre de Tela", "Color", "Existencia", "Ancho", "Largo (metros)", "Editar"],
-      insumos: ["Nombre", "Categoría", "Stock", "Unidad", "Detalles", "Estado", "Acciones"],
+      insumos: ["Nombre", "Categoría", "Stock", "Unidad", "Detalles", "Estado", "Editar"],
       
     };
 
@@ -418,7 +418,7 @@ export class InventarioManager {
               </td>
               <td class="acciones">
                 <button class="btn-edit" onclick="window.inventarioManager.prepararEdicion(${item.idProducto})">
-                  <i class="fas fa-pencil-alt"></i>
+                  <i class="fas fa-pencil-alt">✍🏼</i>
                 </button>
               </td>
             </tr>`;
@@ -443,7 +443,7 @@ export class InventarioManager {
               </td>
               <td class="acciones">
                 <button class="btn-editar" onclick='FormularioProductos.prepararEdicion(${itemJson})'>
-                    <i class="fas fa-edit"></i>
+                    <i class="fas fa-edit">✍🏼</i>
                 </button>
               </td>
             </tr>`;
@@ -459,7 +459,7 @@ export class InventarioManager {
               <td>${item.largoTotal || 0} m</td>
               <td class="acciones">
                 <button onclick="FormularioTelas.prepararEdicion(${item.id})">
-                  <i class="fas fa-pencil-alt"></i>
+                  <i class="fas fa-pencil-alt">✍🏼</i>
                 </button>
               </td>
             </tr>`;
@@ -493,7 +493,7 @@ export class InventarioManager {
             </td>
             <td class="acciones">
               <button class="btn-edit" onclick="window.FormularioInsumos.prepararEdicionInsumo(${item.id})">
-                <i class="fas fa-pencil-alt"></i>
+                <i class="fas fa-pencil-alt">✍🏼</i>
               </button>
             </td>
           </tr>`;

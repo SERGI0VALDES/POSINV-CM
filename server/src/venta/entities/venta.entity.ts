@@ -17,11 +17,20 @@ export class Venta {
   @CreateDateColumn({ type: 'datetime' })
   fecha: Date;
 
+  @Column('decimal', { precision: 10, scale: 2 })
+  subtotal: number; // Sin descuento
+
   @Column({ type: 'decimal', precision: 10, scale: 2 })
   total: number;
 
   @Column({ type: 'varchar', length: 50, default: 'completada' })
   estado: string; // 'completada', 'cancelada'
+
+  @Column('decimal', { precision: 5, scale: 2, default: 0 })
+  porcentajeDescuento: number;
+
+  @Column('decimal', { precision: 10, scale: 2, default: 0 })
+  montoDescuento: number;
 
   // Una venta tiene muchos detalles (productos)
   @OneToMany(() => DetalleVenta, (detalle) => detalle.venta, { cascade: true })

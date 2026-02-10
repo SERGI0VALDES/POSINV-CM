@@ -1,0 +1,53 @@
+.ticket-container {
+    width: 250px; /* Tamaño ideal para impresoras de 58mm */
+    padding: 10px;
+    font-family: 'Courier New', Courier, monospace;
+    color: #000;
+}
+
+.ticket-header { text-align: center; font-size: 11px; }
+.ticket-header strong { font-size: 14px; }
+
+.separador { border-top: 1px dashed #000; margin: 10px 0; }
+
+.ticket-tabla { width: 100%; font-size: 11px; border-collapse: collapse; }
+.ticket-tabla th { border-bottom: 1px solid #000; text-align: left; }
+.ticket-tabla td { padding: 3px 0; }
+
+.ticket-totales { font-size: 12px; }
+.fila-total { display: flex; justify-content: space-between; margin-bottom: 3px; }
+.total-negrita { font-weight: bold; font-size: 14px; border-top: 1px double #000; padding-top: 5px; }
+
+.ticket-footer { text-align: center; font-size: 10px; margin-top: 15px; }
+
+@media print {
+    /* 1. Escondemos TODO lo que hay en el body */
+    body * {
+        visibility: hidden;
+        background: white !important;
+        overflow: visible !important;
+    }
+
+    .topbar, .main-content, header, nav {
+        display: none !important;
+    }
+
+    /* 2. Hacemos que el ticket y sus hijos sean visibles */
+    #ticket-impresion, #ticket-impresion * {
+        visibility: visible;
+    }
+
+    /* 3. Posicionamos el ticket arriba a la izquierda para que no salga centrado en la hoja */
+    #ticket-impresion {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%; /* El ancho lo controlará el contenedor interno */
+        display: block !important; /* Nos aseguramos de que no esté oculto */
+    }
+
+    /* 4. Quitamos márgenes de la página (opcional, ayuda con impresoras térmicas) */
+    @page {
+        margin: 0;
+    }
+}

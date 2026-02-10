@@ -8,8 +8,11 @@ export class VentasController {
 
   @Post()
   async crearVenta(@Body() createVentaDto: CreateVentaDto) {
-    // Pasamos el array de items al servicio
-    return await this.ventasService.procesarVenta(createVentaDto.items);
+    // Ahora pasamos los dos argumentos que pide tu nuevo servicio
+    return await this.ventasService.procesarVenta(
+      createVentaDto.items,
+      createVentaDto.porcentajeDescuento || 0,
+    );
   }
 
   @Get()
