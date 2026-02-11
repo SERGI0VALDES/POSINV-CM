@@ -465,9 +465,11 @@ const PosManager = {
 
         // Quitar el cargador antes del alert
         loader.remove();
-
-        if (confirm("¿Desea imprimir el ticket?")) {
-          this.imprimirTicket(resultado, copiaCarrito);
+        const imprimir = confirm("¿Desea imprimir el ticket?");
+        if (imprimir) {
+          setTimeout(() => {
+            this.imprimirTicket(resultado, copiaCarrito);
+          }, 300); // Pequeño delay
         }
 
         // Refrescar inventario
@@ -521,49 +523,242 @@ const PosManager = {
     this.cerrarModalDescuento();
   },
 
-  imprimirTicket(datosVenta, itemsCarrito) {
-    const ticketElement = document.getElementById("ticket-impresion");
-    const cuerpo = document.getElementById("ticket-cuerpo");
-    const idVenta = document.getElementById("ticket-id");
-    const fechaElem = document.getElementById("ticket-fecha");
+  async imprimirTicket(datosVenta, itemsCarrito) {
+    // ===========================================
+    // 1. CARGAR EL LOGO
+    // ===========================================
+    let logoSrc = "";
 
-    // Usar solo tu formateador
-    fechaElem.textContent = `Fecha: ${this.formatearFechaTicket(new Date())}`;
-    idVenta.textContent = `Ticket #: ${datosVenta.idVenta}`;
-
-    // Llenar productos
-    cuerpo.innerHTML = itemsCarrito
-      .map(
-        (item) => `
-        <tr>
-            <td>${item.cantidad}</td>
-            <td>${item.nombre.substring(0, 18)}${item.nombre.length > 18 ? ".." : ""}</td>
-            <td>$${(item.precio * item.cantidad).toFixed(2)}</td>
-        </tr>
-    `,
-      )
-      .join("");
-
-    // Llenar totales
-    document.getElementById("t-subtotal").textContent =
-      `$${datosVenta.subtotal.toFixed(2)}`;
-    const descFila = document.getElementById("t-descuento-fila");
-    if (datosVenta.porcentajeDescuento > 0) {
-      descFila.style.display = "block";
-      document.getElementById("t-descuento").textContent =
-        `-$${datosVenta.descuento.toFixed(2)}`;
-    } else {
-      descFila.style.display = "none";
+    // Intentar cargar el logo desde el servidor
+    try {
+      // Ruta relativa desde donde se sirve el HTML
+      const logoBase64 = await this.convertirImagenABase64(
+        "../../../assets/img/logo.png",
+      );
+      if (logoBase64) {
+        logoSrc = logoBase64;
+      } else {
+        // Fallback: logo de texto
+        logoSrc = null;
+      }
+    } catch (error) {
+      console.warn("No se pudo cargar el logo, usando texto:", error);
+      logoSrc = null;
     }
-    document.getElementById("t-total").textContent =
-      `$${datosVenta.total.toFixed(2)}`;
 
-    ticketElement.style.display = "block";
+    // ===========================================
+    // 2. GENERAR HTML DEL TICKET
+    // ===========================================
+    const ANCHO_TICKET = "250px";
 
-    // Lanzar impresión
-    window.print();
+    const ticketHTML = `
+        <div class="ticket-container" style="
+            width: ${ANCHO_TICKET};
+            padding: 12px 15px;
+            background: white;
+            font-family: 'Courier New', Courier, monospace;
+            color: black;
+            margin: 0 auto;
+            box-sizing: border-box;
+            border: none;
+            font-size: 12px;
+            line-height: 1.3;
+        ">
+            
+            <!-- ===== LOGO REAL ===== -->
+            <div style="text-align: center; margin-bottom: 8px;">
+                ${
+                  logoSrc
+                    ? `
+                    <img src="${logoSrc}" 
+                         style="width: 100px; height: auto; margin-bottom: 5px; display: inline-block;"
+                         alt="Creaciones Madriz Logo">
+                    <div style="font-size: 14px; font-weight: bold; letter-spacing: 1px; margin-top: 2px;">
+                        CREACIONES MADRIZ
+                    </div>
+                `
+                    : `
+                    <div style="font-size: 22px; font-weight: bold; letter-spacing: 2px; color: #000;">
+                        CREACIONES MADRIZ
+                    </div>
+                    <div style="font-size: 11px; margin-top: 2px; border-top: 1px solid #000; border-bottom: 1px solid #000; padding: 3px 0; display: inline-block;">
+                        ✦ PUNTO DE VENTA ✦
+                    </div>
+                `
+                }
+            </div>
+            
+            <!-- ===== INFORMACIÓN CONTACTO ===== -->
+            <div style="text-align: center; font-size: 11px; margin-bottom: 12px;">
+                <div style="margin-bottom: 2px;">+52 453 103 9314</div>
+                <div style="margin-bottom: 2px;">Martínez de Navarrete #490</div>
+                <div>Col. Jardines de Cdral</div>
+            </div>
+            
+            <!-- SEPARADOR -->
+            <div style="border-top: 1px dashed #333; margin: 8px 0;"></div>
+            
+            <!-- ===== FECHA Y FOLIO ===== -->
+            <div style="font-size: 11px; margin-bottom: 10px; display: flex; justify-content: space-between;">
+                <span>${this.formatearFechaTicket(new Date())}</span>
+                <span>Ticket #${datosVenta.idVenta}</span>
+            </div>
+            
+            <!-- SEPARADOR -->
+            <div style="border-top: 1px dashed #333; margin: 8px 0;"></div>
+            
+            <!-- ===== PRODUCTOS ===== -->
+            <div style="display: flex; font-weight: bold; font-size: 11px; margin-bottom: 5px; border-bottom: 1px solid #000; padding-bottom: 3px;">
+                <div style="width: 15%;">CANT</div>
+                <div style="width: 55%;">PRODUCTO</div>
+                <div style="width: 30%; text-align: right;">TOTAL</div>
+            </div>
+            
+            ${itemsCarrito
+              .map(
+                (item) => `
+                <div style="display: flex; font-size: 11px; margin-bottom: 3px;">
+                    <div style="width: 15%;">${item.cantidad}</div>
+                    <div style="width: 55%;">${item.nombre.substring(0, 14)}${item.nombre.length > 14 ? ".." : ""}</div>
+                    <div style="width: 30%; text-align: right;">$${(item.precio * item.cantidad).toFixed(2)}</div>
+                </div>
+            `,
+              )
+              .join("")}
+            
+            <!-- SEPARADOR -->
+            <div style="border-top: 1px dashed #333; margin: 12px 0;"></div>
+            
+            <!-- ===== TOTALES ===== -->
+            <div style="font-size: 11px; margin-bottom: 3px; display: flex; justify-content: space-between;">
+                <span>SUBTOTAL:</span>
+                <span>$${datosVenta.subtotal.toFixed(2)}</span>
+            </div>
+            
+            ${
+              datosVenta.porcentajeDescuento > 0
+                ? `
+                <div style="font-size: 11px; margin-bottom: 3px; display: flex; justify-content: space-between;">
+                    <span>DESCUENTO (${datosVenta.porcentajeDescuento}%):</span>
+                    <span>-$${datosVenta.descuento.toFixed(2)}</span>
+                </div>
+            `
+                : ""
+            }
+            
+            <div style="font-size: 14px; font-weight: bold; margin-top: 8px; padding-top: 5px; border-top: 2px double #000; display: flex; justify-content: space-between;">
+                <span>TOTAL:</span>
+                <span>$${datosVenta.total.toFixed(2)}</span>
+            </div>
+            
+            <!-- SEPARADOR -->
+            <div style="border-top: 1px dashed #333; margin: 12px 0;"></div>
+            
+            <!-- ===== PIE DE PÁGINA ===== -->
+            <div style="text-align: center; font-size: 9px;">
+                <p style="margin: 2px 0;">Cambios hasta 4 días hábiles</p>
+                <p style="margin: 2px 0;">Conserve este ticket para aclaraciones</p>
+                <div style="margin: 12px 0 5px 0;">
+                    <span style="font-size: 13px; font-weight: bold;">¡GRACIAS POR SU COMPRA!</span>
+                </div>
+            </div>
+        </div>
+    `;
 
-    ticketElement.style.display = "none";
+    // ===========================================
+    // 3. CREAR IFRAME PARA IMPRESIÓN
+    // ===========================================
+    const iframe = document.createElement("iframe");
+    iframe.style.position = "fixed";
+    iframe.style.right = "0";
+    iframe.style.bottom = "0";
+    iframe.style.width = ANCHO_TICKET;
+    iframe.style.height = "0";
+    iframe.style.border = "none";
+    document.body.appendChild(iframe);
+
+    const iframeDoc = iframe.contentWindow.document;
+    iframeDoc.open();
+    iframeDoc.write(`
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <title>Ticket Creaciones Madriz</title>
+            <style>
+                * { margin: 0; padding: 0; box-sizing: border-box; }
+                
+                @page { 
+                    margin: 0; 
+                    size: 58mm auto;
+                }
+                
+                body { 
+                    margin: 0; 
+                    padding: 0;
+                    background: white; 
+                    display: flex; 
+                    justify-content: center;
+                    font-family: 'Courier New', Courier, monospace;
+                }
+                
+                img {
+                    max-width: 100%;
+                    height: auto;
+                }
+                
+                @media print {
+                    body { padding: 0; }
+                    .ticket-container { box-shadow: none; }
+                }
+            </style>
+        </head>
+        <body>
+            ${ticketHTML}
+            <script>
+                window.onload = function() {
+                    setTimeout(function() {
+                        window.print();
+                        setTimeout(function() {
+                            window.close();
+                        }, 500);
+                    }, 300);
+                };
+            <\/script>
+        </body>
+        </html>
+    `);
+    iframeDoc.close();
+
+    // Limpieza
+    setTimeout(() => {
+      if (document.body.contains(iframe)) {
+        document.body.removeChild(iframe);
+      }
+    }, 5000);
+  },
+
+  // Método auxiliar para obtener estilos
+  obtenerEstilosTicket() {
+    // Puedes copiar aquí los estilos de ticket.css como string
+    return `
+        .ticket-container {
+            width: 250px;
+            padding: 10px;
+            font-family: 'Courier New', Courier, monospace;
+            color: #000;
+        }
+        .ticket-header { text-align: center; font-size: 11px; }
+        .ticket-header strong { font-size: 14px; }
+        .separador { border-top: 1px dashed #000; margin: 10px 0; }
+        .ticket-tabla { width: 100%; font-size: 11px; border-collapse: collapse; }
+        .ticket-tabla th { border-bottom: 1px solid #000; text-align: left; }
+        .ticket-tabla td { padding: 3px 0; }
+        .ticket-totales { font-size: 12px; }
+        .fila-total { display: flex; justify-content: space-between; margin-bottom: 3px; }
+        .total-negrita { font-weight: bold; font-size: 14px; border-top: 1px double #000; padding-top: 5px; }
+        .ticket-footer { text-align: center; font-size: 10px; margin-top: 15px; }
+    `;
   },
 
   formatearFechaTicket(fecha) {
@@ -595,6 +790,24 @@ const PosManager = {
 
     return `${dia}/${mes}/${anio} - ${horas}:${minutos} ${ampm}`;
   },
+
+  // MÉTODO NUEVO - Convertir imagen local a Base64
+  async convertirImagenABase64(ruta) {
+    try {
+      const response = await fetch(ruta);
+      const blob = await response.blob();
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
+      });
+    } catch (error) {
+      console.error("Error cargando logo:", error);
+      return null;
+    }
+  },
+
 };
 
 window.PosManager = PosManager;
