@@ -1,15 +1,23 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { ProductoBase } from '../inventario/entities/producto-base.entity';
+
+import {
+  ProductoBase,
+  TipoProducto,
+} from '../inventario/entities/producto-base.entity';
 import { MovimientoInventario } from './entities/movimiento-inventario.entity';
 //import { RegistrarMovimientoDto } from './dto/registrar-movimiento.dto';
+import { Tela } from './entities/tela.entity'; // Asegúrate de que la ruta sea correcta
 
 @Injectable()
 export class InventarioService {
   constructor(
     @InjectRepository(ProductoBase)
     private readonly productoRepo: Repository<ProductoBase>,
+
+    @InjectRepository(Tela) // <--- Agregamos esto
+    private readonly telaRepo: Repository<Tela>,
 
     @InjectRepository(MovimientoInventario)
     private readonly movRepo: Repository<MovimientoInventario>,
@@ -63,33 +71,37 @@ export class InventarioService {
     });
   }
 
-  /*
-  async registrar(dto: RegistrarMovimientoDto) {
-    return await this.movRepo.manager.transaction(async (manager) => {
-      // 1. Crear el registro del movimiento
-      const nuevoMovimiento = manager.create(MovimientoInventario, {
-        ...dto,
-        producto: { idProducto: dto.idProducto } as any,
-      });
-
-      // 2. Actualizar el stock en ProductoBase
-      const factor = dto.tipoMovimiento === 'entrada' ? 1 : -1;
-      await manager.increment(
-        ProductoBase,
-        { idProducto: dto.idProducto },
-        'stockActual',
-        dto.cantidad * factor,
-      );
-
-      return await manager.save(nuevoMovimiento);
-    });
-  }*/
-
   async obtenerPorProducto(idProducto: number) {
     return await this.movRepo.find({
       where: { producto: { idProducto } },
       relations: ['producto'],
       order: { fechaMovimiento: 'DESC' },
     });
+  }
+
+  // inventario.service.ts
+
+  async obtenerResumenDashboard() {
+    const vestidos = await this.productoRepo.count({
+      where: { tipoProducto: TipoProducto.VESTIDO },
+    });
+    const terminados = await this.productoRepo.count({
+      where: { tipoProducto: TipoProducto.TERMINADO },
+    });
+
+    const cantidadTipos = await this.telaRepo.count();
+
+    // Usar COALESCE para manejar NULL
+    const sumaRollos = await this.telaRepo
+      .createQueryBuilder('t')
+      .select('COALESCE(SUM(t.stockRollo), 0)', 'totalSuma')
+      .getRawOne();
+
+    return {
+      vestidos,
+      terminados,
+      telas: cantidadTipos,
+      totalRollos: Number(sumaRollos?.totalSuma || 0),
+    };
   }
 }

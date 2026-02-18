@@ -25,12 +25,6 @@ export class InventarioController {
     return this.inventoryService.obtenerHistorial();
   }
 
-  /* POST /inventory/move -> Registrar una entrada, salida o ajuste
-  @Post('inventarioMover')
-  registerMovement(@Body() registrarMovimientoDto: RegistrarMovimientoDto) {
-    return this.inventoryService.registrar(registrarMovimientoDto);
-  }*/
-
   // GET /inventory/history/product/:id -> Movimientos por producto específico
   @Get('historial/producto/:id')
   getHistoryByProduct(@Param('id', ParseIntPipe) id: number) {
@@ -49,6 +43,13 @@ export class InventarioController {
   findAllProducts() {
     // Este llama al método que trae el stock actual de PRODUCTO_BASE
     return this.inventoryService.obtenerTodos();
+  }
+
+  // --- SECCIÓN DE DASHBOARD ---
+
+  @Get('resumen-dashboard')
+  async getResumen() {
+    return await this.inventoryService.obtenerResumenDashboard();
   }
 
   @Get(':id')

@@ -1,4 +1,6 @@
-/* Colores y tipografía base */
+/* ============================================
+   RESET Y BASE - SIN MODIFICAR ESTILOS VISUALES
+============================================= */
 :root {
     --primary-color: #4A90E2;
     --secondary-color: #F5A623;
@@ -7,14 +9,14 @@
     --card-bg: #FFF;
     --border-color: #E0E0E0;
 }
-/* Animación de entrada suave */
+
 @keyframes screenFadeIn {
     from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
 }
-/* Estilos base para el cuerpo */
+
 body {
-    overflow: hidden; /* Evita el scroll si no es necesario */
+    overflow: hidden;
     opacity: 0;
     font-family: Arial, sans-serif;
     margin: 0;
@@ -24,27 +26,18 @@ body {
     animation: screenFadeIn 0.8s ease-out forwards;
 }
 
-/* Estilos para la barra superior */
+/* ============================================
+   TOPBAR - SIN CAMBIOS VISUALES
+============================================= */
 .topbar {
-
-    display: grid; /* 1. Habilitar el sistema Grid */
-    
-    grid-template-columns: auto 1fr auto; /* 2. Definimos las tres columnas (Izquierda | Centro | Derecha) */
-    /* 
-       - auto: La columna del Logo ocupa solo el espacio de su contenido.
-       - 1fr: La columna de Info-Usuario ocupa todo el espacio restante (Centro).
-       - auto: La columna del Menú ocupa solo el espacio de su contenido.
-    */
-    align-items: center; /* 3. Asegura que los ítems dentro de las celdas se alineen verticalmente al centro */
-    justify-items: center; /* 4. Centra horizontalmente los ítems dentro de sus celdas */   
-    /* padding: 10px 30px; Espaciado interno */
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    justify-items: center;
     background-color: var(--card-bg);
     border-bottom: 1px solid var(--border-color);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-
-    /* Orden: Arriba | Derecha | Abajo | Izquierda */
-    padding: 10px 0px 10px 10px; /* Espaciado interno */
-    
+    padding: 10px 0px 10px 10px;
 }
 
 .logo img {
@@ -61,14 +54,25 @@ body {
     margin: 0;
 }
 
-/* Estilos para el menú con los iconos */
+.info-usuario h2 {
+    font-family: 'Ananda', Arial, sans-serif;
+    font-size: 38px;
+    padding-left: 48px;
+    padding-bottom: 10px;
+}
+
+.info-usuario p {
+    font-family: 'Comfortaa', Arial, sans-serif;
+    font-size: 15px;
+}
+
 .nav-menu ul {
-    list-style: none; 
-    padding: 0; /* Elimina el padding por defecto */
-    margin: 0; /* Elimina el margen por defecto */
-    display: flex; /* Usa flexbox para alinear los iconos */
-    justify-content: center; /* Centra los iconos horizontalmente */
-    gap: 2rem; /* Espacio entre los iconos */
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
 }
 
 .nav-menu li {
@@ -78,18 +82,17 @@ body {
 .nav-menu a {
     text-decoration: none;
     color: var(--text-color);
-    display: flex; /* Convierte el enlace en un flexbox para centrar la imagen */
-    flex-direction: column ; /* Alinea los elementos en columna */
-    align-items: center; /* Centra la imagen horizontalmente */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     transition: color 0.3s;
 }
 
 .nav-menu img {
-    /* Estandariza el tamaño de los iconos */
-    width: 60px; 
+    width: 60px;
     height: 60px;
     object-fit: contain;
-    margin-bottom: 5px; /* Espacio entre la imagen y el texto (si lo hay) */
+    margin-bottom: 5px;
 }
 
 .nav-menu a span {
@@ -102,226 +105,394 @@ body {
     color: var(--primary-color);
 }
 
-/* Contenido principal para las tarjetas */
-.main-content {
-    padding: 30px;
-}
-
-.summary-cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 20px;
-    padding: 20px;
-}
-
-/* Botón flotante */
-.add-button {
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    background-color: var(--primary-color);
-    color: #FFF;
-    font-size: 30px;
-    border: none;
-    cursor: pointer;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-
-/* Estilos para el contenedor de las tarjetas */
-.summary-cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 20px;
-    padding: 20px;
-}
-
-/* ========================================================= */
-/* MODIFICACIÓN CLAVE: Quitamos el color base de .card      */
-/* y lo definimos en selectores específicos más abajo.       */
-/* ========================================================= */
-.card {
-    display: flex;
-    align-items: center;
-    /* background-color: var(--card-bg); <--- ¡ELIMINADO! */
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-    transition: transform 0.2s;
-}
-
-.card:hover {
-    transform: translateY(-5px);
-}
-
-.card-icon {
-    font-size: 3rem;
-    margin-right: 20px;
-}
-
-.card-content {
-    display: flex;
-    flex-direction: column;
-}
-
-.card-content p {
-    margin: 0;
-    font-size: 0.9rem;
-    color: #777;
-}
-
-.card-content h3 {
-    margin: 5px 0 0;
-    font-size: 1.5rem;
-    color: var(--text-color);
-}
-
-/* ========================================================= */
-/* NUEVOS ESTILOS: Colores de fondo individuales por tarjeta */
-/* ========================================================= */
-
-.card-ventas {
-    background-color: #fffdfd; /* Azul muy claro */
-    border-radius: 10px;
-}
-
-.card-vestidos {
-    background-color: #ee9ceedb; /* Rosa suave */
-    border-radius: 10px;
-}
-
-.card-telas {
-    background-color: #b0c798; /* Verde muy claro */
-    border-radius: 10px;
-}
-
-.card-ultimas-ventas {
-    background-color: #ffeeee; /* Melocotón / Naranja suave */
-    border-radius: 10px;
-}
-
-
-/* Importamos la fuente "Ananda" */
 @font-face {
-    font-family: 'Ananda'; /* El nombre que usarás en tu CSS */
+    font-family: 'Ananda';
     src: url('../../assets/fonts/Ananda.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
 }
 
-/* Importamos la fuente "Comfortaa" */
 @font-face {
-    font-family: 'Comfortaa'; /* El nombre que usarás en tu CSS */
+    font-family: 'Comfortaa';
     src: url('../../assets/fonts/Comfortaa.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
 }
 
-/* Aplicamos la fuente a los textos de la barra superior */
-.info-usuario h2 {
-    font-family: 'Ananda', Arial, sans-serif;
-    font-size: 38px;
-    padding-left: 48px;
-    padding-bottom: 10px;
-}
-.info-usuario p {
-    font-family: 'Comfortaa', Arial, sans-serif;
-    font-size: 15px;
-}
-
-.tabla-cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 200px;
-    padding-left: 50px;
-    padding-bottom: 20px;
-}
-
-/* Estilos para las tarjetas (revisión de .card-content) */
-.card-content {
-    display:flex;
-    flex-direction: column;
-    width: 550px;
-    height: 110px;
-    /* Aseguramos que el color de fondo no bloquee el color de la tarjeta exterior */
-    background-color: transparent; 
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    
-}
-
-/* Estilos para la tarjeta contenedora */
-.card-rapidas {
-    /* 1. Habilita Flexbox y fuerza el flujo vertical (título encima de botones) */
-    display: flex; 
-    flex-direction: column; 
-    /* 2. Centrado Horizontal: Centra todos los elementos hijos (h3 y div.botones-acciones) */
-    align-items: center; 
-    justify-content: center;
-    /* 3. Espacio vertical entre los elementos apilados (título y botones) */
-    gap: 0px;
-    /* 3. Centrado Vertical: Alinea el contenido de las celdas verticalmente */
-    align-items: center;
-    
-    /* --- Estilos de Apariencia --- */
-    height: auto;
-    min-height: 20px;
-    width: 800px; /* O el ancho que prefieras */
-    margin: 0 auto; /* Centra la tarjeta en la pantalla */
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.30);
-    border-radius: 10px;
-    padding: 10px 20px; 
-    background-color: #ffffff;
-}
-
-/* Estilo del Título (Columna 1) */
-.card-rapidas h3 {
-    /* Asegurar que el título esté centrado verticalmente dentro de su celda, si aplica */
-    align-self: center; 
-    margin: 5; 
-    font-size: 1.5rem;
-    font-weight: bold;
-    /* Opcional: Centrar texto dentro de la celda (si la celda es más ancha que el texto) */
-}
-
-/* El contenedor que agrupa los botones (Columna 2) */
-.botones-acciones {
-    /* Mantenemos Flexbox para alinear los dos botones internos */
+/* ============================================
+   MAIN CONTENT - LAYOUT CORREGIDO
+============================================= */
+.main-content {
+    height: calc(100vh - 150px);
+    overflow-y: auto;
+    padding: 30px;
     display: flex;
-    gap: 10px; 
-    /* Opcional: Asegura que el grupo de botones se alinee a la izquierda de su columna */
-    justify-self: start;
+    flex-direction: column;
+    gap: 30px;
 }
 
-/* Estilos de los botones (con pequeña modificación de display) */
+/* ============================================
+   TABLA CARDS - MANTENIENDO MATRIZ 2x2
+============================================= */
+.tabla-cards {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.tabla-cards tr {
+    display: flex;
+    gap: 30px;
+    margin-bottom: 30px;
+}
+
+.tabla-cards td {
+    display: block;
+    flex: 1;
+    padding: 0;
+}
+
+/* ============================================
+   CARDS PRO - VERSIÓN ÉPICA CON TAMAÑOS CONTROLADOS 🚀
+============================================= */
+
+/* Tarjetas con efecto glassmorphism y hover 3D */
+.card-ultimas-ventas,
+.card-vestidos,
+.card-telas,
+.card-total-dia {
+    height: 100%;
+    min-height: 140px;
+    border-radius: 16px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* Efecto de brillo en el borde */
+.card-ultimas-ventas::before,
+.card-vestidos::before,
+.card-telas::before,
+.card-total-dia::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, 
+        rgba(255,255,255,0.5) 0%, 
+        rgba(255,255,255,0.2) 50%, 
+        rgba(255,255,255,0.5) 100%);
+    border-radius: 18px;
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.card-ultimas-ventas:hover::before,
+.card-vestidos:hover::before,
+.card-telas:hover::before,
+.card-total-dia:hover::before {
+    opacity: 1;
+}
+
+/* Hover efecto levitación */
+.card-ultimas-ventas:hover,
+.card-vestidos:hover,
+.card-telas:hover,
+.card-total-dia:hover {
+    transform: translateY(-5px) scale(1.01);
+    box-shadow: 0 20px 30px rgba(0, 0, 0, 0.15);
+}
+
+/* Mantener colores base pero más saturados y con gradientes más vivos */
+.card-ultimas-ventas {
+    background: linear-gradient(145deg, #ffd6d6, #ffc2c2);
+}
+
+.card-vestidos {
+    background: linear-gradient(145deg, #f7b5f7, #f0a0f0);
+}
+
+.card-telas {
+    background: linear-gradient(145deg, #c4ddac, #b8d49c);
+}
+
+.card-total-dia {
+    background: linear-gradient(145deg, #ffffff, #f5f5f5);
+}
+
+/* Card Content - Rediseñado */
+.card-content {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    height: 100%;
+    width: 100%;
+    padding: 16px 20px;
+    background: rgba(255, 255, 255, 0.5); /* Reducido de 0.7 a 0.5 */
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-radius: 16px;
+    box-shadow: inset 0 1px 3px rgba(255,255,255,0.9);
+    box-sizing: border-box;
+    position: relative;
+    z-index: 2;
+}
+
+/* Icono con animación */
+.card-icon {
+    font-size: 3rem;
+    flex-shrink: 0;
+    filter: drop-shadow(0 5px 10px rgba(0,0,0,0.25));
+    transition: all 0.3s ease;
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-3px); }
+    100% { transform: translateY(0px); }
+}
+
+.card-ultimas-ventas:hover .card-icon,
+.card-vestidos:hover .card-icon,
+.card-telas:hover .card-icon,
+.card-total-dia:hover .card-icon {
+    transform: scale(1.1) rotate(3deg);
+    filter: drop-shadow(0 10px 12px rgba(0,0,0,0.2));
+}
+
+/* Textos con más contraste */
+.card-content p {
+    margin: 0;
+    font-size: 1rem; /* Aumentado de 0.8rem */
+    color: #333;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    opacity: 0.9;
+}
+
+.card-content h3 {
+    margin: 4px 0 0;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+    line-height: 1.2;
+}
+
+/* Estilo especial para el texto de vestidos/terminados */
+.card-content h3 span {
+    font-size: 1rem; /* Aumentado de 0.85rem */
+    font-weight: 600;
+    color: #222;
+    text-shadow: none;
+}
+
+/* ============================================
+   TARJETA DE ACCIONES RÁPIDAS PRO
+============================================= */
+.card-rapidas {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 16px 25px;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-radius: 16px;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.12);
+    border: 1px solid rgba(255,255,255,0.5);
+    box-sizing: border-box;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Efecto de fondo animado */
+.card-rapidas::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(150,212,243,0.1) 0%, transparent 70%);
+    animation: rotate 20s linear infinite;
+    z-index: 1;
+}
+
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.card-rapidas h3 {
+    margin: 0;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    font-family: Comfortaa;
+    position: relative;
+    z-index: 2;
+    text-shadow: 1px 1px 2px rgba(255,255,255,0.5);
+}
+
+.botones-acciones {
+    display: flex;
+    gap: 12px;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 2;
+}
+
+/* Botones con efecto neumórfico */
 .boton-rapidas {
-    /* Aseguramos que el enlace se comporte como un bloque para poder darle padding y width */
-    display: inline-block; 
+    display: inline-block;
     text-align: center;
-    padding: 15px 20px;
-    /* Nota: Los estilos en línea del HTML (style="...") no son necesarios si los pones aquí */
-    color: rgb(0, 0, 0); 
+    padding: 10px 22px;
+    color: #1a1a1a;
     text-decoration: none;
-    /* Sigue el resto de tus estilos del boton-rapidas */
-    background-color: #96d4f3;
-    border-radius: 5px;
-    /* ... */
+    background: rgba(150, 212, 243, 0.8);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border-radius: 40px;
+    font-family: Comfortaa;
+    font-weight: 600;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255,255,255,0.5);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    letter-spacing: 0.3px;
 }
 
-/* Efecto al pasar el ratón */
 .boton-rapidas:hover {
-    background-color: #d5e4ec; /* Azul un poco más oscuro */
-    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15); /* Sombra ligeramente más profunda */
+    background: #96d4f3;
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 12px 20px rgba(150, 212, 243, 0.3);
+    border-color: white;
 }
 
-/* Efecto al hacer clic (opcional, pero mejora la experiencia) */
 .boton-rapidas:active {
-    transform: translateY(1px); /* Mueve el botón ligeramente hacia abajo */
+    transform: translateY(0) scale(0.98);
+}
+
+/* ============================================
+   ANIMACIONES ADICIONALES
+============================================= */
+
+/* Partículas decorativas con más brillo */
+.card-ultimas-ventas::after,
+.card-vestidos::after,
+.card-telas::after,
+.card-total-dia::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.9) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    pointer-events: none;
+    border-radius: 16px;
+}
+
+
+.card-ultimas-ventas:hover::after,
+.card-vestidos:hover::after,
+.card-telas:hover::after,
+.card-total-dia:hover::after {
+    opacity: 0.5;
+}
+
+/* Efecto de entrada para las cards */
+@keyframes cardAppear {
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.card-ultimas-ventas,
+.card-vestidos,
+.card-telas,
+.card-total-dia,
+.card-rapidas {
+    animation: cardAppear 0.5s ease-out forwards;
+}
+
+/* Diferentes delays para cada card */
+.card-ultimas-ventas { animation-delay: 0.1s; }
+.card-vestidos { animation-delay: 0.15s; }
+.card-telas { animation-delay: 0.2s; }
+.card-total-dia { animation-delay: 0.25s; }
+.card-rapidas { animation-delay: 0.3s; }
+
+/* ============================================
+   RESPONSIVE AJUSTADO
+============================================= */
+@media (max-width: 768px) {
+    .card-ultimas-ventas,
+    .card-vestidos,
+    .card-telas,
+    .card-total-dia {
+        min-height: 130px;
+    }
+    
+    .card-content {
+        padding: 14px 16px;
+        gap: 12px;
+    }
+    
+    .card-icon {
+        font-size: 2.2rem;
+    }
+    
+    .card-content h3 {
+        font-size: 1.3rem;
+    }
+    
+    .card-rapidas h3 {
+        font-size: 1.2rem;
+    }
+    
+    .boton-rapidas {
+        padding: 8px 18px;
+        font-size: 0.85rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .card-ultimas-ventas,
+    .card-vestidos,
+    .card-telas,
+    .card-total-dia {
+        min-height: 120px;
+    }
+    
+    .card-content {
+        padding: 12px;
+    }
+    
+    .card-icon {
+        font-size: 2rem;
+    }
+    
+    .card-content h3 {
+        font-size: 1.2rem;
+    }
+    
+    .card-content p {
+        font-size: 0.75rem;
+    }
 }

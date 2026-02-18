@@ -1,400 +1,559 @@
 /* ------------------------------------------- */
-/* 1. Estilos Base del Modal de Categorías (Selección) */
-/* Clase única: #modal-inv-categorias */
+/* MODALES REDISEÑADOS - MÁS LIMPIOS Y MODERNOS */
 /* ------------------------------------------- */
-#modal-inv-categorias {
-    /* Ocultar por defecto */
-    display: none; 
-    
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.6);
-    z-index: 1000;
-    justify-content: center;
-    align-items: center;
+
+/* ==========================================================================
+   VARIABLES COMPARTIDAS PARA MODALES
+   ========================================================================== */
+
+:root {
+  --modal-bg: #ffffff;
+  --modal-overlay: rgba(0, 0, 0, 0.5);
+  --modal-border-radius: 24px;
+  --modal-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  --modal-header-bg: #ffffff;
+  --modal-footer-bg: #fafafa;
+  --modal-primary: #4A90E2;
+  --modal-primary-light: #E8F0FE;
+  --modal-text: #1e293b;
+  --modal-text-light: #64748b;
+  --modal-border: #e2e8f0;
 }
 
-/* Mostrar el modal cuando se le agrega la clase 'active' */
-#modal-inv-categorias.active {
-    display: flex;
+/* ==========================================================================
+   MODAL BASE - Estilos compartidos
+   ========================================================================== */
+
+.modal-base,
+#modal-inv-categorias,
+.modal-inventario {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--modal-overlay);
+  backdrop-filter: blur(8px);
+  z-index: 1000;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
 }
 
-/* ------------------------------------------- */
-/* 2. Estilos del Contenido del Modal (Caja Blanca) */
-/* Clase única: .modal-inv-content */
-/* ------------------------------------------- */
-.modal-inv-content {
-    background: #ffffff;
-    border-radius: 12px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-    width: 90%;
-    max-width: 500px; 
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    transform: scale(0.9);
-    transition: transform 0.3s ease-out;
+.modal-base.active,
+#modal-inv-categorias.active,
+.modal-inventario.active {
+  display: flex;
+}
+
+/* ==========================================================================
+   MODAL DE CATEGORÍAS - #modal-inv-categorias
+   ========================================================================== */
+
+#modal-inv-categorias .modal-inv-content {
+  background: var(--modal-bg);
+  border-radius: var(--modal-border-radius);
+  box-shadow: var(--modal-shadow);
+  width: 90%;
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transform: scale(0.95) translateY(10px);
+  opacity: 0;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 #modal-inv-categorias.active .modal-inv-content {
-    transform: scale(1);
+  transform: scale(1) translateY(0);
+  opacity: 1;
 }
 
-/* ------------------------------------------- */
-/* 3. Encabezado y Cuerpo */
-/* ------------------------------------------- */
-.modal-inv-header {
-    padding: 15px 20px;
-    border-bottom: 1px solid #eeeeee;
-    text-align: center;
-    background-color: #f7f7f7;
+/* Header */
+#modal-inv-categorias .modal-inv-header {
+  padding: 24px 24px 16px;
+  border-bottom: 1px solid var(--modal-border);
+  text-align: left;
+  background: var(--modal-header-bg);
 }
 
-.modal-inv-title {
-    margin: 0;
-    font-size: 1.5em;
-    color: #333333;
+#modal-inv-categorias .modal-inv-title {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--modal-text);
+  letter-spacing: -0.01em;
 }
 
-.modal-inv-body {
-    padding: 20px;
-    text-align: center;
+/* Body */
+#modal-inv-categorias .modal-inv-body {
+  padding: 24px;
 }
 
-/* ------------------------------------------- */
-/* 4. Estilos de Navegación (Botones de Categoría) */
-/* Clase única para todos los botones: .btn-inv-categoria */
-/* ------------------------------------------- */
-.modal-inv-body nav {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+#modal-inv-categorias .modal-inv-body nav {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
+/* Botones de categoría - Limpios y elegantes */
 .btn-inv-categoria {
-    padding: 15px 20px;
-    border: 2px solid #007bff;
-    background-color: #ffffff;
-    color: #007bff;
-    border-radius: 8px;
-    font-size: 1.1em;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.2s, color 0.2s, border-color 0.2s;
-    width: 100%;
-    text-align: center;
+  padding: 16px 20px;
+  border: 1.5px solid var(--modal-border);
+  background-color: #ffffff;
+  color: var(--modal-text);
+  border-radius: 16px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Iconos decorativos para cada categoría (opcional) */
+.btn-inv-categoria::before {
+  content: '→';
+  opacity: 0;
+  transform: translateX(-10px);
+  transition: all 0.2s ease;
+  color: var(--modal-primary);
+  font-weight: 400;
+}
+
+.btn-inv-categoria:hover::before {
+  opacity: 1;
+  transform: translateX(0);
 }
 
 .btn-inv-categoria:hover {
-    background-color: #007bff;
-    color: #ffffff;
+  border-color: var(--modal-primary);
+  background-color: var(--modal-primary-light);
+  transform: translateX(4px);
+  box-shadow: 0 4px 12px rgba(74, 144, 226, 0.15);
 }
 
-/* ------------------------------------------- */
-/* 5. Pie de Página (Botones de Acción) */
-/* ------------------------------------------- */
-.modal-inv-footer {
-    padding: 10px 20px;
-    border-top: 1px solid #eeeeee;
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
+/* Footer */
+#modal-inv-categorias .modal-inv-footer {
+  padding: 16px 24px 24px;
+  border-top: 1px solid var(--modal-border);
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  background: var(--modal-footer-bg);
 }
 
-/* Estilo base para todos los botones en el footer del modal de inventario */
-.modal-inv-footer button {
-    padding: 8px 15px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: background-color 0.2s;
+#modal-inv-categorias .modal-inv-footer button {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 40px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+  min-width: 100px;
 }
 
-/* ID específico para el botón "Agregar" (asumiendo que tiene lógica) */
-#btn-inv-guardar { 
-    background-color: #28a745;
-    color: white;
+#btn-inv-cerrar-modal,
+#btn-inv-atras {
+  background-color: #f1f5f9;
+  color: var(--modal-text);
+}
+
+#btn-inv-cerrar-modal:hover,
+#btn-inv-atras:hover {
+  background-color: #e2e8f0;
+  transform: translateY(-2px);
+}
+
+#btn-inv-guardar {
+  background-color: var(--modal-primary);
+  color: white;
+  box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3);
 }
 
 #btn-inv-guardar:hover {
-    background-color: #218838;
+  background-color: #357abd;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(74, 144, 226, 0.4);
 }
 
-/* ID específico para el botón "Cerrar" */
-#btn-inv-cerrar-modal, #btn-inv-atras {
-    background-color: #6c757d;
-    color: white;
-}
+/* ==========================================================================
+   MODAL DE FORMULARIO - .modal-inventario
+   ========================================================================== */
 
-#btn-inv-cerrar-modal:hover, #btn-inv-atras:hover {
-    background-color: #5a6268;
-}
-
-/*----------------------------------------------*/
-
-/* ------------------------------------------- */
-/* 1. Contenedor del Modal de Formulario (FormularioManager) */
-/* ------------------------------------------- */
-.modal-inventario {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 1010;
-    justify-content: center;
-    align-items: center; /* Centrado vertical */
-    padding: 20px; /* Espacio alrededor en móviles */
-}
-
-/* El JavaScript añade la clase 'active' */
-.modal-inventario.active {
-    display: flex;
-}
-
-/* Overlay (el fondo oscuro que se puede clicar para cerrar) */
-.modal-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.7);
-    cursor: pointer;
-}
-
-/* ------------------------------------------- */
-/* 2. Contenido del Formulario (La Caja Blanca) */
-/* ------------------------------------------- */
 .modal-inventario .modal-content {
-    background: #ffffff;
-    border-radius: 10px;
-    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.4);
-    
-    /* Cambiamos para que la altura sea flexible */
-    width: 90%;
-    max-width: 800px;
-    max-height: 90vh; /* Altura máxima del viewport */
-    z-index: 1020;
-    position: relative;
-    
-    /* Animación desde abajo */
-    transform: translateY(100px);
-    opacity: 0;
-    transition: all 0.3s ease-out;
-    
-    /* Flexbox para manejar el crecimiento */
-    display: flex;
-    flex-direction: column;
+  background: var(--modal-bg);
+  border-radius: var(--modal-border-radius);
+  box-shadow: var(--modal-shadow);
+  width: 90%;
+  max-width: 800px;
+  max-height: 90vh;
+  z-index: 1020;
+  position: relative;
+  transform: scale(0.95) translateY(20px);
+  opacity: 0;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .modal-inventario.active .modal-content {
-    transform: translateY(0);
-    opacity: 1;
+  transform: scale(1) translateY(0);
+  opacity: 1;
 }
 
-/* ------------------------------------------- */
-/* 3. Encabezado y Botón de Cierre (X) */
-/* ------------------------------------------- */
+/* Overlay más sutil */
+.modal-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+/* Header del modal de formulario */
 .modal-inventario .modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 20px;
-    border-bottom: 1px solid #e0e0e0;
-    background-color: #f8f8f8;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 28px;
+  border-bottom: 1px solid var(--modal-border);
+  background: var(--modal-header-bg);
 }
 
 .modal-inventario .modal-header h2 {
-    margin: 0;
-    font-size: 1.6em;
-    color: #333;
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--modal-text);
+  letter-spacing: -0.01em;
 }
 
+/* Botón de cierre (X) - más elegante */
 .modal-close {
-    background: none;
-    border: none;
-    color: #777;
-    font-size: 1.5em;
-    cursor: pointer;
-    padding: 5px;
-    transition: color 0.2s;
+  background: none;
+  border: none;
+  color: var(--modal-text-light);
+  font-size: 1.8rem;
+  cursor: pointer;
+  padding: 0;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 40px;
+  transition: all 0.2s ease;
+  line-height: 1;
 }
 
 .modal-close:hover {
-    color: #d9534f; /* Rojo de cierre */
+  background-color: #fee2e2;
+  color: #ef4444;
+  transform: rotate(90deg);
 }
 
-/* ------------------------------------------- */
-/* 4. Cuerpo del Formulario */
-/* ------------------------------------------- */
+/* Cuerpo del modal de formulario */
 .modal-inventario .modal-body {
-    padding: 25px;
-    overflow-y: auto;
-    flex-grow: 1; /* Esto hace que crezca según el contenido */
-    min-height: 550px; /* Altura mínima */
+  padding: 28px;
+  overflow-y: auto;
+  flex-grow: 1;
+  max-height: calc(90vh - 140px);
 }
 
-/* Estilos de los Formularios Específicos */
+/* Formularios más limpios */
 .form-inventario {
-    display: flex;
-    flex-direction: column;
-    gap: 15px; /* Espacio entre grupos de formulario */
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 .form-header {
-    text-align: center;
-    margin-bottom: 20px;
+  text-align: left;
+  margin-bottom: 8px;
 }
 
 .form-header h3 {
-    color: #007bff;
-    margin-bottom: 5px;
+  color: var(--modal-text);
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 0 0 4px 0;
 }
 
-/* ------------------------------------------- */
-/* 5. Grupos de Input y Diseño de Filas */
-/* ------------------------------------------- */
+.form-header p {
+  color: var(--modal-text-light);
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+/* Grupos de formulario mejorados */
 .form-group {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 16px;
 }
 
 .form-group label {
-    font-weight: 600;
-    margin-bottom: 5px;
-    color: #555;
-    font-size: 0.95em;
+  font-weight: 500;
+  margin-bottom: 6px;
+  color: var(--modal-text);
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
+.form-group label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, var(--modal-border), transparent);
+  margin-left: 8px;
+}
+
+/* Inputs más limpios */
 .form-group input,
 .form-group select,
 .form-group textarea {
-    padding: 10px 12px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    font-size: 1em;
-    width: 100%;
-    box-sizing: border-box;
+  padding: 12px 16px;
+  border: 1.5px solid var(--modal-border);
+  border-radius: 14px;
+  font-size: 0.95rem;
+  width: 100%;
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+  background-color: #ffffff;
+  color: var(--modal-text);
 }
 
-.form-group input[type="number"] {
-    /* Asegurar que los números no tengan flechas en algunos navegadores */
-    -moz-appearance: textfield;
+.form-group input:hover,
+.form-group select:hover,
+.form-group textarea:hover {
+  border-color: var(--modal-primary);
+  background-color: #fafafa;
 }
 
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--modal-primary);
+  box-shadow: 0 0 0 4px rgba(74, 144, 226, 0.1);
+  background-color: #ffffff;
+}
+
+/* Filas de formulario */
 .form-row {
-    display: flex;
-    gap: 20px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
 }
 
 .form-row .form-group {
-    flex: 1; /* Para que ocupen el mismo ancho */
+  margin-bottom: 0;
 }
 
-.form-help {
-    font-size: 0.8em;
-    color: #888;
-    margin-top: 3px;
-}
-
-/* Iconos de input */
+/* Input con icono */
 .input-with-icon {
-    display: flex;
-    align-items: center;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    overflow: hidden;
+  display: flex;
+  align-items: center;
+  border: 1.5px solid var(--modal-border);
+  border-radius: 14px;
+  overflow: hidden;
+  transition: all 0.2s ease;
+  background-color: #ffffff;
+}
+
+.input-with-icon:focus-within {
+  border-color: var(--modal-primary);
+  box-shadow: 0 0 0 4px rgba(74, 144, 226, 0.1);
 }
 
 .input-with-icon input {
-    border: none;
-    padding: 10px 12px;
-    flex-grow: 1;
+  border: none;
+  padding: 12px 16px;
+  flex-grow: 1;
+  background: transparent;
 }
 
-.currency, .unit {
-    padding: 10px;
-    background-color: #f0f0f0;
-    border-right: 1px solid #ccc;
-    color: #555;
-    font-weight: bold;
+.input-with-icon input:focus {
+  box-shadow: none;
 }
 
-/* ------------------------------------------- */
-/* 6. Botones de Acción del Formulario (Guardar/Cancelar) */
-/* ------------------------------------------- */
+.currency,
+.unit {
+  padding: 12px 16px;
+  background-color: #f8fafc;
+  border-right: 1.5px solid var(--modal-border);
+  color: var(--modal-text-light);
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+/* Texto de ayuda */
+.form-help {
+  font-size: 0.8rem;
+  color: var(--modal-text-light);
+  margin-top: 4px;
+  margin-left: 4px;
+}
+
+/* ==========================================================================
+   BOTONES DE ACCIÓN DEL FORMULARIO
+   ========================================================================== */
+
 .form-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-    margin-top: 20px;
-    padding-top: 15px;
-    border-top: 1px solid #eee;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 28px;
+  padding-top: 20px;
+  border-top: 1px solid var(--modal-border);
 }
 
 .form-actions button {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 6px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.2s, opacity 0.2s;
+  padding: 12px 28px;
+  border: none;
+  border-radius: 40px;
+  font-weight: 500;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 120px;
 }
 
 .btn-cancelar {
-    background-color: #f44336; /* Rojo */
-    color: white;
+  background-color: #f1f5f9;
+  color: var(--modal-text);
 }
 
 .btn-cancelar:hover {
-    background-color: #d32f2f;
+  background-color: #e2e8f0;
+  transform: translateY(-2px);
 }
 
 .btn-guardar {
-    background-color: #007bff; /* Azul */
-    color: white;
+  background-color: var(--modal-primary);
+  color: white;
+  box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3);
 }
 
 .btn-guardar:hover {
-    background-color: #0056b3;
+  background-color: #357abd;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(74, 144, 226, 0.4);
 }
 
-/* Estilos para el Loading */
 .btn-guardar[disabled] {
-    opacity: 0.7;
-    cursor: not-allowed;
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
 }
 
-/* ------------------------------------------- */
-/* 7. Mensajes de Error y Éxito */
-/* ------------------------------------------- */
+/* ==========================================================================
+   MENSAJES DE ERROR Y ÉXITO
+   ========================================================================== */
+
 .errores-formulario {
-    padding: 10px;
-    margin-bottom: 15px;
-    border-radius: 6px;
-    background-color: #f8d7da;
-    border: 1px solid #f5c6cb;
-    color: #721c24;
+  padding: 14px 18px;
+  margin-bottom: 20px;
+  border-radius: 16px;
+  background-color: #fef2f2;
+  border: 1px solid #fee2e2;
+  color: #b91c1c;
 }
 
 .error-message {
-    font-size: 0.9em;
-    margin: 5px 0;
+  font-size: 0.9rem;
+  margin: 4px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.error-message::before {
+  content: '⚠️';
+  font-size: 1rem;
 }
 
 .exito-formulario {
-    padding: 10px;
-    margin-bottom: 15px;
-    border-radius: 6px;
-    background-color: #d4edda;
-    border: 1px solid #c3e6cb;
-    color: #155724;
-    text-align: center;
+  padding: 14px 18px;
+  margin-bottom: 20px;
+  border-radius: 16px;
+  background-color: #f0fdf4;
+  border: 1px solid #dcfce7;
+  color: #166534;
+  text-align: center;
+  font-weight: 500;
+}
+
+/* ==========================================================================
+   RESPONSIVE
+   ========================================================================== */
+
+@media (max-width: 768px) {
+  .modal-inventario .modal-header {
+    padding: 20px 24px;
+  }
+  
+  .modal-inventario .modal-header h2 {
+    font-size: 1.3rem;
+  }
+  
+  .modal-inventario .modal-body {
+    padding: 24px;
+  }
+  
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  
+  .form-actions {
+    flex-direction: column;
+  }
+  
+  .form-actions button {
+    width: 100%;
+  }
+  
+  #modal-inv-categorias .modal-inv-footer {
+    flex-direction: column;
+  }
+  
+  #modal-inv-categorias .modal-inv-footer button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .modal-inventario .modal-header {
+    padding: 16px 20px;
+  }
+  
+  .modal-inventario .modal-body {
+    padding: 20px;
+  }
+  
+  .btn-inv-categoria {
+    padding: 14px 18px;
+  }
+  
+  .modal-close {
+    width: 36px;
+    height: 36px;
+    font-size: 1.5rem;
+  }
 }

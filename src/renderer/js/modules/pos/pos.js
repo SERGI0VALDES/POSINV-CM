@@ -3,6 +3,7 @@ const PosManager = {
   carrito: [],
   total: 0,
   descuentoAplicado: 0,
+  logoBase64Cache: null,
 
   async init() {
     console.log("POS Inicializado");
@@ -411,6 +412,9 @@ const PosManager = {
   },
 
   async finalizarCompra() {
+    console.log("--- INICIANDO FINALIZAR COMPRA ---");
+    console.log("Contenido actual del carrito:", this.carrito);
+
     if (this.carrito.length === 0) return alert("El carrito está vacío");
 
     const confirmar = confirm(
@@ -418,77 +422,91 @@ const PosManager = {
     );
     if (!confirmar) return;
 
-    // --- MOSTRAR CARGANDO ---
+    // --- LOADER ---
     const loader = document.createElement("div");
     loader.className = "loader-overlay";
-    loader.innerHTML = `
-        <div class="spinner"></div>
-        <p style="margin-top: 15px; font-family: sans-serif; font-weight: bold; color: #333;">
-            Procesando venta...
-        </p>
-    `;
+    loader.innerHTML = `<div class="spinner"></div><p>Procesando...</p>`;
     document.body.appendChild(loader);
 
-    // Bloquear botón para evitar doble clic
-    const btn = document.getElementById("finalizarCompraBtn");
-    btn.disabled = true;
-
     try {
-      const response = await fetch("http://localhost:3000/ventas", {
+      // --- SEPARACIÓN DE ITEMS ---
+      const itemsVentaNormal = this.carrito
+        .filter((item) => !item.esPedidoUnico)
+        .map((item) => ({
+          idProducto: item.idProducto || item.id,
+          cantidad: item.cantidad,
+        }));
+
+      const pedidosUnicos = this.carrito
+        .filter((item) => item.esPedidoUnico === true) // Forzamos validación booleana
+        .map((item) => ({
+          nombreProducto: item.nombre.replace("[PEDIDO] ", ""),
+          precioUnitario: parseFloat(item.precio),
+          cantidad: parseInt(item.cantidad),
+          observaciones: item.observaciones || "",
+          clienteNombre: "Mostrador",
+          clienteTelefono: "",
+        }));
+
+      console.log("Items Normales:", itemsVentaNormal);
+      console.log("Pedidos Únicos detectados:", pedidosUnicos);
+
+      // --- PASO 1: REGISTRAR VENTA ---
+      // Enviamos TODOS los items (incluyendo pedidos) para que el total sea real
+      // Pero el backend debe saber cuáles son pedidos para no buscar stock
+      const resVenta = await fetch("http://localhost:3000/ventas", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           items: this.carrito.map((item) => ({
-            idProducto: item.id,
+            idProducto: item.idProducto, // null si es pedido
             cantidad: item.cantidad,
+            precioUnitario: item.precio, // Importante para pedidos
           })),
           porcentajeDescuento: this.descuentoAplicado,
         }),
       });
 
-      if (response.ok) {
-        const resultado = await response.json(); // Obtenemos el ID de venta y totales del backend
-        // GUARDAMOS una copia del carrito antes de limpiarlo para el ticket
-        const copiaCarrito = [...this.carrito];
+      const ventaResultado = await resVenta.json();
+      console.log("Respuesta de Venta del Servidor:", ventaResultado);
 
-        // Esperar un pequeño delay artificial para que la animación se aprecie
-        await new Promise((resolve) => setTimeout(resolve, 500));
+      if (!resVenta.ok)
+        throw new Error(ventaResultado.message || "Error en venta");
 
-        // 1. Limpiamos el carrito
-        this.carrito = [];
-        // 2. Reseteamos el descuento aplicado a 0 de nuevo
-        this.descuentoAplicado = 0;
-        // 3. Actualizamos la interfaz
-        this.actualizarCarrito(); // Esto llamará a actualizarTotales y pondrá todo en $0
+      const idVentaGenerada = ventaResultado.idVenta;
+      console.log("ID de Venta obtenido:", idVentaGenerada);
 
-        await this.cargarDB();
+      // --- PASO 2: REGISTRAR PEDIDOS ---
+      if (pedidosUnicos.length > 0) {
+        console.log("Intentando enviar pedidos al batch...");
+        const resPedidos = await fetch("http://localhost:3000/pedidos/batch", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            pedidos: pedidosUnicos,
+            idVenta: idVentaGenerada,
+          }),
+        });
 
-        // Quitar el cargador antes del alert
-        loader.remove();
-        const imprimir = confirm("¿Desea imprimir el ticket?");
-        if (imprimir) {
-          setTimeout(() => {
-            this.imprimirTicket(resultado, copiaCarrito);
-          }, 300); // Pequeño delay
-        }
-
-        // Refrescar inventario
-        const buscador = document.getElementById("buscador");
-        this.renderizarInventario(this.productos, buscador?.value || "");
+        const pedRes = await resPedidos.json();
+        console.log("Respuesta de Pedidos Batch:", pedRes);
       } else {
-        loader.remove();
-        const resultado = await response.json();
-        alert(
-          "Error: " + (resultado.message || "No se pudo completar la venta"),
-        );
+        console.log("No hay pedidos únicos para procesar.");
+      }
+
+      // --- FINALIZACIÓN ---
+      const copiaCarrito = [...this.carrito];
+      this.carrito = [];
+      this.actualizarCarrito();
+      loader.remove();
+
+      if (confirm("Venta terminada. ¿Imprimir ticket?")) {
+        this.imprimirTicket(ventaResultado, copiaCarrito);
       }
     } catch (error) {
-      loader.remove();
-      console.error("Error:", error);
-      alert("Error de conexión");
-    } finally {
-      btn.disabled = false;
-      if (document.querySelector(".loader-overlay")) loader.remove();
+      console.error("ERROR DETECTADO:", error);
+      alert("Error: " + error.message);
+      if (loader) loader.remove();
     }
   },
 
@@ -738,29 +756,6 @@ const PosManager = {
     }, 5000);
   },
 
-  // Método auxiliar para obtener estilos
-  obtenerEstilosTicket() {
-    // Puedes copiar aquí los estilos de ticket.css como string
-    return `
-        .ticket-container {
-            width: 250px;
-            padding: 10px;
-            font-family: 'Courier New', Courier, monospace;
-            color: #000;
-        }
-        .ticket-header { text-align: center; font-size: 11px; }
-        .ticket-header strong { font-size: 14px; }
-        .separador { border-top: 1px dashed #000; margin: 10px 0; }
-        .ticket-tabla { width: 100%; font-size: 11px; border-collapse: collapse; }
-        .ticket-tabla th { border-bottom: 1px solid #000; text-align: left; }
-        .ticket-tabla td { padding: 3px 0; }
-        .ticket-totales { font-size: 12px; }
-        .fila-total { display: flex; justify-content: space-between; margin-bottom: 3px; }
-        .total-negrita { font-weight: bold; font-size: 14px; border-top: 1px double #000; padding-top: 5px; }
-        .ticket-footer { text-align: center; font-size: 10px; margin-top: 15px; }
-    `;
-  },
-
   formatearFechaTicket(fecha) {
     const meses = [
       "Ene",
@@ -793,12 +788,20 @@ const PosManager = {
 
   // MÉTODO NUEVO - Convertir imagen local a Base64
   async convertirImagenABase64(ruta) {
+    // Si ya tenemos el logo en caché, lo reusamos
+    if (this.logoBase64Cache) {
+      return this.logoBase64Cache;
+    }
+
     try {
       const response = await fetch(ruta);
       const blob = await response.blob();
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
-        reader.onloadend = () => resolve(reader.result);
+        reader.onloadend = () => {
+          this.logoBase64Cache = reader.result; // Guardar en caché
+          resolve(reader.result);
+        };
         reader.onerror = reject;
         reader.readAsDataURL(blob);
       });
@@ -808,13 +811,209 @@ const PosManager = {
     }
   },
 
+  abrirModalHistorial() {
+    document.getElementById("modalHistorial").style.display = "flex";
+    this.cargarHistorial();
+  },
+
+  cerrarModalHistorial() {
+    document.getElementById("modalHistorial").style.display = "none";
+  },
+
+  async cargarHistorial() {
+    const cuerpo = document.getElementById("cuerpoHistorial");
+    cuerpo.innerHTML =
+      '<tr><td colspan="4" style="text-align:center; padding:20px;">Cargando...</td></tr>';
+
+    try {
+      const response = await fetch(
+        "http://localhost:3000/ventas/historial/recientes",
+      );
+      const ventas = await response.json();
+
+      // Calculamos el total vendido hoy
+      const totalVendidoHoy = ventas.reduce(
+        (acc, v) => acc + parseFloat(v.total || 0),
+        0,
+      );
+
+      // Actualizamos el título o un label si quieres (opcional)
+      console.log("Total vendido hoy:", totalVendidoHoy);
+
+      if (ventas.length === 0) {
+        cuerpo.innerHTML =
+          '<tr><td colspan="4" style="text-align:center; padding:20px;">No hay ventas registradas hoy.</td></tr>';
+        return;
+      }
+
+      cuerpo.innerHTML = ventas
+        .map(
+          (v) => `
+            <tr style="border-bottom: 1px solid #eee;">
+                <td style="padding: 10px;">#${v.idVenta}</td>
+                <td style="padding: 10px; font-size: 0.85rem;">${this.formatearFechaTicket(new Date(v.fecha))}</td>
+                <td style="padding: 10px; text-align: right; font-weight: bold;">$${Number(v.total).toFixed(2)}</td>
+                <td style="padding: 10px; text-align: center;">
+                    <button class="btn-reimprimir" title="Reimprimir Ticket" 
+                        onclick="PosManager.reimprimirDesdeHistorial(${v.idVenta})">
+                        <i class="fas fa-print"></i>
+                    </button>
+                </td>
+            </tr>
+        `,
+        )
+        .join("");
+    } catch (error) {
+      cuerpo.innerHTML =
+        '<tr><td colspan="4" style="text-align:center; color:red;">Error al cargar historial.</td></tr>';
+    }
+  },
+
+  async reimprimirDesdeHistorial(idVenta) {
+    try {
+      const response = await fetch(`http://localhost:3000/ventas/${idVenta}`);
+      const v = await response.json();
+
+      // Formatear items para que coincidan con lo que espera imprimirTicket
+      const items = v.detalles.map((d) => ({
+        cantidad: d.cantidad,
+        nombre: d.producto.nombre,
+        precio: Number(d.precioUnitario),
+      }));
+
+      const datosTicket = {
+        idVenta: v.idVenta,
+        subtotal: Number(v.subtotal),
+        descuento: Number(v.montoDescuento),
+        porcentajeDescuento: Number(v.porcentajeDescuento),
+        total: Number(v.total),
+      };
+
+      this.imprimirTicket(datosTicket, items);
+    } catch (error) {
+      alert("Error al recuperar los datos de la venta");
+    }
+  },
+
+  // ============================================
+  // MÉTODOS PARA PEDIDOS ÚNICOS
+  // ============================================
+
+  abrirModalPedidoUnico() {
+    const modal = document.getElementById("modalPedidoUnico");
+    if (modal) {
+      modal.style.display = "flex";
+      // Limpiar el formulario
+      document.getElementById("pedidoNombre").value = "";
+      document.getElementById("pedidoDescripcion").value = "";
+      document.getElementById("pedidoPrecio").value = "";
+      document.getElementById("pedidoCantidad").value = "1";
+
+      // Enfocar el primer campo
+      setTimeout(() => document.getElementById("pedidoNombre").focus(), 100);
+    }
+  },
+
+  cerrarModalPedidoUnico() {
+    const modal = document.getElementById("modalPedidoUnico");
+    if (modal) {
+      modal.style.display = "none";
+    }
+  },
+
+  // Dentro de PosManager en pos.js
+  agregarPedidoUnicoAlCarrito() {
+    const nombre = document.getElementById("pu-nombre").value;
+    const precio = parseFloat(document.getElementById("pu-precio").value);
+    const cantidad = parseInt(document.getElementById("pu-cantidad").value);
+    const observaciones = document.getElementById("pu-observaciones").value;
+
+    if (!nombre || isNaN(precio) || cantidad <= 0) {
+      alert("Por favor llena los campos básicos.");
+      return;
+    }
+
+    const itemPedidoUnico = {
+      idProducto: null, // No viene de la DB de inventario
+      esPedidoUnico: true,
+      nombre: `[PEDIDO] ${nombre}`,
+      precio: precio,
+      cantidad: cantidad,
+      observaciones: observaciones,
+      subtotal: precio * cantidad,
+    };
+
+    this.carrito.push(itemPedidoUnico);
+    this.actualizarCarrito();
+    this.cerrarModalPedidoUnico();
+
+    // Limpiar campos para el próximo
+    document.getElementById("pu-nombre").value = "";
+    document.getElementById("pu-precio").value = "";
+    document.getElementById("pu-observaciones").value = "";
+  },
+
+  // Método auxiliar para notificaciones (opcional)
+  mostrarNotificacion(mensaje, tipo = "info") {
+    // Puedes implementar un sistema de notificaciones simple
+    console.log(`[${tipo}] ${mensaje}`);
+    // O usar alert temporalmente
+    // alert(mensaje);
+  },
+
+  async revisarCortesPendientes() {
+    const res = await fetch("http://localhost:3000/reportes/pendientes");
+    const cortes = await res.json();
+
+    if (cortes.length > 0) {
+      cortes.forEach((corte) => {
+        const confirmar = confirm(
+          `Se encontró un corte pendiente del día ${corte.fecha}. ¿Desea imprimir el ticket ahora?`,
+        );
+        if (confirmar) {
+          this.imprimirTicketCorte(corte);
+        }
+      });
+    }
+  },
+
+  async imprimirTicketCorte(corte) {
+    // 1. Preparamos los datos para que tu función imprimirTicket los entienda
+    const datosCorte = {
+      idVenta: `CIERRE-${corte.idCierre}`,
+      total: corte.totalVendido,
+      subtotal: corte.totalVendido,
+      descuento: 0,
+      porcentajeDescuento: 0,
+      fecha: corte.fecha,
+    };
+
+    // 2. Creamos los "items" del ticket de cierre
+    const itemsCorte = [
+      { nombre: "Ventas Inv.", cantidad: 1, precio: corte.totalInventario },
+      { nombre: "Ventas Pedidos", cantidad: 1, precio: corte.totalPedidos },
+    ];
+
+    console.log("Mandando corte a la impresora térmica...");
+
+    // 3. Llamamos a tu función de impresión física (la que ya usas para ventas)
+    this.imprimirTicket(datosCorte, itemsCorte);
+
+    // 4. Notificamos al servidor que ya se imprimió físicamente
+    await fetch(
+      `http://localhost:3000/reportes/marcar-impreso/${corte.idCierre}`,
+    );
+  },
 };
 
 window.PosManager = PosManager;
-// Al final de tu archivo pos.js, asegúrate de que el init se llame así:
+
 document.addEventListener("DOMContentLoaded", () => {
   console.log("DOM Cargado, iniciando PosManager...");
   PosManager.init();
+
+  // Cortes
+  PosManager.revisarCortesPendientes();
 
   // Refuerzo: Vincular el botón manualmente por si el setEventListeners falló
   const btnFinalizar = document.getElementById("finalizarCompraBtn");

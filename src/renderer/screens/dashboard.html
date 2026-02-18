@@ -18,14 +18,14 @@
                 <img src="../../assets/img/logo.png" alt="Logo">
             </a>
         </div>
-        
+
         <!-- Informacion del usuario y fecha actual -->
         <div class="info-usuario">
-        <h2>¡Bienvenido!</h2>
-        <!-- Traemos la fecha y hora actual-->
-        <p id="currentDate"></p>
+            <h2>¡Bienvenido!</h2>
+            <!-- Traemos la fecha y hora actual-->
+            <p id="currentDate"></p>
         </div>
-        
+
         <!-- Menu de navegacion -->
         <nav class="nav-menu">
 
@@ -35,7 +35,7 @@
                     <!-- Botón para ir al punto de venta de la app -->
                     <a data-screen="POS">
                         <img src="../../assets/img/icon_pos.png">
-                        <span style="font-family: Comfortaa;">Punto de Venta</span>    
+                        <span style="font-family: Comfortaa;">Punto de Venta</span>
                     </a>
                 </li>
                 <li>
@@ -44,7 +44,7 @@
                         <img src="../../assets/img/img_inventario.png">
                         <span style="font-family: Comfortaa;">Revisar inventarios</span>
                     </a>
-                </li>   
+                </li>
             </ul>
         </nav>
     </header>
@@ -52,76 +52,84 @@
     <main class="main-content">
 
         <table class="tabla-cards">
-               
-                <!-- Tarjeta que muestra el total de ventas -->
-                <tr>
-                    <td>
-                        <div class="card-ventas">
-                            <div class="card-content">
-                                <span class="card-icon">💰</span>
-                                <p>Total de Ventas</p>
-                                <h3>SIN DATOS</h3>
-                            </div>
-                        </div>
-                    </td>
 
-                <!-- Tarjeta que muestra los vestidos listos -->        
-                    <td>
-                        <div class="card-vestidos">
-                            <div class="card-content">
-                                <span class="card-icon">📦</span>
-                                <p>Productos listos</p>
-                                <h3>SIN DATOS</h3>
-                            </div>
+            <!-- Tarjeta que muestra el total de ventas -->
+            <tr>
+                <td>
+                    <div class="card card-ultimas-ventas">
+                        <div class="card-content">
+                            <span class="card-icon">🛍️</span>
+                            <p>Ventas de Hoy</p>
+                            <h3 id="conteoVentas">0 ventas</h3>
                         </div>
-                    </td>
-                </tr>
-                
-                <!-- Tarjeta que muestra el stock de telas -->
-                <tr> 
-                    <td>
-                        <div class="card-telas">
-                            <div class="card-content">
-                                <span class="card-icon">📈</span>
-                                <p>Stock de telas</p>
-                                <h3>SIN DATOS</h3>
-                            </div>
-                        </div>
-                    </td>
+                    </div>
+                </td>
 
-                    <td>
+                <!-- Tarjeta que muestra los vestidos listos -->
+                <td>
+                    <div class="card-vestidos">
+                        <div class="card-content">
+                            <span class="card-icon">📦</span>
+                            <p>Productos listos</p>
+                            <h3>
+                                <span id="dash-vestidos">0</span>
+                                <span style="font-size: 14px; color: #666;">Vestidos</span>
+                                <span style="margin: 0 5px;">|</span>
+                                <span id="dash-terminados">0</span>
+                                <span style="font-size: 14px; color: #666;">Productos terminados</span>
+                            </h3>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+
+            <!-- Tarjeta que muestra el stock de telas -->
+            <tr>
+                <td>
+                    <div class="card-telas">
+                        <div class="card-content">
+                            <span class="card-icon">📈</span>
+                            <p>Stock de telas</p>
+                            <h3 id="dash-telas">0</h3>
+                        </div>
+                    </div>
+                </td>
+
+                <td>
                     <!-- Tarjeta de las ultimas ventas que se han realizado -->
-                        <div class="card-ultimas-ventas">
-                            <div class="card-content">
-                                <span class="card-icon">🛍️</span>   
-                                <p>Últimas Ventas</p>
-                                <h3>SIN DATOS</h3>
-                            </div>
+                    <div class="card card-total-dia">
+                        <div class="card-content">
+                            <span class="card-icon">💰</span>
+                            <p>Ingresos de Hoy</p>
+                            <h3 id="montoTotalDia">$0.00</h3>
                         </div>
-                    </td>
-                </tr>
+                    </div>
+                </td>
+            </tr>
 
         </table>
-                    <!-- Tarjeta donde se muestran dos opciones en la parte de abajo-->
-                    <div class="card-rapidas"> 
-                        <!-- 1. Columna 1 del Grid -->
-                        <h3 style="color: rgb(72, 72, 72); font-family: Comfortaa;">Acciones rapidas</h3>
-                        
-                        <!-- 2. Columna 2 del Grid -->
-                        <div class="botones-acciones"> 
-                            <a class="boton-rapidas" data-screen="REPORTES" style="text-decoration: none; font-family: Comfortaa;">
-                                Descargar reportes
-                            </a>       
-                            <a class="boton-rapidas" data-screen="FICHA" style="text-decoration: none; font-family: Comfortaa;">
-                                Crear fichas
-                            </a>
-                        </div>
+        <!-- Tarjeta donde se muestran dos opciones en la parte de abajo-->
+        <div class="card-rapidas">
+            <!-- 1. Columna 1 del Grid -->
+            <h3 style="color: rgb(72, 72, 72); font-family: Comfortaa;">Acciones rapidas</h3>
 
-                    </div>   
-    </main> 
+            <!-- 2. Columna 2 del Grid -->
+            <div class="botones-acciones">
+                <a class="boton-rapidas" data-screen="REPORTES" style="text-decoration: none; font-family: Comfortaa;">
+                    Descargar reportes
+                </a>
+                <a class="boton-rapidas" data-screen="FICHA" style="text-decoration: none; font-family: Comfortaa;">
+                    Crear fichas
+                </a>
+            </div>
+
+        </div>
+    </main>
 
     <!-- JavaScript -->
     <script src="../js/dateTime.js"></script>
     <script type="module" src="../js/cargar_rutas.js"></script>
+    <script src="../js/modules/dashboard/dashboard.js"></script>
 </body>
+
 </html>

@@ -1,9 +1,6 @@
 // D:\POSINVCM\src\renderer\js\abrir_folder.js
 
-// 🚨 IMPORTANTE: Define la ruta ABSOLUTA de la carpeta de reportes aquí.
-// Ejemplo: 'D:\\ReportesCM' o 'C:\\Usuarios\\TuUsuario\\MisReportes'
-// ASEGÚRATE de usar DOBLE BARRA INVERTIDA (\\) en Windows.
-const RUTA_CARPETA_REPORTES = 'D:\\reportes'; 
+const RUTA_CARPETA_REPORTES = 'D:\\POSINVCM\\server\\reportes\\cortes\\generales'; 
 
 document.addEventListener('DOMContentLoaded', () => {
     

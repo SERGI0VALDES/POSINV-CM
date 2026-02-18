@@ -39,7 +39,6 @@ export class TelaController {
     return await this.telaService.crear(dto);
   }
 
-  // 6. Eliminar (Desactivar producto base)
   @Delete(':id')
   async remove(@Param('id', ParseIntPipe) id: number) {
     return await this.telaService.eliminar(id);

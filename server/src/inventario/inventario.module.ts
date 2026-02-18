@@ -57,5 +57,7 @@ import { Insumo } from './entities/insumo.entity';
     ProductoTerminadoController,
     VestidosController,
   ],
+  // Se modifico la linea de abajo, exactamente se agrego, si hay fallos regresar a lo anterior ELIMINARLA
+  exports: [InventarioService, TelaService, VestidosService],
 })
 export class InventarioModule {}

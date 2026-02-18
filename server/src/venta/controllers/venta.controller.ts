@@ -1,4 +1,11 @@
-import { Controller, Post, Body, Get } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Get,
+  Param,
+  ParseIntPipe,
+} from '@nestjs/common';
 import { VentasService } from '../services/ventas.service';
 import { CreateVentaDto } from '../dto/crear-venta.dto';
 
@@ -18,5 +25,28 @@ export class VentasController {
   @Get()
   async listarVentas() {
     return await this.ventasService.obtenerVentas();
+  }
+
+  // Rutas para el historial de ventas y reimpresion de tickets
+  @Get('historial/recientes')
+  async getRecientes() {
+    return await this.ventasService.findAllHoy();
+  }
+
+  @Get(':id')
+  async getOne(@Param('id', ParseIntPipe) id: number) {
+    return await this.ventasService.findOne(id);
+  }
+
+  // Ruta para la informacion de ventas para el dashboard
+  @Get('dashboard/resumen-hoy')
+  async getResumen() {
+    return await this.ventasService.obtenerResumenHoy();
+  }
+
+  // Ruta Corte diario de caja
+  @Get('corte-diario')
+  async getCorte() {
+    return await this.ventasService.obtenerCorteCajaDiario();
   }
 }

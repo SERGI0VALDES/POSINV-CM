@@ -229,36 +229,38 @@ body {
 
 /* Botones Específicos */
 .añadir {
-  background-color: var(--primary-color);
+  background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
   color: white;
   border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
+  padding: 12px 28px;
+  border-radius: 50px;
   cursor: pointer;
   font-size: 1rem;
   font-weight: 600;
-  transition: background-color 0.3s, transform 0.2s;
-  box-shadow: 0 4px 6px rgba(74, 144, 226, 0.3);
+  transition: all 0.3s ease;
+  box-shadow: 0 10px 20px -5px rgba(74, 144, 226, 0.4);
   font-family: 'Comfortaa', Arial, sans-serif;
+  letter-spacing: 0.5px;
 }
 
 .añadir:hover {
-  background-color: #387cbe;
-  transform: translateY(-2px);
+  transform: translateY(-3px);
+  box-shadow: 0 15px 25px -5px rgba(74, 144, 226, 0.5);
 }
 
 .botones {
-  background: linear-gradient(135deg, #ffffff 0%, #E0F7FF 50%, #ffe7ff 100%);
-  padding: 15px 20px;
-  border: none;
-  border-radius: 5px;
-  color: rgb(0, 0, 0);
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(5px);
+  padding: 16px 22px;
+  border: 1px solid rgba(74, 144, 226, 0.2);
+  border-radius: 16px;
+  color: #2c3e50;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.2, 0.9, 0.3, 1);
   text-align: left;
   font-size: 1rem;
-  box-shadow: var(--shadow);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.02);
   position: relative;
   overflow: hidden;
   font-family: 'Comfortaa', Arial, sans-serif;
@@ -269,21 +271,26 @@ body {
   content: '';
   position: absolute;
   top: 0;
-  left: -100%;
+  left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-  transition: left 0.5s;
+  background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transform: translateX(-100%);
+  transition: transform 0.6s ease;
 }
 
 .botones:hover::before {
-  left: 100%;
+  transform: translateX(100%);
 }
 
+
 .botones:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--shadow-lg);
-  background: linear-gradient(135deg, #ffe7ff, var(--primary-dark));
+  transform: translateY(-2px);
+  border-color: var(--primary-color);
+  background: white;
+  box-shadow: 
+    0 15px 25px -8px rgba(74, 144, 226, 0.3),
+    0 0 0 2px rgba(74, 144, 226, 0.2);
 }
 
 /* Estados */
@@ -418,12 +425,22 @@ body {
 
 /* Panel lateral de botones */
 .contenedor-botones {
-  background: linear-gradient(135deg, #ffffff 0%, #f8f9ff 100%);
-  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(15px);
+  border-radius: 24px;
   padding: 25px 20px;
-  box-shadow: var(--shadow-lg);
-  border: 1px solid rgba(139, 95, 191, 0.1);
-  backdrop-filter: blur(10px);
+  box-shadow: 
+    0 20px 35px -8px rgba(0, 0, 0, 0.15),
+    0 0 0 1px rgba(74, 144, 226, 0.1) inset,
+    0 0 30px rgba(139, 95, 191, 0.1);
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.contenedor-botones:hover {
+  box-shadow: 
+    0 25px 40px -10px rgba(74, 144, 226, 0.25),
+    0 0 0 1px rgba(74, 144, 226, 0.2) inset;
 }
 
 .contenedor-botones nav {
@@ -442,16 +459,27 @@ body {
 
 /* Panel de inventario */
 .inventarios {
-  background: linear-gradient(135deg, #ffffff 0%, #f8f9ff 100%);
-  padding: 20px;
-  box-shadow: var(--shadow-lg);
-  border: 1px solid rgba(139, 95, 191, 0.1);
-  backdrop-filter: blur(10px);
-  border-radius: 20px;
-  height: 55vh;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(15px);
+  padding: 24px;
+  box-shadow: 
+    0 25px 40px -15px rgba(0, 0, 0, 0.2),
+    0 0 0 1px rgba(139, 95, 191, 0.1) inset;
+  border: none;
+  border-radius: 28px;
+  height: auto;
+  max-height: 520px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  min-height: 380px;
+  transition: all 0.3s ease;
+}
+
+.inventarios:hover {
+  box-shadow: 
+    0 30px 50px -15px rgba(74, 144, 226, 0.25),
+    0 0 0 1px rgba(74, 144, 226, 0.15) inset;
 }
 
 .inventario-vacio,
@@ -482,43 +510,51 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 2px solid var(--border-color);
+  margin-bottom: 1.2rem;
+  padding-bottom: 0.8rem;
+  border-bottom: 2px solid rgba(74, 144, 226, 0.2);
 }
 
 .inventario-header h3 {
-  color: var(--text-color);
+  color: var(--text-color-dark);
   font-size: 1.6rem;
   font-weight: 700;
   font-family: 'Comfortaa', Arial, sans-serif;
+  background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0;
 }
 
 .total-items {
-  background: var(--accent-color);
+  background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
   color: white;
-  padding: 8px 16px;
-  border-radius: 20px;
+  padding: 6px 16px;
+  border-radius: 40px;
   font-weight: 600;
   font-size: 0.9rem;
   font-family: 'Comfortaa', Arial, sans-serif;
+  box-shadow: 0 4px 10px rgba(74, 144, 226, 0.3);
 }
 
 .table-container {
   overflow: auto;
-  box-shadow: var(--shadow);
-  background: white;
+  box-shadow: none;
+  background: transparent;
   flex: 1;
+  border-radius: 20px;
 }
 
 .inventario-table {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0 8px;
   text-align: center;
 }
 
 .inventario-table thead {
-  background: #eadfe8;
+  background: transparent;
 }
 
 .inventario-table th {
@@ -526,18 +562,27 @@ body {
   text-align: center;
   font-weight: 600;
   font-family: 'Comfortaa', Arial, sans-serif;
+  color: var(--text-color-light);
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  letter-spacing: 1px;
+  border-bottom: 2px solid rgba(74, 144, 226, 0.1);
 }
 
 .inventario-table td {
   padding: 1rem 0.5rem;
-  border-bottom: 1px solid var(--border-color);
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.02);
   font-family: 'Comfortaa', Arial, sans-serif;
   text-align: center;
+  transition: all 0.2s ease;
 }
 
-.inventario-table tbody tr:hover {
-  background: rgba(139, 95, 191, 0.05);
-  transition: all 0.2s ease;
+.inventario-table tbody tr:hover td {
+  background: #f8faff;
+  box-shadow: 0 8px 15px rgba(74, 144, 226, 0.1);
+  transform: scale(1.01);
 }
 
 .inventario-table tbody tr:last-child td {
@@ -891,8 +936,8 @@ body {
   }
   
   .inventarios {
-    height: auto;
-    max-height: 80vh;
+    max-height: 450px;
+    min-height: 350px;
   }
 }
 
@@ -929,6 +974,15 @@ body {
     flex-direction: column;
     align-items: stretch;
   }
+
+  .inventarios {
+    min-height: 300px;
+    max-height: 400px;
+    padding: 20px;
+  }
+  .inventario-table td {
+    padding: 0.8rem 0.3rem;
+  }
 }
 
 @media (max-width: 480px) {
@@ -951,6 +1005,19 @@ body {
   .nav-menu img {
     width: 40px;
     height: 40px;
+  }
+  .inventarios {
+    padding: 15px;
+    min-height: 280px;
+    max-height: 380px;
+  }
+  
+  .contenedor-botones {
+    padding: 20px 15px;
+  }
+  
+  .botones {
+    padding: 14px 18px;
   }
 }
 

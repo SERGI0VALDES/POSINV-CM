@@ -8,6 +8,12 @@ import {
   ViewColumn,
 } from 'typeorm';
 
+export enum TipoProducto {
+  VESTIDO = 'VESTIDO',
+  TELA = 'TELA',
+  TERMINADO = 'TERMINADO',
+}
+
 @Entity('PRODUCTO_BASE')
 export class ProductoBase {
   @PrimaryGeneratedColumn() // Este será 1, 2, 3... y será el ID de negocio también
@@ -27,6 +33,12 @@ export class ProductoBase {
 
   @Column({ type: 'decimal' })
   precioVenta: number;
+
+  @Column({
+    type: 'varchar',
+    default: TipoProducto.TERMINADO,
+  })
+  tipoProducto: TipoProducto;
 
   @Column({ default: 1 })
   activo: number;
@@ -50,6 +62,7 @@ export class ProductoCompleto {
   @ViewColumn() stockActual: number;
   @ViewColumn() stockMinimo: number;
   @ViewColumn() precioVenta: number;
+  @ViewColumn() tipoProducto: string;
   @ViewColumn() activo: number;
 
   // Campos de VESTIDO
